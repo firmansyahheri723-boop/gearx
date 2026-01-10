@@ -42,9 +42,9 @@ export const SelectCell: Component<SelectCellProps> = (props) => {
   if (props.asContent) {
     return (
       <div
-        class="p-0"
+        class="p-0 transition-colors"
         classList={{
-          'bg-slate-900/30 hover:bg-slate-800/50': !isSelected(),
+          'bg-slate-800/40 hover:bg-cyan-900/30': !isSelected(),
           'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isSelected(),
         }}
       >
@@ -55,9 +55,9 @@ export const SelectCell: Component<SelectCellProps> = (props) => {
 
   return (
     <td
-      class="border-r border-b border-slate-800/50 p-0"
+      class="border-r border-b border-slate-800/50 p-0 transition-colors"
       classList={{
-        'bg-slate-900/30 hover:bg-slate-800/50': !isSelected(),
+        'bg-slate-800/40 hover:bg-cyan-900/30': !isSelected(),
         'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isSelected(),
       }}
     >

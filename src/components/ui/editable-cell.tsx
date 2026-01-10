@@ -49,8 +49,8 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
   });
 
   const containerClasses = () => ({
-    'bg-slate-900/30 hover:bg-slate-800/50': !isSelected() && !props.highlight,
-    'bg-green-900/20 hover:bg-green-900/30': !isSelected() && props.highlight,
+    'bg-slate-800/40 hover:bg-cyan-900/30': !isSelected() && !props.highlight,
+    'bg-green-900/20 hover:bg-green-900/40': !isSelected() && props.highlight,
     'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isSelected(),
   });
 
