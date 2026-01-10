@@ -2,6 +2,7 @@ import { Component, For, createMemo, Show } from 'solid-js';
 import { SectionHeader } from '../ui/section-header';
 import { vehicleInputs, setVehicleInputs } from '../../stores/vehicle';
 import { calculateSuspensionOutputs } from '../../utils/suspension';
+import { SuspensionOutput } from '../suspension-output';
 
 // Input slider configuration
 interface SliderConfig {
@@ -87,6 +88,9 @@ export const SuspensionTab: Component = () => {
 
   return (
     <div class="space-y-4">
+      {/* Suspension Output Card */}
+      <SuspensionOutput />
+
       {/* Top Row: Key Metrics + Input Sliders */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Suspension Parameters Input */}

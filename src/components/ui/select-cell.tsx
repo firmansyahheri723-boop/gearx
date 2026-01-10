@@ -8,6 +8,7 @@ interface SelectCellProps {
   tableId: string;
   row: number;
   col: number;
+  disabled?: boolean;
 }
 
 export const SelectCell: Component<SelectCellProps> = (props) => {
@@ -24,7 +25,8 @@ export const SelectCell: Component<SelectCellProps> = (props) => {
       <select
         value={props.value}
         onChange={(e) => props.onChange(e.currentTarget.value)}
-        class="w-full h-full px-3 py-2 bg-transparent text-emerald-400 cursor-pointer appearance-none focus:outline-none"
+        disabled={props.disabled}
+        class="w-full h-full px-3 py-2 bg-transparent text-emerald-400 cursor-pointer appearance-none focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
           'background-image':
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2334d399' d='M2 4l4 4 4-4'/%3E%3C/svg%3E\")",

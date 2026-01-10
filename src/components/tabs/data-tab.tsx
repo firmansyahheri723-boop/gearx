@@ -1,5 +1,5 @@
 import { Component, For, Show, createSignal } from 'solid-js';
-import { carData, importCarData, clearCarData } from '../../stores/car-data';
+import { carData, importCarData, clearCarData, selectCar, selectEngine, selectedCarIndex, selectedEngineIndex } from '../../stores/car-data';
 import { toast } from '../../stores/notifications';
 import { parseCSV, downloadCSV, CSV_COLUMNS } from '../../utils/csv';
 import type { CarData } from '../../types';
@@ -76,7 +76,7 @@ function formatCellValue(value: string | number | null): string {
   return value;
 }
 
-export const DataTab: Component = () => {
+export const DatabaseTab: Component = () => {
   const [isDragging, setIsDragging] = createSignal(false);
   let fileInputRef: HTMLInputElement | undefined;
 
@@ -289,32 +289,97 @@ const DataTable: Component<DataTableProps> = (props) => {
   return (
     <div class="relative overflow-hidden">
       <div class="flex">
-        {/* Sticky car name column */}
+        {/* Sticky car name column with action buttons */}
         <div class="flex-shrink-0 border-r-2 border-slate-700 bg-slate-950 z-10">
           <table class="text-xs">
             <thead>
               {/* Group header row */}
               <tr>
-                <th class="px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase bg-yellow-500/20 text-yellow-400 border-b border-yellow-500/30 text-left whitespace-nowrap">
-                  Car
+                <th 
+                  colSpan={3}
+                  class="px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase bg-yellow-500/20 text-yellow-400 border-b border-yellow-500/30 text-left whitespace-nowrap"
+                >
+                  Car / Actions
                 </th>
               </tr>
               {/* Column header row */}
               <tr>
-                <th class="px-3 py-1.5 text-[10px] font-medium tracking-wider uppercase bg-slate-900 text-slate-400 border-b border-slate-700/50 text-left whitespace-nowrap min-w-[200px]">
+                <th class="px-3 py-1.5 text-[10px] font-medium tracking-wider uppercase bg-slate-900 text-slate-400 border-b border-slate-700/50 text-left whitespace-nowrap min-w-[180px]">
                   Name
+                </th>
+                <th class="px-2 py-1.5 text-[10px] font-medium tracking-wider uppercase bg-slate-900 text-slate-400 border-b border-slate-700/50 text-center whitespace-nowrap w-[70px]">
+                  Chassis
+                </th>
+                <th class="px-2 py-1.5 text-[10px] font-medium tracking-wider uppercase bg-slate-900 text-slate-400 border-b border-slate-700/50 text-center whitespace-nowrap w-[70px]">
+                  Engine
                 </th>
               </tr>
             </thead>
             <tbody>
               <For each={props.data}>
-                {(row) => (
-                  <tr class="hover:bg-slate-800/30">
-                    <td class="px-3 py-1.5 border-b border-slate-800/50 text-cyan-400 font-medium whitespace-nowrap bg-yellow-500/5">
-                      {row.car || '-'}
-                    </td>
-                  </tr>
-                )}
+                {(row, index) => {
+                  const isSelectedCar = () => selectedCarIndex() === index();
+                  const isSelectedEngine = () => selectedEngineIndex() === index();
+                  
+                  return (
+                    <tr 
+                      class="hover:bg-slate-800/30"
+                      classList={{
+                        'bg-cyan-500/10': isSelectedCar() || isSelectedEngine(),
+                      }}
+                    >
+                      <td 
+                        class="px-3 py-1.5 border-b border-slate-800/50 font-medium whitespace-nowrap"
+                        classList={{
+                          'text-cyan-400 bg-yellow-500/5': !isSelectedCar() && !isSelectedEngine(),
+                          'text-cyan-300 bg-cyan-500/10': isSelectedCar() || isSelectedEngine(),
+                        }}
+                      >
+                        <div class="flex items-center gap-2">
+                          <span>{row.car || '-'}</span>
+                          <Show when={isSelectedCar()}>
+                            <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-green-500/20 text-green-400 border border-green-500/30">
+                              CAR
+                            </span>
+                          </Show>
+                          <Show when={isSelectedEngine()}>
+                            <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                              ENG
+                            </span>
+                          </Show>
+                        </div>
+                      </td>
+                      <td class="px-1 py-1 border-b border-slate-800/50 text-center bg-yellow-500/5">
+                        <button
+                          type="button"
+                          onClick={() => selectCar(index())}
+                          class="px-2 py-0.5 text-[9px] font-medium tracking-wider uppercase transition-colors"
+                          classList={{
+                            'bg-green-500/30 text-green-300 border border-green-500/50': isSelectedCar(),
+                            'bg-slate-700/50 text-slate-400 border border-slate-600/50 hover:bg-green-500/20 hover:text-green-400 hover:border-green-500/30': !isSelectedCar(),
+                          }}
+                          title="Use this car's chassis data (wheelbase, track width, etc.)"
+                        >
+                          {isSelectedCar() ? 'Active' : 'Use'}
+                        </button>
+                      </td>
+                      <td class="px-1 py-1 border-b border-slate-800/50 text-center bg-yellow-500/5">
+                        <button
+                          type="button"
+                          onClick={() => selectEngine(index())}
+                          class="px-2 py-0.5 text-[9px] font-medium tracking-wider uppercase transition-colors"
+                          classList={{
+                            'bg-amber-500/30 text-amber-300 border border-amber-500/50': isSelectedEngine(),
+                            'bg-slate-700/50 text-slate-400 border border-slate-600/50 hover:bg-amber-500/20 hover:text-amber-400 hover:border-amber-500/30': !isSelectedEngine(),
+                          }}
+                          title="Use this car's engine data (power, position offsets, etc.)"
+                        >
+                          {isSelectedEngine() ? 'Active' : 'Use'}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                }}
               </For>
             </tbody>
           </table>

@@ -1,17 +1,78 @@
-import type { Component } from 'solid-js';
+import { Component, createMemo, Show } from 'solid-js';
 import { SectionHeader } from './ui/section-header';
 import { EditableCell } from './ui/editable-cell';
 import { LabelCell } from './ui/label-cell';
 import { SelectCell } from './ui/select-cell';
 import { vehicleInputs, setVehicleInputs } from '../stores/vehicle';
+import { carData, selectCar, selectEngine, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '../stores/car-data';
 
-const CAR_OPTIONS = ['Dodge Challenger SRT', 'Ford Mustang GT', 'Chevrolet Camaro SS'];
 const DRIVETRAIN_OPTIONS = ['RWD/AWD', 'FWD', 'AWD'];
 
 export const InputSection: Component = () => {
+  // Get car names from imported data for dropdown options
+  const carOptions = createMemo(() => {
+    if (carData.length === 0) {
+      return ['No cars imported'];
+    }
+    return carData.map((car) => car.car || 'Unknown');
+  });
+
+  // Handle car selection change
+  const handleCarChange = (carName: string) => {
+    const index = carData.findIndex((car) => car.car === carName);
+    if (index >= 0) {
+      selectCar(index);
+    }
+  };
+
+  // Handle engine selection change
+  const handleEngineChange = (carName: string) => {
+    const index = carData.findIndex((car) => car.car === carName);
+    if (index >= 0) {
+      selectEngine(index);
+    }
+  };
+
+  // Check if a field is from car data (to show indicator)
+  const isCarDataField = (field: 'wheelbase' | 'frontTrackWidth' | 'rearTrackWidth') => {
+    const car = getSelectedCar();
+    if (!car) return false;
+    switch (field) {
+      case 'wheelbase':
+        return car.wheelbase !== null || (car.fAxleOffset !== null && car.rAxleOffset !== null);
+      case 'frontTrackWidth':
+        return car.fTrackWidth !== null;
+      case 'rearTrackWidth':
+        return car.rTrackWidth !== null;
+      default:
+        return false;
+    }
+  };
+
   return (
     <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
       <SectionHeader title="Vehicle Input" variant="input" />
+      
+      {/* Selection info banner */}
+      <Show when={selectedCarIndex() !== null || selectedEngineIndex() !== null}>
+        <div class="px-3 py-1.5 border-b border-slate-800/50 bg-slate-900/50 flex items-center gap-4 text-[10px]">
+          <Show when={getSelectedCar()}>
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-green-500 rounded-full" />
+              <span class="text-slate-400">Chassis:</span>
+              <span class="text-green-400 font-medium">{getSelectedCar()?.car}</span>
+            </span>
+          </Show>
+          <Show when={getSelectedEngine()}>
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-amber-500 rounded-full" />
+              <span class="text-slate-400">Engine:</span>
+              <span class="text-amber-400 font-medium">{getSelectedEngine()?.car}</span>
+            </span>
+          </Show>
+        </div>
+      </Show>
+      
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-sm">
           <tbody>
@@ -20,19 +81,21 @@ export const InputSection: Component = () => {
               <LabelCell>Car selection</LabelCell>
               <SelectCell
                 value={vehicleInputs.carSelection}
-                options={CAR_OPTIONS}
-                onChange={(v) => setVehicleInputs('carSelection', v)}
+                options={carOptions()}
+                onChange={handleCarChange}
                 tableId="input"
                 row={0}
                 col={0}
+                disabled={carData.length === 0}
               />
-              <LabelCell>Wheelbase, m</LabelCell>
+              <LabelCell highlight={isCarDataField('wheelbase')}>Wheelbase, m</LabelCell>
               <EditableCell
                 value={vehicleInputs.wheelbase}
                 onChange={(v) => setVehicleInputs('wheelbase', parseFloat(v) || 0)}
                 tableId="input"
                 row={0}
                 col={1}
+                highlight={isCarDataField('wheelbase')}
               />
             </tr>
 
@@ -41,11 +104,12 @@ export const InputSection: Component = () => {
               <LabelCell>Engine selection</LabelCell>
               <SelectCell
                 value={vehicleInputs.engineSelection}
-                options={CAR_OPTIONS}
-                onChange={(v) => setVehicleInputs('engineSelection', v)}
+                options={carOptions()}
+                onChange={handleEngineChange}
                 tableId="input"
                 row={1}
                 col={0}
+                disabled={carData.length === 0}
               />
               <td class="border-r border-b border-slate-800/50 bg-slate-900/20" colspan={2} />
             </tr>

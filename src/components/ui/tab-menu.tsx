@@ -8,10 +8,10 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { id: 'main', label: 'Main' },
+  { id: 'main', label: 'Input' },
   { id: 'suspension', label: 'Suspension' },
   { id: 'gearbox', label: 'Gearbox' },
-  { id: 'data', label: 'Data' },
+  { id: 'data', label: 'Database' },
 ];
 
 interface TabMenuProps {

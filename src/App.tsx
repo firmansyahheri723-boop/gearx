@@ -1,10 +1,10 @@
 import { Component, onMount, onCleanup, createSignal, Match, Switch } from 'solid-js';
 import { DashboardHeader } from './components/dashboard-header';
 import { TabMenu, type TabId } from './components/ui/tab-menu';
-import { MainTab } from './components/tabs/main-tab';
+import { InputTab } from './components/tabs/main-tab';
 import { SuspensionTab } from './components/tabs/suspension-tab';
 import { GearboxTab } from './components/tabs/gearbox-tab';
-import { DataTab } from './components/tabs/data-tab';
+import { DatabaseTab } from './components/tabs/data-tab';
 import { ToasterWithStyles } from './components/ui/toast';
 import {
   setIsSelecting,
@@ -86,7 +86,7 @@ const App: Component = () => {
 
         <Switch>
           <Match when={activeTab() === 'main'}>
-            <MainTab />
+            <InputTab />
           </Match>
           <Match when={activeTab() === 'suspension'}>
             <SuspensionTab />
@@ -95,7 +95,7 @@ const App: Component = () => {
             <GearboxTab />
           </Match>
           <Match when={activeTab() === 'data'}>
-            <DataTab />
+            <DatabaseTab />
           </Match>
         </Switch>
 
