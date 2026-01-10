@@ -189,6 +189,8 @@ export const DatabaseTab: Component = () => {
         initialSorting={sorting()}
         onSortingChange={setSorting}
         stickyHeader
+        columnPinning={{ left: ['car'] }}
+        maxHeight="70vh"
         getRowClass={(row, index) => {
           const isSelectedCar = selectedCarIndex() === row._rowIndex;
           const isSelectedEngine = selectedEngineIndex() === row._rowIndex;

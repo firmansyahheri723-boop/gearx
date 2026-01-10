@@ -89,7 +89,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
       style={{ 'max-height': merged.maxHeight }}
     >
       <table class="w-full border-collapse text-sm">
-        <thead class={merged.stickyHeader ? 'sticky top-0 z-10' : ''}>
+        <thead class={merged.stickyHeader ? 'sticky top-0 z-20' : ''}>
           {/* Header groups row (optional) */}
           <Show when={merged.showHeaderGroups}>
             <For each={table.getHeaderGroups().slice(0, -1)}>
@@ -130,6 +130,8 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                           'text-left': header.column.columnDef.meta?.align === 'left',
                           'text-center': !header.column.columnDef.meta?.align || header.column.columnDef.meta?.align === 'center',
                           'text-right': header.column.columnDef.meta?.align === 'right',
+                          'sticky left-0 z-30': header.column.getIsPinned() === 'left',
+                          'sticky right-0 z-30': header.column.getIsPinned() === 'right',
                         }}
                         onClick={canSort() ? header.column.getToggleSortingHandler() : undefined}
                         title={canSort() ? 'Click to sort' : undefined}
@@ -162,11 +164,13 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                   <For each={row.getVisibleCells()}>
                     {(cell) => (
                       <td
-                        class="border-r border-b border-neutral-800/50"
+                        class="border-r border-b border-neutral-800/50 bg-neutral-950"
                         classList={{
                           'text-left': cell.column.columnDef.meta?.align === 'left',
                           'text-center': !cell.column.columnDef.meta?.align || cell.column.columnDef.meta?.align === 'center',
                           'text-right': cell.column.columnDef.meta?.align === 'right',
+                          'sticky left-0 z-10': cell.column.getIsPinned() === 'left',
+                          'sticky right-0 z-10': cell.column.getIsPinned() === 'right',
                         }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
