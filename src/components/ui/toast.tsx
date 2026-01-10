@@ -152,22 +152,22 @@ const ToastStyles: Component = () => {
     <style>{`
       @keyframes toast-in {
         from {
-          transform: tranneutralX(100%);
+          transform: translateX(100%);
           opacity: 0;
         }
         to {
-          transform: tranneutralX(0);
+          transform: translateX(0);
           opacity: 1;
         }
       }
 
       @keyframes toast-out {
         from {
-          transform: tranneutralX(0);
+          transform: translateX(0);
           opacity: 1;
         }
         to {
-          transform: tranneutralX(100%);
+          transform: translateX(100%);
           opacity: 0;
         }
       }

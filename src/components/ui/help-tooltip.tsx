@@ -20,26 +20,26 @@ const getPositionStyles = (position: TooltipPosition) => {
     case "right":
       // Arrow points left (toward the button)
       return {
-        popup: "left-6 top-1/2 -tranneutral-y-1/2",
-        arrow: "left-0 top-1/2 -tranneutral-x-1 -tranneutral-y-1/2 rotate-45 border-l border-b",
+        popup: "left-6 top-1/2 -translate-y-1/2",
+        arrow: "left-0 top-1/2 -translate-x-1 -translate-y-1/2 rotate-45 border-l border-b",
       };
     case "bottom":
       // Arrow points up (toward the button)
       return {
-        popup: "top-6 left-1/2 -tranneutral-x-1/2",
-        arrow: "top-0 left-1/2 -tranneutral-y-1 -tranneutral-x-1/2 rotate-45 border-l border-t",
+        popup: "top-6 left-1/2 -translate-x-1/2",
+        arrow: "top-0 left-1/2 -translate-y-1 -translate-x-1/2 rotate-45 border-l border-t",
       };
     case "left":
       // Arrow points right (toward the button)
       return {
-        popup: "right-6 top-1/2 -tranneutral-y-1/2",
-        arrow: "right-0 top-1/2 tranneutral-x-1 -tranneutral-y-1/2 rotate-45 border-r border-t",
+        popup: "right-6 top-1/2 -translate-y-1/2",
+        arrow: "right-0 top-1/2 translate-x-1 -translate-y-1/2 rotate-45 border-r border-t",
       };
     case "top":
       // Arrow points down (toward the button)
       return {
-        popup: "bottom-6 left-1/2 -tranneutral-x-1/2",
-        arrow: "bottom-0 left-1/2 tranneutral-y-1 -tranneutral-x-1/2 rotate-45 border-r border-b",
+        popup: "bottom-6 left-1/2 -translate-x-1/2",
+        arrow: "bottom-0 left-1/2 translate-y-1 -translate-x-1/2 rotate-45 border-r border-b",
       };
   }
 };
