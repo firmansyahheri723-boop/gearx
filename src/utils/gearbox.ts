@@ -6,6 +6,7 @@ interface GearboxCalcInputs {
   profile: number; // %
   wheelDiameter: number; // inches
   gearRatios: GearRatio[];
+  finalDrive: number; // final drive ratio
   torqueRpmData: TorqueRpmRow[];
   weight: number; // kg
   frontWeightDistribution: number; // %
@@ -131,6 +132,7 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
     profile,
     wheelDiameter,
     gearRatios,
+    finalDrive,
     torqueRpmData,
     weight,
     frontWeightDistribution,
@@ -145,11 +147,10 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
   const wheelCircumference = calcWheelCircumference(tireWidth, profile, wheelDiameter);
   const wheelRadiusM = calcWheelRadiusM(tireWidth, profile, wheelDiameter);
 
-  // Get final drive ratio (last item in gearRatios array)
-  const finalDrive = gearRatios[gearRatios.length - 1].ratio;
+  // gearRatios is now a clean array of just gears (no final drive mixed in)
+  const gearCount = gearRatios.length;
 
-  // Calculate effective ratios for each gear (excluding final drive)
-  const gearCount = gearRatios.length - 1; // Exclude final drive
+  // Calculate effective ratios for each gear
   const effectiveRatios: number[] = [];
   for (let i = 0; i < gearCount; i++) {
     effectiveRatios.push(gearRatios[i].ratio * finalDrive);

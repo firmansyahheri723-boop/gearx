@@ -7,6 +7,7 @@ import type {
   AccelerationMetrics,
   TorqueRpmRow,
   GearRatio,
+  FinalDrive,
   TireCompound,
 } from '../types';
 
@@ -101,17 +102,23 @@ export const [torqueRpmData, setTorqueRpmData] = createStore<TorqueRpmRow[]>([
   { torque: 840, rpm: 8116 },
 ]);
 
-// Transmission - Gear Ratios with min/max bounds
+// Transmission - Final Drive (separate from gear ratios)
+export const [finalDrive, setFinalDrive] = createStore<FinalDrive>({
+  ratio: 3.0,
+  min: 2.0,
+  max: 5.0,
+});
+
+// Transmission - Gear Ratios (8 gears, indexed 0-7 for 1st-8th)
 export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
-  { gear: 'Final drive', ratio: 3.0, min: 2.0, max: 5.0 },
-  { gear: '1st', ratio: 2.76, min: 1.5, max: 4.0 },
-  { gear: '2nd', ratio: 2.0, min: 1.2, max: 3.0 },
-  { gear: '3rd', ratio: 1.5, min: 1.0, max: 2.5 },
-  { gear: '4th', ratio: 1.15, min: 0.8, max: 2.0 },
-  { gear: '5th', ratio: 1.0, min: 0.7, max: 1.5 },
-  { gear: '6th', ratio: 0.9, min: 0.6, max: 1.2 },
-  { gear: '7th', ratio: 0, min: 0, max: 1.0 },
-  { gear: '8th', ratio: 0, min: 0, max: 0.9 },
+  { ratio: 2.76, min: 1.5, max: 4.0 },   // 1st
+  { ratio: 2.0, min: 1.2, max: 3.0 },    // 2nd
+  { ratio: 1.5, min: 1.0, max: 2.5 },    // 3rd
+  { ratio: 1.15, min: 0.8, max: 2.0 },   // 4th
+  { ratio: 1.0, min: 0.7, max: 1.5 },    // 5th
+  { ratio: 0.9, min: 0.6, max: 1.2 },    // 6th
+  { ratio: 0, min: 0, max: 1.0 },        // 7th (unused)
+  { ratio: 0, min: 0, max: 0.9 },        // 8th (unused)
 ]);
 
 // Tire compound selection for traction calculations

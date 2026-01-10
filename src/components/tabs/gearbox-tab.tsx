@@ -2,16 +2,21 @@ import { Component, For, createMemo, Show } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
 import { DataTable } from '../ui/data-table';
+import { GearSpeedChart } from '../ui/gear-speed-chart';
+import { GearTorqueChart } from '../ui/gear-torque-chart';
 import { HelpLink } from '../ui/help-tooltip';
+import { GEAR_COLORS } from '../../constants/colors';
 import {
   vehicleInputs,
   torqueRpmData,
   gearRatios,
+  finalDrive,
   tireCompound,
   setTireCompound,
 } from '../../stores/vehicle';
 import { calculateGearboxOutputs } from '../../utils/gearbox';
 import type { TireCompound, SpeedRpmPoint } from '../../types';
+import { GEAR_LABELS } from '../../types';
 
 // Help tooltip content for gearbox sections
 const HELP_CONTENT: Record<
@@ -82,6 +87,20 @@ const HELP_CONTENT: Record<
       { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
     ],
   },
+  speedRpmChart: {
+    description:
+      "Visual representation of vehicle speed at each RPM point across all gears. Each line represents a gear - use this to visualize speed overlap between gears and identify optimal shift points for your target speed range.",
+    articles: [
+      { label: "Wikipedia: Gear Ratio", url: "https://en.wikipedia.org/wiki/Gear_ratio" },
+    ],
+  },
+  wheelTorqueChart: {
+    description:
+      "Wheel torque output visualization showing torque delivered to wheels across the RPM range. The red dashed line indicates traction limit - any torque above this line will cause wheelspin. Lower gears produce higher torque but are more likely to exceed traction limits.",
+    articles: [
+      { label: "Wikipedia: Torque", url: "https://en.wikipedia.org/wiki/Torque" },
+    ],
+  },
 };
 
 const TIRE_OPTIONS: { value: TireCompound; label: string; friction: number }[] = [
@@ -117,6 +136,7 @@ export const GearboxTab: Component = () => {
       profile: vehicleInputs.profile,
       wheelDiameter: vehicleInputs.wheelDiameter,
       gearRatios: [...gearRatios],
+      finalDrive: finalDrive.ratio,
       torqueRpmData: [...torqueRpmData],
       weight: vehicleInputs.weight,
       frontWeightDistribution: vehicleInputs.frontWeightDistribution,
@@ -129,14 +149,29 @@ export const GearboxTab: Component = () => {
   );
 
   // Get active gears (ratio > 0)
+  // index corresponds directly to position in gearRatios array and outputs arrays
   const activeGears = createMemo(() => {
     const gears: { index: number; name: string; ratio: number }[] = [];
-    for (let i = 0; i < gearRatios.length - 1; i++) {
-      if (gearRatios[i].ratio > 0) {
-        gears.push({ index: i, name: gearRatios[i].gear, ratio: gearRatios[i].ratio });
+    for (let i = 0; i < gearRatios.length; i++) {
+      const gear = gearRatios[i];
+      if (gear.ratio > 0) {
+        gears.push({ index: i, name: GEAR_LABELS[i], ratio: gear.ratio });
       }
     }
     return gears;
+  });
+
+  // Chart data - only include active gears with data
+  const chartSpeedRpmData = createMemo(() => {
+    return activeGears()
+      .map((gear) => outputs().speedRpmData[gear.index])
+      .filter((data) => data && data.length > 0);
+  });
+
+  const chartGearNames = createMemo(() => {
+    return activeGears()
+      .filter((gear) => outputs().speedRpmData[gear.index]?.length > 0)
+      .map((gear) => gear.name);
   });
 
   // Speed vs RPM table data
@@ -338,7 +373,7 @@ export const GearboxTab: Component = () => {
             />
             <MetricCard
               label="Final Drive"
-              value={gearRatios[gearRatios.length - 1].ratio.toFixed(2)}
+              value={finalDrive.ratio.toFixed(2)}
               unit="x"
             />
             <MetricCard
@@ -402,12 +437,21 @@ export const GearboxTab: Component = () => {
         <div class="p-4">
           <div class="flex flex-wrap gap-3">
             <For each={activeGears()}>
-              {(gear) => (
-                <div class="flex flex-col items-center px-4 py-2 border border-slate-700/50 bg-slate-900/30">
-                  <span class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+              {(gear, idx) => (
+                <div
+                  class="flex flex-col items-center px-4 py-2 border bg-slate-900/30"
+                  style={{ "border-color": `${GEAR_COLORS[idx() % GEAR_COLORS.length]}50` }}
+                >
+                  <span
+                    class="text-[10px] uppercase tracking-wider mb-1"
+                    style={{ color: GEAR_COLORS[idx() % GEAR_COLORS.length] }}
+                  >
                     {gear.name}
                   </span>
-                  <span class="text-lg font-bold text-amber-400">
+                  <span
+                    class="text-lg font-bold"
+                    style={{ color: GEAR_COLORS[idx() % GEAR_COLORS.length] }}
+                  >
                     {outputs().effectiveRatios[gear.index].toFixed(2)}
                   </span>
                   <span class="text-[10px] text-slate-600">
@@ -416,6 +460,48 @@ export const GearboxTab: Component = () => {
                 </div>
               )}
             </For>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Row */}
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* Speed vs RPM Chart */}
+        <div class="border border-slate-800/50 bg-slate-950/50">
+          <SectionHeader
+            title="Speed vs RPM Chart"
+            variant="output"
+            help={{
+              ...HELP_CONTENT.speedRpmChart,
+              position: "bottom",
+            }}
+          />
+          <div class="p-4">
+            <GearSpeedChart
+              speedRpmData={chartSpeedRpmData()}
+              gearNames={chartGearNames()}
+              height={280}
+            />
+          </div>
+        </div>
+
+        {/* Wheel Torque Chart */}
+        <div class="border border-slate-800/50 bg-slate-950/50">
+          <SectionHeader
+            title="Wheel Torque vs RPM Chart"
+            variant="output"
+            help={{
+              ...HELP_CONTENT.wheelTorqueChart,
+              position: "bottom",
+            }}
+          />
+          <div class="p-4">
+            <GearTorqueChart
+              speedRpmData={chartSpeedRpmData()}
+              gearNames={chartGearNames()}
+              tractionLimit={outputs().tractionLimitTorque}
+              height={280}
+            />
           </div>
         </div>
       </div>

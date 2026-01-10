@@ -10,11 +10,19 @@ export interface TorqueRpmRow {
 }
 
 export interface GearRatio {
-  gear: string;
   ratio: number;
   min: number;
   max: number;
 }
+
+export interface FinalDrive {
+  ratio: number;
+  min: number;
+  max: number;
+}
+
+// Gear labels for display (1st, 2nd, etc.)
+export const GEAR_LABELS = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'] as const;
 
 export interface VehicleInputs {
   carSelection: string;
