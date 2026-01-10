@@ -1,10 +1,56 @@
-import { Component, For } from 'solid-js';
+import { Component, For, createMemo } from 'solid-js';
+import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from './ui/section-header';
 import { EditableCell } from './ui/editable-cell';
 import { GearSlider } from './ui/gear-slider';
+import { DataTable } from './ui/data-table';
 import { torqueRpmData, setTorqueRpmData, gearRatios, setGearRatios } from '../stores/vehicle';
+import type { TorqueRpmRow, GearRatio } from '../types';
+
+// Column definitions for Torque/RPM table
+const torqueColumns: ColumnDef<TorqueRpmRow & { index: number }>[] = [
+  {
+    accessorKey: 'torque',
+    header: 'Torque, Nm',
+    cell: (info) => {
+      const rowData = info.row.original;
+      return (
+        <EditableCell
+          value={rowData.torque}
+          onChange={(v) => setTorqueRpmData(rowData.index, 'torque', parseFloat(v) || 0)}
+          tableId="torque"
+          row={rowData.index}
+          col={0}
+          asContent
+        />
+      );
+    },
+  },
+  {
+    accessorKey: 'rpm',
+    header: 'RPM',
+    cell: (info) => {
+      const rowData = info.row.original;
+      return (
+        <EditableCell
+          value={rowData.rpm}
+          onChange={(v) => setTorqueRpmData(rowData.index, 'rpm', parseFloat(v) || 0)}
+          tableId="torque"
+          row={rowData.index}
+          col={1}
+          asContent
+        />
+      );
+    },
+  },
+];
 
 export const TransmissionSection: Component = () => {
+  // Add index to torque data for cell tracking
+  const torqueDataWithIndex = createMemo(() =>
+    torqueRpmData.map((row, index) => ({ ...row, index }))
+  );
+
   return (
     <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
       <SectionHeader title="Transmission" variant="input" />
@@ -17,42 +63,12 @@ export const TransmissionSection: Component = () => {
               Torque Curve Data
             </span>
           </div>
-          <div class="max-h-[350px] overflow-y-auto">
-            <table class="w-full border-collapse text-sm">
-              <thead class="sticky top-0 z-10">
-                <tr>
-                  <th class="border-r border-b border-slate-800/50 bg-slate-900 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
-                    Torque, Nm
-                  </th>
-                  <th class="border-b border-slate-800/50 bg-slate-900 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
-                    RPM
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <For each={torqueRpmData}>
-                  {(row, index) => (
-                    <tr>
-                      <EditableCell
-                        value={row.torque}
-                        onChange={(v) => setTorqueRpmData(index(), 'torque', parseFloat(v) || 0)}
-                        tableId="torque"
-                        row={index()}
-                        col={0}
-                      />
-                      <EditableCell
-                        value={row.rpm}
-                        onChange={(v) => setTorqueRpmData(index(), 'rpm', parseFloat(v) || 0)}
-                        tableId="torque"
-                        row={index()}
-                        col={1}
-                      />
-                    </tr>
-                  )}
-                </For>
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            data={torqueDataWithIndex()}
+            columns={torqueColumns}
+            stickyHeader
+            maxHeight="350px"
+          />
         </div>
 
         {/* Gear Ratios with Sliders */}

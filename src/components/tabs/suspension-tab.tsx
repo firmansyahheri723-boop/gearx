@@ -1,5 +1,7 @@
 import { Component, For, createMemo, Show } from 'solid-js';
+import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
+import { DataTable } from '../ui/data-table';
 import { vehicleInputs, setVehicleInputs } from '../../stores/vehicle';
 import { calculateSuspensionOutputs } from '../../utils/suspension';
 import { SuspensionOutput } from '../suspension-output';
@@ -63,6 +65,15 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
   },
 ];
 
+// Type for damper table row
+interface DamperTableRow {
+  label: string;
+  description: string;
+  front: number;
+  rear: number;
+  highlight?: boolean;
+}
+
 export const SuspensionTab: Component = () => {
   // Convert cogHeight from inches to meters for calculation
   const cogHeightM = () => vehicleInputs.cogHeight * 0.0254;
@@ -85,6 +96,74 @@ export const SuspensionTab: Component = () => {
       tireRate: vehicleInputs.tireRate,
     })
   );
+
+  // Damper table data
+  const damperData = createMemo((): DamperTableRow[] => [
+    { label: 'Bump', description: 'C × 2/3', front: outputs().dampers.bumpFront, rear: outputs().dampers.bumpRear },
+    { label: 'Fast Bump', description: 'C × 1/3', front: outputs().dampers.fastBumpFront, rear: outputs().dampers.fastBumpRear },
+    { label: 'Rebound', description: 'C × 3/2', front: outputs().dampers.reboundFront, rear: outputs().dampers.reboundRear, highlight: true },
+    { label: 'Fast Rebound', description: 'C × 3/4', front: outputs().dampers.fastReboundFront, rear: outputs().dampers.fastReboundRear },
+  ]);
+
+  // Damper table columns
+  const damperColumns: ColumnDef<DamperTableRow>[] = [
+    {
+      accessorKey: 'label',
+      header: 'Damper Type',
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <div
+            class="px-4 py-2"
+            classList={{
+              'bg-amber-500/5': row.highlight,
+              'bg-slate-900/30': !row.highlight,
+            }}
+          >
+            <div class="text-slate-300">{row.label}</div>
+            <div class="text-[10px] text-slate-600">{row.description}</div>
+          </div>
+        );
+      },
+      meta: { align: 'left' as const },
+    },
+    {
+      accessorKey: 'front',
+      header: 'Front',
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <span
+            class="block px-4 py-2 text-center"
+            classList={{
+              'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
+              'bg-slate-900/30 text-slate-300': !row.highlight,
+            }}
+          >
+            {info.getValue<number>().toFixed(0)}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: 'rear',
+      header: 'Rear',
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <span
+            class="block px-4 py-2 text-center"
+            classList={{
+              'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
+              'bg-slate-900/30 text-slate-300': !row.highlight,
+            }}
+          >
+            {info.getValue<number>().toFixed(0)}
+          </span>
+        );
+      },
+    },
+  ];
 
   return (
     <div class="space-y-4">
@@ -209,50 +288,10 @@ export const SuspensionTab: Component = () => {
       {/* Dampers Section */}
       <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
         <SectionHeader title="Damper Settings" variant="output" />
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-sm">
-            <thead>
-              <tr>
-                <th class="border-r border-b border-slate-800/50 bg-slate-900 px-4 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-left min-w-[140px]">
-                  Damper Type
-                </th>
-                <th class="border-r border-b border-slate-800/50 bg-slate-900 px-4 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center min-w-[120px]">
-                  Front
-                </th>
-                <th class="border-b border-slate-800/50 bg-slate-900 px-4 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center min-w-[120px]">
-                  Rear
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <DamperRow
-                label="Bump"
-                description="C × 2/3"
-                front={outputs().dampers.bumpFront}
-                rear={outputs().dampers.bumpRear}
-              />
-              <DamperRow
-                label="Fast Bump"
-                description="C × 1/3"
-                front={outputs().dampers.fastBumpFront}
-                rear={outputs().dampers.fastBumpRear}
-              />
-              <DamperRow
-                label="Rebound"
-                description="C × 3/2"
-                front={outputs().dampers.reboundFront}
-                rear={outputs().dampers.reboundRear}
-                highlight
-              />
-              <DamperRow
-                label="Fast Rebound"
-                description="C × 3/4"
-                front={outputs().dampers.fastReboundFront}
-                rear={outputs().dampers.fastReboundRear}
-              />
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          data={damperData()}
+          columns={damperColumns}
+        />
         <div class="px-4 py-2 border-t border-slate-800/30 bg-slate-900/30 flex items-center gap-6">
           <span class="text-[10px] text-slate-500">
             Critical Damping Front:{' '}
@@ -402,48 +441,6 @@ const MetricCard: Component<{
         </Show>
       </div>
     </div>
-  );
-};
-
-// Helper component for damper table rows
-const DamperRow: Component<{
-  label: string;
-  description: string;
-  front: number;
-  rear: number;
-  highlight?: boolean;
-}> = (props) => {
-  return (
-    <tr>
-      <td
-        class="border-r border-b border-slate-800/50 px-4 py-2"
-        classList={{
-          'bg-amber-500/5': props.highlight,
-          'bg-slate-900/30': !props.highlight,
-        }}
-      >
-        <div class="text-slate-300">{props.label}</div>
-        <div class="text-[10px] text-slate-600">{props.description}</div>
-      </td>
-      <td
-        class="border-r border-b border-slate-800/50 px-4 py-2 text-center"
-        classList={{
-          'bg-amber-500/5 text-amber-400 font-medium': props.highlight,
-          'bg-slate-900/30 text-slate-300': !props.highlight,
-        }}
-      >
-        {props.front.toFixed(0)}
-      </td>
-      <td
-        class="border-b border-slate-800/50 px-4 py-2 text-center"
-        classList={{
-          'bg-amber-500/5 text-amber-400 font-medium': props.highlight,
-          'bg-slate-900/30 text-slate-300': !props.highlight,
-        }}
-      >
-        {props.rear.toFixed(0)}
-      </td>
-    </tr>
   );
 };
 

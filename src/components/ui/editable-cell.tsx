@@ -17,6 +17,8 @@ interface EditableCellProps {
   type?: 'text' | 'number';
   align?: 'left' | 'center' | 'right';
   highlight?: boolean;
+  /** If true, renders without <td> wrapper (for use with TanStack Table) */
+  asContent?: boolean;
 }
 
 export const EditableCell: Component<EditableCellProps> = (props) => {
@@ -38,14 +40,38 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
     }
   };
 
+  const inputClasses = () => ({
+    'text-cyan-400': !props.highlight,
+    'text-green-400': props.highlight,
+    'text-left': props.align === 'left',
+    'text-center': props.align === 'center' || !props.align,
+    'text-right': props.align === 'right',
+  });
+
+  const containerClasses = () => ({
+    'bg-slate-900/30 hover:bg-slate-800/50': !isSelected() && !props.highlight,
+    'bg-green-900/20 hover:bg-green-900/30': !isSelected() && props.highlight,
+    'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isSelected(),
+  });
+
+  if (props.asContent) {
+    return (
+      <input
+        type={props.type || 'text'}
+        value={props.value}
+        onInput={(e) => props.onChange(e.currentTarget.value)}
+        onMouseDown={handleMouseDown}
+        onMouseEnter={handleMouseEnter}
+        class="w-full h-full px-3 py-2 bg-transparent focus:bg-slate-800/50 focus:text-emerald-400 focus:outline-none transition-colors duration-75"
+        classList={{ ...inputClasses(), ...containerClasses() }}
+      />
+    );
+  }
+
   return (
     <td
       class="border-r border-b border-slate-800/50 p-0 transition-colors duration-75"
-      classList={{
-        'bg-slate-900/30 hover:bg-slate-800/50': !isSelected() && !props.highlight,
-        'bg-green-900/20 hover:bg-green-900/30': !isSelected() && props.highlight,
-        'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isSelected(),
-      }}
+      classList={containerClasses()}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
     >
@@ -54,13 +80,7 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
         value={props.value}
         onInput={(e) => props.onChange(e.currentTarget.value)}
         class="w-full h-full px-3 py-2 bg-transparent focus:bg-slate-800/50 focus:text-emerald-400 focus:outline-none"
-        classList={{
-          'text-cyan-400': !props.highlight,
-          'text-green-400': props.highlight,
-          'text-left': props.align === 'left',
-          'text-center': props.align === 'center' || !props.align,
-          'text-right': props.align === 'right',
-        }}
+        classList={inputClasses()}
       />
     </td>
   );

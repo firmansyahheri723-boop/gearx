@@ -1,14 +1,9 @@
 import { Component, For, createMemo, createSignal } from 'solid-js';
+import type { ColumnDef, SortingState } from '@tanstack/solid-table';
+import { DataTable } from '../ui/data-table';
 import { carData, selectedCarIndex, selectedEngineIndex } from '../../stores/car-data';
 import { CSV_COLUMNS } from '../../utils/csv';
 import type { CarData } from '../../types';
-
-// Sort direction type
-type SortDirection = 'default' | 'asc' | 'desc';
-
-// Sort state signal
-const [sortColumn, setSortColumn] = createSignal<keyof CarData | null>(null);
-const [sortDirection, setSortDirection] = createSignal<SortDirection>('default');
 
 // Sort car data: regular cars first, then engines, then transmissions
 // Within each group, items are sorted alphabetically
@@ -32,64 +27,6 @@ function defaultSortCarData(data: CarData[]): CarData[] {
     // Within same category, sort alphabetically
     return a.car.localeCompare(b.car);
   });
-}
-
-// Sort data by a specific column
-function sortByColumn(data: CarData[], column: keyof CarData, direction: SortDirection): CarData[] {
-  if (direction === 'default') {
-    return defaultSortCarData(data);
-  }
-
-  return [...data].sort((a, b) => {
-    const valA = a[column];
-    const valB = b[column];
-
-    // Handle null values - push them to the end
-    if (valA === null && valB === null) return 0;
-    if (valA === null) return 1;
-    if (valB === null) return -1;
-
-    // Compare values
-    let comparison: number;
-    if (typeof valA === 'string' && typeof valB === 'string') {
-      comparison = valA.localeCompare(valB);
-    } else {
-      comparison = (valA as number) - (valB as number);
-    }
-
-    return direction === 'asc' ? comparison : -comparison;
-  });
-}
-
-// Cycle through sort directions
-function cycleSortDirection(column: keyof CarData) {
-  const currentColumn = sortColumn();
-  const currentDirection = sortDirection();
-
-  if (currentColumn !== column) {
-    // New column, start with ascending
-    setSortColumn(column);
-    setSortDirection('asc');
-  } else {
-    // Same column, cycle: asc -> desc -> default
-    if (currentDirection === 'asc') {
-      setSortDirection('desc');
-    } else if (currentDirection === 'desc') {
-      setSortDirection('default');
-      setSortColumn(null);
-    } else {
-      setSortDirection('asc');
-    }
-  }
-}
-
-// Get sort indicator for a column
-function getSortIndicator(column: keyof CarData): string {
-  if (sortColumn() !== column) return '';
-  const dir = sortDirection();
-  if (dir === 'asc') return ' ▲';
-  if (dir === 'desc') return ' ▼';
-  return '';
 }
 
 // Column group definitions for visual organization
@@ -157,19 +94,76 @@ function formatCellValue(value: string | number | null): string {
   return value;
 }
 
-export const DatabaseTab: Component = () => {
-  // Get all column keys in order (excluding 'car' which is sticky)
-  const scrollableColumns = CSV_COLUMNS.filter((c) => c.key !== 'car');
+// Extended row type with index for selection tracking
+interface CarDataRow extends CarData {
+  _rowIndex: number;
+}
 
-  // Sort data based on current sort state
-  const sortedData = createMemo(() => {
-    const column = sortColumn();
-    const direction = sortDirection();
+export const DatabaseTab: Component = () => {
+  // Sorting state
+  const [sorting, setSorting] = createSignal<SortingState>([]);
+
+  // Sort data based on current sort state, or use default sorting
+  const sortedData = createMemo((): CarDataRow[] => {
+    const sorted = sorting().length === 0 
+      ? defaultSortCarData(carData)
+      : carData; // Let TanStack Table handle sorting when active
     
-    if (column && direction !== 'default') {
-      return sortByColumn(carData, column, direction);
-    }
-    return defaultSortCarData(carData);
+    return sorted.map((car, index) => ({ ...car, _rowIndex: index }));
+  });
+
+  // Build column definitions dynamically
+  const columns = createMemo((): ColumnDef<CarDataRow>[] => {
+    return CSV_COLUMNS.map((col) => {
+      const group = getColumnGroup(col.key);
+      
+      return {
+        accessorKey: col.key,
+        header: col.header,
+        cell: (info) => {
+          const row = info.row.original;
+          const value = row[col.key as keyof CarData];
+          const isCarColumn = col.key === 'car';
+          const isSelectedCar = selectedCarIndex() === row._rowIndex;
+          const isSelectedEngine = selectedEngineIndex() === row._rowIndex;
+
+          if (isCarColumn) {
+            return (
+              <div
+                class="px-3 py-1.5 font-medium whitespace-nowrap flex items-center gap-2"
+                classList={{
+                  'text-cyan-400 bg-yellow-500/5': !isSelectedCar && !isSelectedEngine,
+                  'text-cyan-300 bg-cyan-500/10': isSelectedCar || isSelectedEngine,
+                }}
+              >
+                <span>{value || '-'}</span>
+                {isSelectedCar && (
+                  <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-green-500/20 text-green-400 border border-green-500/30">
+                    CAR
+                  </span>
+                )}
+                {isSelectedEngine && (
+                  <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    ENG
+                  </span>
+                )}
+              </div>
+            );
+          }
+
+          const bgClass = group ? group.color.split(' ')[0].replace('/20', '/5').replace('/10', '/5') : '';
+          return (
+            <span class={`block px-3 py-1.5 text-center text-slate-300 tabular-nums ${bgClass}`}>
+              {formatCellValue(value)}
+            </span>
+          );
+        },
+        meta: {
+          align: col.key === 'car' ? 'left' as const : 'center' as const,
+          headerClass: group ? `${group.color} ${group.headerColor}` : '',
+        },
+      };
+    });
   });
 
   return (
@@ -187,148 +181,20 @@ export const DatabaseTab: Component = () => {
         </div>
       </div>
 
-      {/* Data Table */}
-      <DataTable data={sortedData()} scrollableColumns={scrollableColumns} />
-    </div>
-  );
-};
-
-// Data table component
-interface DataTableProps {
-  data: CarData[];
-  scrollableColumns: { key: keyof CarData; header: string }[];
-}
-
-const DataTable: Component<DataTableProps> = (props) => {
-  return (
-    <div class="relative overflow-hidden">
-      <div class="flex">
-        {/* Sticky car name column */}
-        <div class="flex-shrink-0 border-r-2 border-slate-700 bg-slate-950 z-10">
-          <table class="text-xs">
-            <thead>
-              {/* Group header row */}
-              <tr>
-                <th 
-                  class="px-3 py-2 text-xs font-bold tracking-wider uppercase bg-yellow-500/20 text-yellow-400 border-b border-yellow-500/30 text-left whitespace-nowrap"
-                >
-                  Car
-                </th>
-              </tr>
-              {/* Column header row */}
-              <tr>
-                <th 
-                  class="px-3 py-2.5 text-xs font-semibold tracking-wider uppercase bg-yellow-500/10 text-yellow-400 border-b border-yellow-500/30 text-left whitespace-nowrap min-w-[180px] cursor-pointer hover:bg-yellow-500/20 select-none"
-                  onClick={() => cycleSortDirection('car')}
-                  title="Click to sort"
-                >
-                  Name{getSortIndicator('car')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <For each={props.data}>
-                {(row, index) => {
-                  const isSelectedCar = () => selectedCarIndex() === index();
-                  const isSelectedEngine = () => selectedEngineIndex() === index();
-                  
-                  return (
-                    <tr 
-                      class="hover:bg-slate-800/30"
-                      classList={{
-                        'bg-cyan-500/10': isSelectedCar() || isSelectedEngine(),
-                      }}
-                    >
-                      <td 
-                        class="px-3 py-1.5 border-b border-slate-800/50 font-medium whitespace-nowrap"
-                        classList={{
-                          'text-cyan-400 bg-yellow-500/5': !isSelectedCar() && !isSelectedEngine(),
-                          'text-cyan-300 bg-cyan-500/10': isSelectedCar() || isSelectedEngine(),
-                        }}
-                      >
-                        <div class="flex items-center gap-2">
-                          <span>{row.car || '-'}</span>
-                          {isSelectedCar() && (
-                            <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-green-500/20 text-green-400 border border-green-500/30">
-                              CAR
-                            </span>
-                          )}
-                          {isSelectedEngine() && (
-                            <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                              ENG
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                }}
-              </For>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Scrollable columns */}
-        <div class="overflow-x-auto flex-1">
-          <table class="text-xs w-max">
-            <thead>
-              {/* Group header row */}
-              <tr>
-                <For each={COLUMN_GROUPS.filter((g) => g.name !== 'Car')}>
-                  {(group) => (
-                    <th
-                      colSpan={group.columns.length}
-                      class={`px-3 py-2 text-xs font-bold tracking-wider uppercase border-b border-r text-center whitespace-nowrap ${group.color} ${group.headerColor}`}
-                    >
-                      {group.name}
-                    </th>
-                  )}
-                </For>
-              </tr>
-              {/* Column header row */}
-              <tr>
-                <For each={props.scrollableColumns}>
-                  {(col) => {
-                    const group = getColumnGroup(col.key);
-                    return (
-                      <th
-                        class={`px-3 py-2.5 text-xs font-semibold tracking-wider uppercase border-b border-r text-center whitespace-nowrap min-w-[80px] cursor-pointer select-none ${
-                          group ? `${group.color} ${group.headerColor} hover:brightness-125` : 'bg-slate-900 text-slate-400 border-slate-700/50 hover:bg-slate-800'
-                        }`}
-                        onClick={() => cycleSortDirection(col.key)}
-                        title="Click to sort"
-                      >
-                        {col.header}{getSortIndicator(col.key)}
-                      </th>
-                    );
-                  }}
-                </For>
-              </tr>
-            </thead>
-            <tbody>
-              <For each={props.data}>
-                {(row) => (
-                  <tr class="hover:bg-slate-800/30">
-                    <For each={props.scrollableColumns}>
-                      {(col) => {
-                        const group = getColumnGroup(col.key);
-                        const bgClass = group ? group.color.split(' ')[0].replace('/20', '/5').replace('/10', '/5') : '';
-                        return (
-                          <td
-                            class={`px-3 py-1.5 border-b border-r border-slate-800/50 text-center text-slate-300 tabular-nums ${bgClass}`}
-                          >
-                            {formatCellValue(row[col.key])}
-                          </td>
-                        );
-                      }}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Data Table with sorting */}
+      <DataTable
+        data={sortedData()}
+        columns={columns()}
+        enableSorting
+        initialSorting={sorting()}
+        onSortingChange={setSorting}
+        stickyHeader
+        getRowClass={(row, index) => {
+          const isSelectedCar = selectedCarIndex() === row._rowIndex;
+          const isSelectedEngine = selectedEngineIndex() === row._rowIndex;
+          return (isSelectedCar || isSelectedEngine) ? 'bg-cyan-500/10' : '';
+        }}
+      />
 
       {/* Scroll hint */}
       <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />

@@ -1,7 +1,7 @@
 import type { Component } from 'solid-js';
+import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from './ui/section-header';
-import { OutputCell } from './ui/output-cell';
-import { LabelCell } from './ui/label-cell';
+import { DataTable } from './ui/data-table';
 import {
   springsStiffness,
   dampers,
@@ -9,7 +9,90 @@ import {
   accelerationMetrics,
 } from '../stores/vehicle';
 
+// Types for table data
+interface DamperRow {
+  label: string;
+  front: number;
+  rear: number;
+}
+
+interface MetricRow {
+  label: string;
+  value: string;
+}
+
+// Column definitions for Dampers table
+const damperColumns: ColumnDef<DamperRow>[] = [
+  {
+    accessorKey: 'label',
+    header: 'Dampers',
+    cell: (info) => (
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+        {info.getValue() as string}
+      </span>
+    ),
+    meta: { align: 'left' as const },
+  },
+  {
+    accessorKey: 'front',
+    header: 'Front',
+    cell: (info) => (
+      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+        {info.getValue() as number}
+      </span>
+    ),
+  },
+  {
+    accessorKey: 'rear',
+    header: 'Rear',
+    cell: (info) => (
+      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+        {info.getValue() as number}
+      </span>
+    ),
+  },
+];
+
+// Column definitions for Acceleration Metrics table
+const metricColumns: ColumnDef<MetricRow>[] = [
+  {
+    accessorKey: 'label',
+    header: 'Metric',
+    cell: (info) => (
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+        {info.getValue() as string}
+      </span>
+    ),
+    meta: { align: 'left' as const },
+  },
+  {
+    accessorKey: 'value',
+    header: 'Value',
+    cell: (info) => (
+      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+        {info.getValue() as string}
+      </span>
+    ),
+  },
+];
+
 export const SuspensionOutput: Component = () => {
+  // Create reactive data for Dampers table
+  const damperData = (): DamperRow[] => [
+    { label: 'Bump', front: dampers.bump.front, rear: dampers.bump.rear },
+    { label: 'Fast bump', front: dampers.fastBump.front, rear: dampers.fastBump.rear },
+    { label: 'Rebound', front: dampers.rebound.front, rear: dampers.rebound.rear },
+    { label: 'Fast rebound', front: dampers.fastRebound.front, rear: dampers.fastRebound.rear },
+  ];
+
+  // Create reactive data for Acceleration Metrics table
+  const metricsData = (): MetricRow[] => [
+    { label: 'Weight transfer on accel', value: `${accelerationMetrics.weightTransfer} kg` },
+    { label: 'Front weight dist on accel', value: accelerationMetrics.frontWeightDistOnAccel },
+    { label: 'Max longitudinal accel', value: `${accelerationMetrics.maxLongitudinalAccel} g` },
+    { label: 'Max lateral accel', value: `${accelerationMetrics.maxLateralAccel} g` },
+  ];
+
   return (
     <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
       <SectionHeader title="Suspension Output" variant="output" />
@@ -41,46 +124,11 @@ export const SuspensionOutput: Component = () => {
         </div>
       </div>
 
-      {/* Dampers */}
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-sm">
-          <thead>
-            <tr>
-              <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-left">
-                Dampers
-              </th>
-              <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
-                Front
-              </th>
-              <th class="border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
-                Rear
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <LabelCell>Bump</LabelCell>
-              <OutputCell value={dampers.bump.front} />
-              <OutputCell value={dampers.bump.rear} />
-            </tr>
-            <tr>
-              <LabelCell>Fast bump</LabelCell>
-              <OutputCell value={dampers.fastBump.front} />
-              <OutputCell value={dampers.fastBump.rear} />
-            </tr>
-            <tr>
-              <LabelCell>Rebound</LabelCell>
-              <OutputCell value={dampers.rebound.front} />
-              <OutputCell value={dampers.rebound.rear} />
-            </tr>
-            <tr>
-              <LabelCell>Fast rebound</LabelCell>
-              <OutputCell value={dampers.fastRebound.front} />
-              <OutputCell value={dampers.fastRebound.rear} />
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {/* Dampers Table */}
+      <DataTable
+        data={damperData()}
+        columns={damperColumns}
+      />
 
       {/* Anti-roll bars */}
       <div class="p-3 border-t border-slate-800/30">
@@ -109,28 +157,12 @@ export const SuspensionOutput: Component = () => {
         </div>
       </div>
 
-      {/* Acceleration Metrics */}
-      <div class="overflow-x-auto border-t border-slate-800/30">
-        <table class="w-full border-collapse text-sm">
-          <tbody>
-            <tr>
-              <LabelCell>Weight transfer on accel</LabelCell>
-              <OutputCell value={`${accelerationMetrics.weightTransfer} kg`} />
-            </tr>
-            <tr>
-              <LabelCell>Front weight dist on accel</LabelCell>
-              <OutputCell value={accelerationMetrics.frontWeightDistOnAccel} />
-            </tr>
-            <tr>
-              <LabelCell>Max longitudinal accel</LabelCell>
-              <OutputCell value={`${accelerationMetrics.maxLongitudinalAccel} g`} />
-            </tr>
-            <tr>
-              <LabelCell>Max lateral accel</LabelCell>
-              <OutputCell value={`${accelerationMetrics.maxLateralAccel} g`} />
-            </tr>
-          </tbody>
-        </table>
+      {/* Acceleration Metrics Table */}
+      <div class="border-t border-slate-800/30">
+        <DataTable
+          data={metricsData()}
+          columns={metricColumns}
+        />
       </div>
     </div>
   );

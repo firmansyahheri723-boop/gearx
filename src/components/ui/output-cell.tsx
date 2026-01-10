@@ -4,23 +4,41 @@ interface OutputCellProps {
   value: string | number;
   align?: 'left' | 'center' | 'right';
   variant?: 'default' | 'highlight';
+  /** If true, renders without <td> wrapper (for use with TanStack Table) */
+  asContent?: boolean;
 }
 
 export const OutputCell: Component<OutputCellProps> = (props) => {
   const isHighlight = () => props.variant === 'highlight';
 
-  return (
-    <td
-      class="border-r border-b border-slate-800/50 px-3 py-2"
+  const content = (
+    <span
+      class="block px-3 py-2"
       classList={{
         'text-left': props.align === 'left',
         'text-center': props.align === 'center' || !props.align,
         'text-right': props.align === 'right',
-        'bg-slate-900/30 text-amber-400': !isHighlight(),
-        'bg-amber-500/10 text-amber-300 font-medium': isHighlight(),
+        'text-amber-400': !isHighlight(),
+        'text-amber-300 font-medium': isHighlight(),
       }}
     >
       {props.value}
+    </span>
+  );
+
+  if (props.asContent) {
+    return content;
+  }
+
+  return (
+    <td
+      class="border-r border-b border-slate-800/50"
+      classList={{
+        'bg-slate-900/30': !isHighlight(),
+        'bg-amber-500/10': isHighlight(),
+      }}
+    >
+      {content}
     </td>
   );
 };
