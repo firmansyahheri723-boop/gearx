@@ -124,8 +124,6 @@ export const TransmissionSection: Component = () => {
           <DataTable
             data={torqueDataWithIndex()}
             columns={torqueColumns}
-            stickyHeader
-            maxHeight="350px"
           />
         </div>
 

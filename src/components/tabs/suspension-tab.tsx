@@ -459,7 +459,7 @@ export const SuspensionTab: Component = () => {
             <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
               Weight Distribution Under Acceleration
             </div>
-            <div class="relative h-6 bg-slate-800 rounded overflow-hidden">
+            <div class="relative h-6 bg-slate-800 rounded">
               <div
                 class="absolute left-0 top-0 h-full bg-cyan-500/30 border-r border-cyan-400 transition-all"
                 style={{ width: `${outputs().acceleration.frontBiasOnAccel}%` }}
@@ -490,7 +490,7 @@ export const SuspensionTab: Component = () => {
           variant="input"
           help={{
             ...HELP_CONTENT.formulaReference,
-            position: "bottom",
+            position: "top",
           }}
         />
         <div class="p-4">

@@ -105,10 +105,10 @@ export const DatabaseTab: Component = () => {
 
   // Sort data based on current sort state, or use default sorting
   const sortedData = createMemo((): CarDataRow[] => {
-    const sorted = sorting().length === 0 
+    const sorted = sorting().length === 0
       ? defaultSortCarData(carData)
       : carData; // Let TanStack Table handle sorting when active
-    
+
     return sorted.map((car, index) => ({ ...car, _rowIndex: index }));
   });
 
@@ -116,7 +116,7 @@ export const DatabaseTab: Component = () => {
   const columns = createMemo((): ColumnDef<CarDataRow>[] => {
     return CSV_COLUMNS.map((col) => {
       const group = getColumnGroup(col.key);
-      
+
       return {
         accessorKey: col.key,
         header: col.header,
@@ -167,7 +167,7 @@ export const DatabaseTab: Component = () => {
   });
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
+    <div class="border border-slate-800/50 bg-slate-950/50">
       {/* Header */}
       <div class="flex items-center justify-between px-3 py-2 border-b bg-slate-900/80 border-slate-700/50">
         <div class="flex items-center gap-3">

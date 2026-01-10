@@ -396,7 +396,7 @@ export const GearboxTab: Component = () => {
           variant="output"
           help={{
             ...HELP_CONTENT.effectiveDriveRatios,
-            position: "bottom",
+            position: "right",
           }}
         />
         <div class="p-4">
@@ -427,7 +427,7 @@ export const GearboxTab: Component = () => {
           variant="output"
           help={{
             ...HELP_CONTENT.speedVsRpm,
-            position: "bottom",
+            position: "right",
           }}
         />
         <DataTable
@@ -444,7 +444,7 @@ export const GearboxTab: Component = () => {
           variant="output"
           help={{
             ...HELP_CONTENT.wheelTorqueOutput,
-            position: "bottom",
+            position: "right",
           }}
         />
         <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30 flex items-center gap-4">
@@ -471,7 +471,7 @@ export const GearboxTab: Component = () => {
           variant="output"
           help={{
             ...HELP_CONTENT.tractionAnalysis,
-            position: "bottom",
+            position: "top",
           }}
         />
         <div class="p-4">
@@ -510,7 +510,7 @@ export const GearboxTab: Component = () => {
                     </div>
 
                     {/* Visual bar */}
-                    <div class="h-2 bg-slate-800 rounded overflow-hidden mb-2">
+                    <div class="h-2 bg-slate-800 rounded">
                       <div
                         class="h-full bg-red-500/70 transition-all"
                         style={{ width: `${percentExceeded()}%` }}

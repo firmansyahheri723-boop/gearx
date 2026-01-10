@@ -155,7 +155,7 @@ export const SuspensionOutput: Component = () => {
             description={HELP_CONTENT.springsStiffness.description}
             articles={HELP_CONTENT.springsStiffness.articles}
             videos={HELP_CONTENT.springsStiffness.videos}
-            position="bottom"
+            position="left"
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -190,7 +190,7 @@ export const SuspensionOutput: Component = () => {
             description={HELP_CONTENT.dampers.description}
             articles={HELP_CONTENT.dampers.articles}
             videos={HELP_CONTENT.dampers.videos}
-            position="bottom"
+            position="left"
           />
         </div>
         <DataTable
@@ -209,7 +209,7 @@ export const SuspensionOutput: Component = () => {
             description={HELP_CONTENT.antiRollBars.description}
             articles={HELP_CONTENT.antiRollBars.articles}
             videos={HELP_CONTENT.antiRollBars.videos}
-            position="bottom"
+            position="left"
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -244,7 +244,7 @@ export const SuspensionOutput: Component = () => {
             description={HELP_CONTENT.accelerationMetrics.description}
             articles={HELP_CONTENT.accelerationMetrics.articles}
             videos={HELP_CONTENT.accelerationMetrics.videos}
-            position="bottom"
+            position="left"
           />
         </div>
         <DataTable
