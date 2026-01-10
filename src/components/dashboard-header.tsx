@@ -37,14 +37,6 @@ export const DashboardHeader: Component = () => {
           <div class="text-slate-500 text-xs font-mono">{timestamp}</div>
         </div>
       </div>
-
-      {/* Tip bar */}
-      <div class="px-4 py-2 border-t border-slate-800/30 bg-slate-950/50 text-xs">
-        <span class="text-cyan-500">[TIP]</span>
-        <span class="text-slate-500 ml-2">
-          Select cells and paste from spreadsheet (Ctrl+V) | Press ESC to clear selection
-        </span>
-      </div>
     </header>
   );
 };

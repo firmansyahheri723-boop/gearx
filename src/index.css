@@ -1,8 +1,9 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import '@fontsource-variable/jetbrains-mono';
 
 @theme {
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 }
 
 * {
@@ -13,7 +14,7 @@ html {
   font-family: var(--font-mono);
   background-color: #0c0c0c;
   color: #e2e8f0;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -60,7 +61,7 @@ body {
 input,
 select {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 16px;
   background: transparent;
   border: none;
   color: inherit;

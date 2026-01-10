@@ -1,56 +1,24 @@
-import { createStore } from 'solid-js/store';
 import { createSignal } from 'solid-js';
 import type { CarData } from '../types';
+import { parseCSV } from '../utils/csv';
 import { setVehicleInputs } from './vehicle';
 import { toast } from './notifications';
+import carDataCsv from '../assets/car-data.csv?raw';
 
-const STORAGE_KEY = 'gearx-car-data';
 const SELECTED_CAR_KEY = 'gearx-selected-car';
 const SELECTED_ENGINE_KEY = 'gearx-selected-engine';
 
-// Load data from localStorage
-const loadFromStorage = (): CarData[] => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored) as CarData[];
-    }
-  } catch {
-    // Silent fail - return empty array
-  }
-  return [];
-};
+// Parse CSV at module load - static embedded data
+export const carData: CarData[] = parseCSV(carDataCsv);
 
-// Save data to localStorage, returns error message if failed
-const saveToStorage = (data: CarData[]): string | undefined => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    return undefined;
-  } catch (e) {
-    if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-      return 'Storage quota exceeded. Data imported but will not persist after refresh.';
-    }
-    return 'Failed to save data to browser storage. Data imported but will not persist after refresh.';
-  }
-};
-
-// Remove data from localStorage
-const removeFromStorage = (): void => {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // Silent fail - not critical
-  }
-};
-
-// Car data store for imported CSV data - initialized from localStorage
-export const [carData, setCarData] = createStore<CarData[]>(loadFromStorage());
-
-// Selected car and engine indices (independent selection)
+// Selected car and engine indices (persisted in localStorage)
 const loadSelectedCar = (): number | null => {
   try {
     const stored = localStorage.getItem(SELECTED_CAR_KEY);
-    return stored ? parseInt(stored, 10) : null;
+    if (stored === null) return null;
+    const idx = parseInt(stored, 10);
+    // Validate index is within bounds
+    return idx >= 0 && idx < carData.length ? idx : null;
   } catch {
     return null;
   }
@@ -59,7 +27,10 @@ const loadSelectedCar = (): number | null => {
 const loadSelectedEngine = (): number | null => {
   try {
     const stored = localStorage.getItem(SELECTED_ENGINE_KEY);
-    return stored ? parseInt(stored, 10) : null;
+    if (stored === null) return null;
+    const idx = parseInt(stored, 10);
+    // Validate index is within bounds
+    return idx >= 0 && idx < carData.length ? idx : null;
   } catch {
     return null;
   }
@@ -79,42 +50,11 @@ export const getSelectedEngine = (): CarData | null => {
   return idx !== null && idx >= 0 && idx < carData.length ? carData[idx] : null;
 };
 
-// Clear all car data
-export const clearCarData = () => {
-  setCarData([]);
-  setSelectedCarIndex(null);
-  setSelectedEngineIndex(null);
-  removeFromStorage();
-  localStorage.removeItem(SELECTED_CAR_KEY);
-  localStorage.removeItem(SELECTED_ENGINE_KEY);
-};
-
-// Replace all car data (used when importing CSV)
-// Returns error message if localStorage save failed, undefined on success
-export const importCarData = (data: CarData[]): string | undefined => {
-  setCarData(data);
-  // Clear selections if they become invalid
-  const carIdx = selectedCarIndex();
-  const engineIdx = selectedEngineIndex();
-  if (carIdx !== null && carIdx >= data.length) {
-    setSelectedCarIndex(null);
-    localStorage.removeItem(SELECTED_CAR_KEY);
-  }
-  if (engineIdx !== null && engineIdx >= data.length) {
-    setSelectedEngineIndex(null);
-    localStorage.removeItem(SELECTED_ENGINE_KEY);
-  }
-  return saveToStorage(data);
-};
-
 /**
  * Apply car data to vehicle inputs (chassis/body related fields only)
  * Missing values (null) are reset to 0 to indicate missing data
  */
 export const applyCarData = (car: CarData): void => {
-  // Chassis/body properties from CarData -> VehicleInputs
-  // Using 0 as default for missing values to clearly indicate missing data
-  
   // Calculate wheelbase from axle offsets if available, otherwise use direct wheelbase
   let wheelbase = car.wheelbase ?? 0;
   if (wheelbase === 0 && car.fAxleOffset !== null && car.rAxleOffset !== null) {
@@ -142,10 +82,6 @@ export const applyCarData = (car: CarData): void => {
  * Missing values (null) are reset to 0 to indicate missing data
  */
 export const applyEngineData = (engine: CarData): void => {
-  // Engine-related properties
-  // Note: We store power/mass for reference, but these don't directly map to current vehicleInputs
-  // The main effect is updating the engine selection name
-  
   setVehicleInputs('engineSelection', engine.car || 'Unknown');
   
   // Engine position offsets (these override car body offsets for engine placement)
