@@ -1,4 +1,4 @@
-import { Component, For, createMemo } from "solid-js";
+import { Component, For, createMemo, createSignal, Show } from "solid-js";
 import type { ColumnDef } from "@tanstack/solid-table";
 import { SectionHeader } from "./ui/section-header";
 import { EditableCell } from "./ui/editable-cell";
@@ -7,6 +7,7 @@ import { DataTable } from "./ui/data-table";
 import { GearSpeedChart } from "./ui/gear-speed-chart";
 import { GearTorqueChart } from "./ui/gear-torque-chart";
 import { HelpTooltip, HelpLink } from "./ui/help-tooltip";
+import { TorqueExtractor } from "./ui/torque-extractor";
 import {
   torqueRpmData,
   setTorqueRpmData,
@@ -143,7 +144,24 @@ const torqueColumns: ColumnDef<TorqueRpmRow & { index: number }>[] = [
 ];
 
 export const TransmissionSection: Component = () => {
-  
+  const [showExtractor, setShowExtractor] = createSignal(false);
+  const [importedImageUrl, setImportedImageUrl] = createSignal<string | null>(null);
+
+  const handleApplyExtractedData = (data: { torque: number; rpm: number }[], imageUrl?: string) => {
+    // Store the image URL for display
+    if (imageUrl) {
+      setImportedImageUrl(imageUrl);
+    }
+    // Clear existing data and replace with extracted data
+    // First, we need to resize the store to match the new data length
+    for (let i = 0; i < data.length; i++) {
+      if (i < torqueRpmData.length) {
+        setTorqueRpmData(i, "torque", data[i].torque);
+        setTorqueRpmData(i, "rpm", data[i].rpm);
+      }
+    }
+  };
+
   const torqueDataWithIndex = createMemo(() =>
     torqueRpmData.map((row, index) => ({ ...row, index })),
   );
@@ -250,16 +268,59 @@ export const TransmissionSection: Component = () => {
         {/* Torque/RPM Table */}
         <div class="flex-1 border-r border-neutral-800/30">
           <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center justify-between">
-            <span class="text-[10px] uppercase tracking-wider text-neutral-500">
-              Torque Curve Data
-            </span>
-            <HelpTooltip
-              description={HELP_CONTENT.torqueCurve.description}
-              articles={HELP_CONTENT.torqueCurve.articles}
-              videos={HELP_CONTENT.torqueCurve.videos}
-              position="bottom"
-            />
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+                Torque Curve Data
+              </span>
+              <HelpTooltip
+                description={HELP_CONTENT.torqueCurve.description}
+                articles={HELP_CONTENT.torqueCurve.articles}
+                videos={HELP_CONTENT.torqueCurve.videos}
+                position="bottom"
+              />
+            </div>
           </div>
+          
+          {/* Image Import Placeholder */}
+          <div class="p-3 border-b border-neutral-800/30">
+            <Show
+              when={importedImageUrl()}
+              fallback={
+                <button
+                  type="button"
+                  onClick={() => setShowExtractor(true)}
+                  class="w-full aspect-[4/3] max-h-48 border border-neutral-800 hover:border-neutral-600 bg-neutral-900/50 hover:bg-neutral-900 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
+                >
+                  <div class="w-10 h-10 border border-neutral-700 group-hover:border-neutral-500 bg-neutral-800/50 flex items-center justify-center transition-colors">
+                    <svg class="w-5 h-5 text-neutral-600 group-hover:text-neutral-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] uppercase tracking-wider text-neutral-600 group-hover:text-neutral-400 transition-colors">
+                    Import from Image
+                  </span>
+                </button>
+              }
+            >
+              <div class="flex flex-col gap-2">
+                <div class="w-full aspect-[4/3] max-h-48 border border-neutral-800 bg-neutral-900/50 overflow-hidden">
+                  <img
+                    src={importedImageUrl()!}
+                    alt="Imported torque curve"
+                    class="w-full h-full object-contain"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowExtractor(true)}
+                  class="w-full border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+                >
+                  Replace Torque Curve Image
+                </button>
+              </div>
+            </Show>
+          </div>
+
           <DataTable data={torqueDataWithIndex()} columns={torqueColumns} />
         </div>
 
@@ -332,6 +393,14 @@ export const TransmissionSection: Component = () => {
           </table>
         </div>
       </div>
+
+      {/* Torque Curve Extractor Modal */}
+      <Show when={showExtractor()}>
+        <TorqueExtractor
+          onClose={() => setShowExtractor(false)}
+          onApply={handleApplyExtractedData}
+        />
+      </Show>
     </div>
   );
 };
