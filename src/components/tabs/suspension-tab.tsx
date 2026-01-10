@@ -2,9 +2,81 @@ import { Component, For, createMemo, Show } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
 import { DataTable } from '../ui/data-table';
+import { HelpLink } from '../ui/help-tooltip';
 import { vehicleInputs, setVehicleInputs } from '../../stores/vehicle';
 import { calculateSuspensionOutputs } from '../../utils/suspension';
 import { SuspensionOutput } from '../suspension-output';
+
+// Help tooltip content for suspension sections
+const HELP_CONTENT: Record<
+  string,
+  { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
+> = {
+  suspensionParameters: {
+    description:
+      "Core suspension settings that define how your car handles bumps and cornering. Ride frequency controls how quickly the suspension oscillates, damping ratio affects how oscillations decay, and roll gradient determines body roll during turns. Higher values generally mean stiffer, more responsive handling.",
+    articles: [
+      { label: "Wikipedia: Suspension", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  springsStiffness: {
+    description:
+      "Calculated spring rates based on ride frequency and sprung mass. Stiffer springs reduce body roll and improve responsiveness but compromise ride comfort. Front/rear balance affects handling characteristics - stiffer front promotes understeer, stiffer rear promotes oversteer.",
+    articles: [
+      { label: "Wikipedia: Spring Rate", url: "https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  antiRollBars: {
+    description:
+      "Anti-roll bars (sway bars) connect left and right wheels to resist body roll during cornering. FARB is Front Anti-Roll Bar, RARB is Rear Anti-Roll Bar. The front/rear balance determines handling balance - more front ARB causes understeer, more rear ARB causes oversteer.",
+    articles: [
+      { label: "Wikipedia: Anti-roll Bar", url: "https://en.wikipedia.org/wiki/Anti-roll_bar" },
+    ],
+    videos: [
+      { label: "Anti-Roll Bars Guide", url: "https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  damperSettings: {
+    description:
+      "Dampers (shock absorbers) control the rate of spring compression and extension. Bump controls compression, rebound controls extension. Fast settings handle quick impacts, slow settings handle body movements. Proper damping prevents oscillation and maintains tire contact.",
+    articles: [
+      { label: "Wikipedia: Shock Absorber", url: "https://en.wikipedia.org/wiki/Shock_absorber" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  accelerationWeightTransfer: {
+    description:
+      "Under acceleration, weight transfers from front to rear, affecting traction. Longitudinal G is forward/braking acceleration, lateral G is cornering acceleration. Understanding weight transfer helps optimize suspension settings for your driving style and track characteristics.",
+    articles: [
+      { label: "Wikipedia: Weight Transfer", url: "https://en.wikipedia.org/wiki/Weight_transfer" },
+    ],
+    videos: [
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  formulaReference: {
+    description:
+      "Reference formulas used to calculate suspension parameters. These physics-based equations ensure your suspension is properly matched to your vehicle's weight and desired handling characteristics. Spring stiffness, critical damping, and damping ratios all follow established engineering principles.",
+    articles: [
+      { label: "Wikipedia: Suspension Geometry", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)#Geometry" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+    ],
+  },
+};
 
 // Input slider configuration
 interface SliderConfig {
@@ -173,8 +245,15 @@ export const SuspensionTab: Component = () => {
       {/* Top Row: Key Metrics + Input Sliders */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Suspension Parameters Input */}
-        <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-          <SectionHeader title="Suspension Parameters" variant="input" />
+        <div class="border border-slate-800/50 bg-slate-950/50">
+          <SectionHeader
+            title="Suspension Parameters"
+            variant="input"
+            help={{
+              ...HELP_CONTENT.suspensionParameters,
+              position: "bottom",
+            }}
+          />
           <div class="p-4 space-y-4">
             <For each={SUSPENSION_SLIDERS}>
               {(slider) => (
@@ -210,8 +289,15 @@ export const SuspensionTab: Component = () => {
         </div>
 
         {/* Springs Stiffness */}
-        <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-          <SectionHeader title="Springs Stiffness" variant="output" />
+        <div class="border border-slate-800/50 bg-slate-950/50">
+          <SectionHeader
+            title="Springs Stiffness"
+            variant="output"
+            help={{
+              ...HELP_CONTENT.springsStiffness,
+              position: "bottom",
+            }}
+          />
           <div class="p-4 space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <MetricCard
@@ -250,8 +336,15 @@ export const SuspensionTab: Component = () => {
         </div>
 
         {/* Anti-Roll Bars */}
-        <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-          <SectionHeader title="Anti-Roll Bars" variant="output" />
+        <div class="border border-slate-800/50 bg-slate-950/50">
+          <SectionHeader
+            title="Anti-Roll Bars"
+            variant="output"
+            help={{
+              ...HELP_CONTENT.antiRollBars,
+              position: "bottom",
+            }}
+          />
           <div class="p-4 space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <MetricCard
@@ -286,8 +379,15 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Dampers Section */}
-      <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-        <SectionHeader title="Damper Settings" variant="output" />
+      <div class="border border-slate-800/50 bg-slate-950/50">
+        <SectionHeader
+          title="Damper Settings"
+          variant="output"
+          help={{
+            ...HELP_CONTENT.damperSettings,
+            position: "bottom",
+          }}
+        />
         <DataTable
           data={damperData()}
           columns={damperColumns}
@@ -309,8 +409,15 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Acceleration Metrics */}
-      <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-        <SectionHeader title="Acceleration & Weight Transfer" variant="output" />
+      <div class="border border-slate-800/50 bg-slate-950/50">
+        <SectionHeader
+          title="Acceleration & Weight Transfer"
+          variant="output"
+          help={{
+            ...HELP_CONTENT.accelerationWeightTransfer,
+            position: "bottom",
+          }}
+        />
         <div class="p-4">
           <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <MetricCard
@@ -377,8 +484,15 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Formula Reference */}
-      <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
-        <SectionHeader title="Formula Reference" variant="input" />
+      <div class="border border-slate-800/50 bg-slate-950/50">
+        <SectionHeader
+          title="Formula Reference"
+          variant="input"
+          help={{
+            ...HELP_CONTENT.formulaReference,
+            position: "bottom",
+          }}
+        />
         <div class="p-4">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
             <FormulaCard

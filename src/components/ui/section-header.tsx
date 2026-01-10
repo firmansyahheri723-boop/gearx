@@ -1,8 +1,15 @@
-import type { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
+import { HelpTooltip, HelpLink, TooltipPosition } from './help-tooltip';
 
 interface SectionHeaderProps {
   title: string;
   variant?: 'input' | 'output';
+  help?: {
+    description: string;
+    articles?: HelpLink[];
+    videos?: HelpLink[];
+    position?: TooltipPosition;
+  };
 }
 
 export const SectionHeader: Component<SectionHeaderProps> = (props) => {
@@ -43,6 +50,14 @@ export const SectionHeader: Component<SectionHeaderProps> = (props) => {
         >
           {props.title}
         </span>
+        <Show when={props.help}>
+          <HelpTooltip
+            description={props.help!.description}
+            articles={props.help!.articles}
+            videos={props.help!.videos}
+            position={props.help!.position}
+          />
+        </Show>
       </div>
       {statusBadge()}
     </div>

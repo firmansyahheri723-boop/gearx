@@ -1,6 +1,7 @@
 import { Component, createMemo, Show, For } from "solid-js";
 import { SectionHeader } from "./ui/section-header";
 import { Dropdown, DropdownOption } from "./ui/dropdown";
+import { HelpTooltip, HelpLink } from "./ui/help-tooltip";
 import { vehicleInputs, setVehicleInputs } from "../stores/vehicle";
 import {
   carData,
@@ -11,6 +12,134 @@ import {
   getSelectedCar,
   getSelectedEngine,
 } from "../stores/car-data";
+
+// Help tooltip content for each input field
+const HELP_CONTENT: Record<
+  string,
+  { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
+> = {
+  carSelection: {
+    description:
+      "Select the vehicle chassis and body configuration from your imported car data. This determines the base platform including wheelbase, track width, and suspension geometry that will be used for calculations.",
+    videos: [
+      { label: "Engine & Transmission Swap Guide", url: "https://youtu.be/iP2bXvSc0WU?si=Tcy02GPdHieKN8gz" },
+    ],
+  },
+  engineSelection: {
+    description:
+      "Choose the engine/powertrain configuration. You can use the car's default engine or select a swapped engine from another vehicle. Engine selection affects power delivery, torque curves, and optimal gear ratios.",
+    videos: [
+      { label: "Engine & Transmission Swap Guide", url: "https://youtu.be/iP2bXvSc0WU?si=Tcy02GPdHieKN8gz" },
+      { label: "Engine Talk", url: "https://youtu.be/A6SZfn6Kgfg?si=J3IxTU4NBJ42-M10" },
+    ],
+  },
+  weight: {
+    description:
+      "Total vehicle curb weight in kilograms, including fluids but without passengers or cargo. Lighter vehicles accelerate faster and handle better, but may sacrifice traction. Consider weight reduction mods carefully - removing too much can upset balance.",
+    articles: [{ label: "Wikipedia: Curb Weight", url: "https://en.wikipedia.org/wiki/Curb_weight" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  frontWeightDistribution: {
+    description:
+      "Percentage of total weight resting on the front axle. Most vehicles range from 50-60%. Front-heavy cars (>55%) tend to understeer, while rear-biased setups (<50%) promote oversteer. Adjust based on your driving style and track characteristics.",
+    articles: [{ label: "Wikipedia: Weight Distribution", url: "https://en.wikipedia.org/wiki/Weight_distribution" }],
+    videos: [
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  frontWheelOffset: {
+    description:
+      "Distance in centimeters from the wheel centerline to the hub mounting surface for front wheels. Positive offset pushes wheels inward, negative pushes them outward. Affects scrub radius, steering feel, and fender clearance. Incorrect offset can cause accelerated tire wear and handling issues.",
+    articles: [{ label: "Wikipedia: Wheel Offset", url: "https://en.wikipedia.org/wiki/Offset_(wheel)" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  rearWheelOffset: {
+    description:
+      "Distance in centimeters from the wheel centerline to the hub mounting surface for rear wheels. On RWD/AWD vehicles, rear offset significantly impacts traction and stability. Wider stance (more negative offset) improves grip but may cause rubbing issues.",
+    articles: [{ label: "Wikipedia: Wheel Offset", url: "https://en.wikipedia.org/wiki/Offset_(wheel)" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  rideFrequency: {
+    description:
+      "Natural oscillation frequency of the suspension in Hz. Lower values (2-3 Hz) provide comfort, higher values (3-5 Hz) improve handling response. Race cars typically run 3.5-5 Hz. Front should generally be slightly lower than rear to prevent pitch oscillation.",
+    articles: [{ label: "Wikipedia: Suspension", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)" }],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  rollGradient: {
+    description:
+      "Degrees of body roll per G of lateral acceleration. Lower values mean less body roll during cornering. Street cars: 0.4-0.7 deg/G. Track cars: 0.2-0.4 deg/G. Race cars: 0.02-0.2 deg/G. Too stiff causes snap oversteer and reduces tire compliance.",
+    articles: [{ label: "Wikipedia: Roll Center", url: "https://en.wikipedia.org/wiki/Roll_center" }],
+    videos: [
+      { label: "Anti-Roll Bars Guide", url: "https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY" },
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  wheelDiameter: {
+    description:
+      "Rim diameter in inches. Larger wheels accommodate bigger brakes and reduce sidewall flex for sharper handling, but add unsprung mass which hurts ride and acceleration. Higher-powered vehicles benefit from larger wheels. Underpowered cars should avoid oversized wheels as they slow acceleration.",
+    articles: [{ label: "Wikipedia: Wheel Sizing", url: "https://en.wikipedia.org/wiki/Wheel_sizing" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  profile: {
+    description:
+      "Tire aspect ratio - sidewall height as a percentage of tire width. Lower profile (30-45%) provides quicker steering response and less flex, but harsher ride and more vulnerable to pothole damage. Higher profile (50-65%) offers better comfort and protection. Match to your wheel diameter and intended use.",
+    articles: [{ label: "Wikipedia: Tire Code", url: "https://en.wikipedia.org/wiki/Tire_code" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  tireWidth: {
+    description:
+      "Tire tread width in millimeters. Wider tires provide more grip but increase rolling resistance, weight, and risk of hydroplaning. Width should match your vehicle's power - excessive width on low-power cars wastes grip potential and adds drag. Consider front/rear stagger for RWD vehicles.",
+    articles: [{ label: "Wikipedia: Tire Code", url: "https://en.wikipedia.org/wiki/Tire_code" }],
+    videos: [
+      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
+    ],
+  },
+  cogHeight: {
+    description:
+      "Center of gravity height from ground in inches. Lower CoG dramatically improves handling, reducing body roll and weight transfer. Typical values: Sports cars 18-20\", Sedans 20-24\", SUVs 26-30\". Lowering suspension, lightweight wheels, and low-mounted components all help reduce CoG.",
+    articles: [{ label: "Wikipedia: Center of Mass", url: "https://en.wikipedia.org/wiki/Center_of_mass" }],
+    videos: [
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  acceleration: {
+    description:
+      "Target acceleration time from 0 to 100 km/h in seconds. Used to calculate optimal gear ratios and final drive. Realistic targets depend on power-to-weight ratio. Sub-4s requires 400+ hp/ton, 4-6s needs 200-400 hp/ton, 6-10s is typical for 100-200 hp/ton.",
+    articles: [{ label: "Wikipedia: Car Performance", url: "https://en.wikipedia.org/wiki/Car_performance" }],
+    videos: [
+      { label: "Gear Ratios Guide", url: "https://youtu.be/8_SaobHPhWs?si=_5gsrOEVdybXMOXN" },
+    ],
+  },
+  maxSpeed118m: {
+    description:
+      "Maximum sustained cornering speed in km/h at 118m radius - the standard skidpad test. This indicates lateral grip capability. Higher speeds require better tires, lower CoG, and stiffer suspension. Used to calculate lateral G capability and appropriate spring/damper rates.",
+    articles: [{ label: "Wikipedia: Skidpad", url: "https://en.wikipedia.org/wiki/Skidpad" }],
+    videos: [
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+  drivetrain: {
+    description:
+      "Power delivery configuration. FWD (front-wheel drive) is efficient but limited by weight transfer under acceleration. RWD (rear-wheel drive) allows better weight transfer utilization. AWD distributes power to all wheels for maximum traction but adds weight and complexity.",
+    articles: [{ label: "Wikipedia: Drivetrain", url: "https://en.wikipedia.org/wiki/Drivetrain" }],
+    videos: [
+      { label: "Transmission Talk", url: "https://youtu.be/oGohWF7HZrw?si=yFHI1mTFhoMXlQ2M" },
+    ],
+  },
+};
 
 const DRIVETRAIN_OPTIONS = ["FWD", "RWD/AWD"] as const;
 const WHEEL_DIAMETER_OPTIONS = [16, 17, 18, 19, 20, 21, 22] as const;
@@ -78,7 +207,7 @@ export const InputSection: Component = () => {
   };
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
+    <div class="border border-slate-800/50 bg-slate-950/50">
       <SectionHeader title="Vehicle Input" variant="input" />
 
       {/* Selection info banner */}
@@ -112,7 +241,10 @@ export const InputSection: Component = () => {
           {/* Car Selection */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50 w-1/3">
-              Car selection
+              <div class="flex items-center justify-between">
+                <span>Car selection</span>
+                <HelpTooltip description={HELP_CONTENT.carSelection.description} />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0">
               <Dropdown
@@ -128,7 +260,10 @@ export const InputSection: Component = () => {
           {/* Engine Selection */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Engine selection
+              <div class="flex items-center justify-between">
+                <span>Engine selection</span>
+                <HelpTooltip description={HELP_CONTENT.engineSelection.description} />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0">
               <Dropdown
@@ -144,7 +279,13 @@ export const InputSection: Component = () => {
           {/* Weight */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Weight
+              <div class="flex items-center justify-between">
+                <span>Weight</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.weight.description}
+                  articles={HELP_CONTENT.weight.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -167,7 +308,13 @@ export const InputSection: Component = () => {
           {/* Front Weight Distribution */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Front weight distribution
+              <div class="flex items-center justify-between">
+                <span>Front weight distribution</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.frontWeightDistribution.description}
+                  articles={HELP_CONTENT.frontWeightDistribution.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -191,7 +338,13 @@ export const InputSection: Component = () => {
           {/* Front Wheel Offset */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Front wheel offset
+              <div class="flex items-center justify-between">
+                <span>Front wheel offset</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.frontWheelOffset.description}
+                  articles={HELP_CONTENT.frontWheelOffset.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -215,7 +368,13 @@ export const InputSection: Component = () => {
           {/* Rear Wheel Offset */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Rear wheel offset
+              <div class="flex items-center justify-between">
+                <span>Rear wheel offset</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.rearWheelOffset.description}
+                  articles={HELP_CONTENT.rearWheelOffset.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -239,7 +398,13 @@ export const InputSection: Component = () => {
           {/* Ride Frequency - Slider */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Ride frequency
+              <div class="flex items-center justify-between">
+                <span>Ride frequency</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.rideFrequency.description}
+                  articles={HELP_CONTENT.rideFrequency.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center gap-2 px-3 py-1.5">
@@ -298,7 +463,13 @@ export const InputSection: Component = () => {
           {/* Roll Gradient - Slider */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Roll gradient
+              <div class="flex items-center justify-between">
+                <span>Roll gradient</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.rollGradient.description}
+                  articles={HELP_CONTENT.rollGradient.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center gap-2 px-3 py-1.5">
@@ -357,7 +528,13 @@ export const InputSection: Component = () => {
           {/* Wheel Diameter - Segmented */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Wheel diameter
+              <div class="flex items-center justify-between">
+                <span>Wheel diameter</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.wheelDiameter.description}
+                  articles={HELP_CONTENT.wheelDiameter.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center px-2 py-1.5">
@@ -388,7 +565,13 @@ export const InputSection: Component = () => {
           {/* Profile */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Profile
+              <div class="flex items-center justify-between">
+                <span>Profile</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.profile.description}
+                  articles={HELP_CONTENT.profile.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -412,7 +595,13 @@ export const InputSection: Component = () => {
           {/* Tire Width */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Tire width
+              <div class="flex items-center justify-between">
+                <span>Tire width</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.tireWidth.description}
+                  articles={HELP_CONTENT.tireWidth.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -436,7 +625,13 @@ export const InputSection: Component = () => {
           {/* CoG Height */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              CoG height
+              <div class="flex items-center justify-between">
+                <span>CoG height</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.cogHeight.description}
+                  articles={HELP_CONTENT.cogHeight.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -460,7 +655,13 @@ export const InputSection: Component = () => {
           {/* 0-100 km/h */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              0-100 km/h
+              <div class="flex items-center justify-between">
+                <span>0-100 km/h</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.acceleration.description}
+                  articles={HELP_CONTENT.acceleration.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -484,7 +685,13 @@ export const InputSection: Component = () => {
           {/* Max Speed @ 118m radius */}
           <tr>
             <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Max speed @ 118m
+              <div class="flex items-center justify-between">
+                <span>Max speed @ 118m</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.maxSpeed118m.description}
+                  articles={HELP_CONTENT.maxSpeed118m.articles}
+                />
+              </div>
             </td>
             <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center">
@@ -508,7 +715,13 @@ export const InputSection: Component = () => {
           {/* Drivetrain - Segmented */}
           <tr>
             <td class="border-r border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
-              Drivetrain
+              <div class="flex items-center justify-between">
+                <span>Drivetrain</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.drivetrain.description}
+                  articles={HELP_CONTENT.drivetrain.articles}
+                />
+              </div>
             </td>
             <td class="border-slate-800/50 p-0 bg-slate-800/40">
               <div class="flex items-center px-2 py-1.5">

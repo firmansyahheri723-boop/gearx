@@ -2,12 +2,60 @@ import type { Component } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from './ui/section-header';
 import { DataTable } from './ui/data-table';
+import { HelpTooltip, HelpLink } from './ui/help-tooltip';
 import {
   springsStiffness,
   dampers,
   antiRollBars,
   accelerationMetrics,
 } from '../stores/vehicle';
+
+// Help tooltip content for suspension output sections
+const HELP_CONTENT: Record<
+  string,
+  { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
+> = {
+  springsStiffness: {
+    description:
+      "Recommended spring rates in N/mm (Newtons per millimeter). Front and rear values are calculated based on your ride frequency and weight distribution settings. Higher values = stiffer springs = less body movement but harsher ride.",
+    articles: [
+      { label: "Wikipedia: Spring Rate", url: "https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+    ],
+  },
+  dampers: {
+    description:
+      "Recommended damper settings for different conditions. Bump controls compression speed, Rebound controls extension speed. Fast variants handle quick impacts, slow variants handle body movements. Values are in N·s/m (Newton-seconds per meter).",
+    articles: [
+      { label: "Wikipedia: Shock Absorber", url: "https://en.wikipedia.org/wiki/Shock_absorber" },
+    ],
+    videos: [
+      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
+    ],
+  },
+  antiRollBars: {
+    description:
+      "Front Anti-Roll Bar (FARB) and Rear Anti-Roll Bar (RARB) stiffness in kNm. These resist body roll during cornering. The balance between front and rear affects handling: more front = understeer, more rear = oversteer.",
+    articles: [
+      { label: "Wikipedia: Anti-roll Bar", url: "https://en.wikipedia.org/wiki/Anti-roll_bar" },
+    ],
+    videos: [
+      { label: "Anti-Roll Bars Guide", url: "https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY" },
+    ],
+  },
+  accelerationMetrics: {
+    description:
+      "Weight transfer and acceleration data. Shows how much weight shifts under acceleration/braking and maximum G-forces the car can achieve. Use this to understand traction limits and optimize launch/braking performance.",
+    articles: [
+      { label: "Wikipedia: Weight Transfer", url: "https://en.wikipedia.org/wiki/Weight_transfer" },
+    ],
+    videos: [
+      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
+    ],
+  },
+};
 
 // Types for table data
 interface DamperRow {
@@ -94,13 +142,21 @@ export const SuspensionOutput: Component = () => {
   ];
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50 overflow-hidden">
+    <div class="border border-slate-800/50 bg-slate-950/50">
       <SectionHeader title="Suspension Output" variant="output" />
 
       {/* Springs Stiffness */}
       <div class="p-3 border-b border-slate-800/30">
-        <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
-          Springs Stiffness
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+            Springs Stiffness
+          </div>
+          <HelpTooltip
+            description={HELP_CONTENT.springsStiffness.description}
+            articles={HELP_CONTENT.springsStiffness.articles}
+            videos={HELP_CONTENT.springsStiffness.videos}
+            position="bottom"
+          />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-slate-900/50 border border-slate-800/50 p-3">
@@ -125,15 +181,36 @@ export const SuspensionOutput: Component = () => {
       </div>
 
       {/* Dampers Table */}
-      <DataTable
-        data={damperData()}
-        columns={damperColumns}
-      />
+      <div class="border-b border-slate-800/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-slate-900/30">
+          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+            Dampers
+          </div>
+          <HelpTooltip
+            description={HELP_CONTENT.dampers.description}
+            articles={HELP_CONTENT.dampers.articles}
+            videos={HELP_CONTENT.dampers.videos}
+            position="bottom"
+          />
+        </div>
+        <DataTable
+          data={damperData()}
+          columns={damperColumns}
+        />
+      </div>
 
       {/* Anti-roll bars */}
       <div class="p-3 border-t border-slate-800/30">
-        <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
-          Anti-roll Bars
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+            Anti-roll Bars
+          </div>
+          <HelpTooltip
+            description={HELP_CONTENT.antiRollBars.description}
+            articles={HELP_CONTENT.antiRollBars.articles}
+            videos={HELP_CONTENT.antiRollBars.videos}
+            position="bottom"
+          />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-slate-900/50 border border-slate-800/50 p-3">
@@ -159,6 +236,17 @@ export const SuspensionOutput: Component = () => {
 
       {/* Acceleration Metrics Table */}
       <div class="border-t border-slate-800/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-slate-900/30">
+          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+            Acceleration Metrics
+          </div>
+          <HelpTooltip
+            description={HELP_CONTENT.accelerationMetrics.description}
+            articles={HELP_CONTENT.accelerationMetrics.articles}
+            videos={HELP_CONTENT.accelerationMetrics.videos}
+            position="bottom"
+          />
+        </div>
         <DataTable
           data={metricsData()}
           columns={metricColumns}
