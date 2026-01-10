@@ -10,8 +10,8 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
-    rolldownOptions: {
-      external: ["@unovis/solid", "@unovis/ts"]
-    }
+    // rolldownOptions: {
+    //   external: ["@unovis/solid", "@unovis/ts"]
+    // }
   },
 });
