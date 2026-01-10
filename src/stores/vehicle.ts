@@ -103,6 +103,7 @@ export const [torqueRpmData, setTorqueRpmData] = createStore<TorqueRpmRow[]>([
 
 // Transmission - Gear Ratios with min/max bounds
 export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
+  { gear: 'Final drive', ratio: 3.0, min: 2.0, max: 5.0 },
   { gear: '1st', ratio: 2.76, min: 1.5, max: 4.0 },
   { gear: '2nd', ratio: 2.0, min: 1.2, max: 3.0 },
   { gear: '3rd', ratio: 1.5, min: 1.0, max: 2.5 },
@@ -111,7 +112,6 @@ export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
   { gear: '6th', ratio: 0.9, min: 0.6, max: 1.2 },
   { gear: '7th', ratio: 0, min: 0, max: 1.0 },
   { gear: '8th', ratio: 0, min: 0, max: 0.9 },
-  { gear: 'Final drive', ratio: 3.0, min: 2.0, max: 5.0 },
 ]);
 
 // Tire compound selection for traction calculations

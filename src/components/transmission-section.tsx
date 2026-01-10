@@ -48,6 +48,10 @@ const HELP_CONTENT: Record<
       { label: "Transmission Talk", url: "https://youtu.be/oGohWF7HZrw?si=yFHI1mTFhoMXlQ2M" },
     ],
   },
+  gearGap: {
+    description:
+      "The difference between the previous gear ratio and current gear ratio. Gaps naturally decrease for higher gears due to logarithmic gear spacing, helping maintain the engine in its powerband across shifts.",
+  },
 };
 
 // Column definitions for Torque/RPM table
@@ -94,6 +98,27 @@ export const TransmissionSection: Component = () => {
     torqueRpmData.map((row, index) => ({ ...row, index }))
   );
 
+  // Calculate gear gaps (difference from previous gear ratio, skipping final drive)
+  const gearGaps = createMemo(() => {
+    return gearRatios.map((gear, index) => {
+      // Skip final drive and first numbered gear (no previous gear to compare)
+      const isFinalDrive = gear.gear.toLowerCase().includes('final');
+      if (isFinalDrive) return null;
+
+      // Find previous numbered gear (skip final drive)
+      let prevIndex = index - 1;
+      while (prevIndex >= 0 && gearRatios[prevIndex].gear.toLowerCase().includes('final')) {
+        prevIndex--;
+      }
+
+      // No previous numbered gear found (this is 1st gear)
+      if (prevIndex < 0) return null;
+
+      const prevGear = gearRatios[prevIndex];
+      return prevGear.ratio - gear.ratio;
+    });
+  });
+
   return (
     <div class="border border-slate-800/50 bg-slate-950/50">
       <SectionHeader
@@ -128,7 +153,7 @@ export const TransmissionSection: Component = () => {
         </div>
 
         {/* Gear Ratios with Sliders */}
-        <div class="w-full lg:w-[420px]">
+        <div class="flex-1">
           <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30 flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-[10px] uppercase tracking-wider text-slate-500">
@@ -152,8 +177,17 @@ export const TransmissionSection: Component = () => {
                 <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
                   Range
                 </th>
-                <th class="border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-24">
+                <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-24">
                   Ratio
+                </th>
+                <th class="border-b border-slate-800/50 bg-slate-900/50 px-2 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-16">
+                  <div class="flex items-center justify-center gap-1">
+                    Gap
+                    <HelpTooltip
+                      description={HELP_CONTENT.gearGap.description}
+                      position="left"
+                    />
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -163,6 +197,7 @@ export const TransmissionSection: Component = () => {
                   <GearSlider
                     gear={gear}
                     index={index()}
+                    gap={gearGaps()[index()]}
                     onRatioChange={(v) => setGearRatios(index(), 'ratio', v)}
                     onMinChange={(v) => setGearRatios(index(), 'min', v)}
                     onMaxChange={(v) => setGearRatios(index(), 'max', v)}

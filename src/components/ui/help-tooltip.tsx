@@ -108,7 +108,7 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
 
           {/* Content */}
           <div class="px-3 py-2">
-            <p class="text-xs text-slate-300 leading-relaxed">
+            <p class="text-xs text-slate-300 leading-relaxed normal-case tracking-normal text-left">
               {props.description}
             </p>
           </div>

@@ -4,6 +4,7 @@ import type { GearRatio } from '../../types';
 interface GearSliderProps {
   gear: GearRatio;
   index: number;
+  gap: number | null;
   onRatioChange: (value: number) => void;
   onMinChange: (value: number) => void;
   onMaxChange: (value: number) => void;
@@ -101,7 +102,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
           </div>
         </div>
       </td>
-      <td class="px-3 py-2.5 bg-slate-900/30 w-24">
+      <td class="px-3 py-2.5 bg-slate-900/30 w-24 border-r border-slate-800/50">
         <input
           type="number"
           value={props.gear.ratio.toFixed(2)}
@@ -109,6 +110,11 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
           onInput={(e) => props.onRatioChange(parseFloat(e.currentTarget.value) || 0)}
           class="w-full bg-transparent text-cyan-400 text-center focus:outline-none focus:text-emerald-400 font-medium"
         />
+      </td>
+      <td class="px-2 py-2.5 bg-slate-900/30 w-16 text-center">
+        <Show when={props.gap !== null} fallback={<span class="text-slate-700">—</span>}>
+          <span class="text-slate-400">{props.gap!.toFixed(2)}</span>
+        </Show>
       </td>
     </tr>
   );
