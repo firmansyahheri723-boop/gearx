@@ -13,8 +13,26 @@ import {
 } from './stores/selection';
 import { torqueRpmData, setTorqueRpmData, gearRatios, setGearRatios } from './stores/vehicle';
 
+const VALID_TABS: TabId[] = ['main', 'suspension', 'gearbox', 'data'];
+
+const getInitialTab = (): TabId => {
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get('tab');
+  if (tab && VALID_TABS.includes(tab as TabId)) {
+    return tab as TabId;
+  }
+  return 'main';
+};
+
 const App: Component = () => {
-  const [activeTab, setActiveTab] = createSignal<TabId>('main');
+  const [activeTab, setActiveTab] = createSignal<TabId>(getInitialTab());
+
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    const params = new URLSearchParams(window.location.search);
+    params.set('tab', tab);
+    history.replaceState(null, '', `?${params.toString()}`);
+  };
 
   onMount(() => {
     const handleMouseUp = () => {
@@ -82,7 +100,7 @@ const App: Component = () => {
       <div class="w-full max-w-7xl">
         <DashboardHeader />
 
-        <TabMenu activeTab={activeTab()} onTabChange={setActiveTab} />
+        <TabMenu activeTab={activeTab()} onTabChange={handleTabChange} />
 
         <Switch>
           <Match when={activeTab() === 'main'}>
