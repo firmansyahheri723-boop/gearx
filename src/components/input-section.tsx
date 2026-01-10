@@ -145,7 +145,7 @@ const DRIVETRAIN_OPTIONS = ["FWD", "RWD/AWD"] as const;
 const WHEEL_DIAMETER_OPTIONS = [16, 17, 18, 19, 20, 21, 22] as const;
 
 export const InputSection: Component = () => {
-  // Get car names from imported data for dropdown options
+  
   const carOptions = createMemo((): DropdownOption[] => {
     if (carData.length === 0) {
       return [{ value: "", label: "No cars imported" }];
@@ -156,7 +156,7 @@ export const InputSection: Component = () => {
     });
   });
 
-  // Get engine options - filter out 'swapped transmission' and add (Engine) suffix where needed
+  
   const engineOptions = createMemo((): DropdownOption[] => {
     if (carData.length === 0) {
       return [{ value: "", label: "No engines imported" }];

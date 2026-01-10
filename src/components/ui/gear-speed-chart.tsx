@@ -21,7 +21,7 @@ interface ChartDataPoint {
 }
 
 export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
-  // Transform speedRpmData into format suitable for multi-line chart
+  
   const chartData = createMemo((): ChartDataPoint[] => {
     if (!props.speedRpmData.length || !props.speedRpmData[0]?.length) return [];
 
@@ -44,22 +44,22 @@ export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
     return data;
   });
 
-  // X accessor
+  
   const xAccessor = (d: ChartDataPoint) => d.rpm;
 
-  // Y accessors as array - one for each gear
+  
   const yAccessors = createMemo(() => {
     return props.speedRpmData.map((_, gearIdx) => 
       (d: ChartDataPoint) => d[`gear${gearIdx}`] as number
     );
   });
 
-  // Colors array for each line
+  
   const lineColors = createMemo(() => {
     return props.speedRpmData.map((_, idx) => GEAR_COLORS[idx % GEAR_COLORS.length]);
   });
 
-  // Tooltip template
+  
   const tooltipTemplate = (d: ChartDataPoint) => {
     // Build entries with values and sort by value descending (to match visual order top to bottom)
     const entries = props.gearNames

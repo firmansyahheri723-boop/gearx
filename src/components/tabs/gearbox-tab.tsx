@@ -148,7 +148,7 @@ export const GearboxTab: Component = () => {
     })
   );
 
-  // Get active gears (ratio > 0)
+  
   // index corresponds directly to position in gearRatios array and outputs arrays
   const activeGears = createMemo(() => {
     const gears: { index: number; name: string; ratio: number }[] = [];

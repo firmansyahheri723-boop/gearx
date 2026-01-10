@@ -75,7 +75,7 @@ const COLUMN_GROUPS = [
   },
 ];
 
-// Get column group by key
+
 function getColumnGroup(key: string) {
   return COLUMN_GROUPS.find((g) => g.columns.includes(key));
 }

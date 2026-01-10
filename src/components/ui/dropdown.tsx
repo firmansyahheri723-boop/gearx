@@ -30,7 +30,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
     return props.options.filter((opt) => opt.label.toLowerCase().includes(query));
   });
 
-  // Get label for current value
+  
   const currentLabel = createMemo(() => {
     const opt = props.options.find((o) => o.value === props.value);
     return opt?.label ?? props.value;

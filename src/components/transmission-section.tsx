@@ -143,7 +143,7 @@ const torqueColumns: ColumnDef<TorqueRpmRow & { index: number }>[] = [
 ];
 
 export const TransmissionSection: Component = () => {
-  // Add index to torque data for cell tracking
+  
   const torqueDataWithIndex = createMemo(() =>
     torqueRpmData.map((row, index) => ({ ...row, index })),
   );
@@ -177,7 +177,7 @@ export const TransmissionSection: Component = () => {
     }),
   );
 
-  // Get active gears (ratio > 0)
+  
   const activeGears = createMemo(() => {
     const gears: { index: number; name: string; ratio: number }[] = [];
     for (let i = 0; i < gearRatios.length; i++) {

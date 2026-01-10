@@ -16,13 +16,13 @@ interface GearSliderProps {
 export const GearSlider: Component<GearSliderProps> = (props) => {
   const [isEditing, setIsEditing] = createSignal(false);
 
-  // Get the color for this gear
+  
   const gearColor = () => {
     if (props.isFinalDrive) return FINAL_DRIVE_COLOR;
     return GEAR_COLORS[props.index % GEAR_COLORS.length];
   };
 
-  // Calculate percentage for visual fill
+  
   const fillPercent = () => {
     const range = props.gear.max - props.gear.min;
     if (range === 0) return 0;

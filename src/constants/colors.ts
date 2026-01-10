@@ -31,7 +31,7 @@ export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-slate-500', text: 'text-slate-5
 // Traction limit line color (for charts)
 export const TRACTION_LIMIT_COLOR = '#ef4444'; // red-500
 
-// Helper function to get gear color by index
+
 export function getGearColor(index: number): string {
   return GEAR_COLORS[index % GEAR_COLORS.length];
 }
