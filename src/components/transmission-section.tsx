@@ -145,9 +145,14 @@ const torqueColumns: ColumnDef<TorqueRpmRow & { index: number }>[] = [
 
 export const TransmissionSection: Component = () => {
   const [showExtractor, setShowExtractor] = createSignal(false);
-  const [importedImageUrl, setImportedImageUrl] = createSignal<string | null>(null);
+  const [importedImageUrl, setImportedImageUrl] = createSignal<string | null>(
+    null,
+  );
 
-  const handleApplyExtractedData = (data: { torque: number; rpm: number }[], imageUrl?: string) => {
+  const handleApplyExtractedData = (
+    data: { torque: number; rpm: number }[],
+    imageUrl?: string,
+  ) => {
     // Store the image URL for display
     if (imageUrl) {
       setImportedImageUrl(imageUrl);
@@ -195,7 +200,6 @@ export const TransmissionSection: Component = () => {
     }),
   );
 
-  
   const activeGears = createMemo(() => {
     const gears: { index: number; name: string; ratio: number }[] = [];
     for (let i = 0; i < gearRatios.length; i++) {
@@ -243,13 +247,12 @@ export const TransmissionSection: Component = () => {
             Speed & Torque Preview
           </span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 mb-10">
           <div class="p-3 border-r border-neutral-800/30">
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               height={320}
-              compact
             />
           </div>
           <div class="p-3">
@@ -257,8 +260,8 @@ export const TransmissionSection: Component = () => {
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               tractionLimit={outputs().tractionLimitTorque}
+              peakHpRpm={outputs().peakHpRpm}
               height={320}
-              compact
             />
           </div>
         </div>
@@ -280,7 +283,7 @@ export const TransmissionSection: Component = () => {
               />
             </div>
           </div>
-          
+
           {/* Image Import Placeholder */}
           <div class="p-3 border-b border-neutral-800/30">
             <Show
@@ -292,8 +295,19 @@ export const TransmissionSection: Component = () => {
                   class="w-full aspect-[4/3] max-h-48 border border-neutral-800 hover:border-neutral-600 bg-neutral-900/50 hover:bg-neutral-900 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
                 >
                   <div class="w-10 h-10 border border-neutral-700 group-hover:border-neutral-500 bg-neutral-800/50 flex items-center justify-center transition-colors">
-                    <svg class="w-5 h-5 text-neutral-600 group-hover:text-neutral-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      class="w-5 h-5 text-neutral-600 group-hover:text-neutral-400 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <span class="text-[10px] uppercase tracking-wider text-neutral-600 group-hover:text-neutral-400 transition-colors">
@@ -338,7 +352,9 @@ export const TransmissionSection: Component = () => {
                 position="bottom"
               />
             </div>
-            <span class="text-[9px] text-neutral-600">click min/max to edit</span>
+            <span class="text-[9px] text-neutral-600">
+              click min/max to edit
+            </span>
           </div>
           <table class="w-full border-collapse text-sm">
             <thead>

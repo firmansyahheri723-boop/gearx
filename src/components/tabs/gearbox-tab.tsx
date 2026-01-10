@@ -500,6 +500,7 @@ export const GearboxTab: Component = () => {
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               tractionLimit={outputs().tractionLimitTorque}
+              peakHpRpm={outputs().peakHpRpm}
               height={280}
             />
           </div>

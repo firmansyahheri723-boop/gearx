@@ -31,6 +31,9 @@ export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-neutral-500', text: 'text-neutr
 // Traction limit line color (for charts)
 export const TRACTION_LIMIT_COLOR = '#ef4444'; // red-500
 
+// Peak torque curve color (black line connecting peak HP points)
+export const PEAK_TORQUE_CURVE_COLOR = '#ffffff'; // white for visibility on dark bg
+
 
 export function getGearColor(index: number): string {
   return GEAR_COLORS[index % GEAR_COLORS.length];
