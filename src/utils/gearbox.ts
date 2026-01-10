@@ -1,0 +1,236 @@
+import type { GearRatio, TorqueRpmRow, SpeedRpmPoint, GearboxOutputs, TireCompound } from '../types';
+import { TIRE_FRICTION_COEFFICIENTS } from '../types';
+
+interface GearboxCalcInputs {
+  tireWidth: number; // mm
+  profile: number; // %
+  wheelDiameter: number; // inches
+  gearRatios: GearRatio[];
+  torqueRpmData: TorqueRpmRow[];
+  weight: number; // kg
+  frontWeightDistribution: number; // %
+  cogHeight: number; // inches
+  wheelbase: number; // meters
+  drivetrain: string; // 'RWD/AWD' or 'FWD'
+  tireCompound: TireCompound;
+  acceleration0to100: number; // seconds
+}
+
+/**
+ * Calculate wheel circumference in inches
+ */
+export function calcWheelCircumference(tireWidth: number, profile: number, wheelDiameter: number): number {
+  // tireWidth in mm, profile in %, wheelDiameter in inches
+  // sidewall height = tireWidth * profile / 100 (in mm)
+  // total diameter = wheelDiameter + 2 * sidewall height (converted to inches)
+  // circumference = π * diameter
+  const sidewallHeightMm = tireWidth * (profile / 100);
+  const sidewallHeightInches = sidewallHeightMm / 25.4;
+  const totalDiameter = wheelDiameter + 2 * sidewallHeightInches;
+  return totalDiameter * Math.PI;
+}
+
+/**
+ * Calculate wheel radius in meters
+ */
+export function calcWheelRadiusM(tireWidth: number, profile: number, wheelDiameter: number): number {
+  const sidewallHeightMm = tireWidth * (profile / 100);
+  const sidewallHeightInches = sidewallHeightMm / 25.4;
+  const totalDiameterInches = wheelDiameter + 2 * sidewallHeightInches;
+  // Convert to meters: inches * 2.54 / 100 / 2
+  return (totalDiameterInches * 2.54) / 100 / 2;
+}
+
+/**
+ * Calculate speed in kph at given RPM and total drive ratio
+ * Formula from Excel: RPM * 60 * Circumference / 63360 / TotalRatio * 1.60934
+ */
+export function calcSpeedKph(rpm: number, circumferenceInches: number, totalRatio: number): number {
+  if (totalRatio === 0) return 0;
+  // 63360 = inches per mile
+  // Result is mph, then * 1.60934 to convert to kph
+  return (rpm * 60 * circumferenceInches) / 63360 / totalRatio * 1.60934;
+}
+
+/**
+ * Calculate horsepower from torque and RPM
+ * Formula: HP = Torque * RPM / 9549 * 1.34102
+ * 9549 is the conversion factor for Nm to kW at given RPM
+ * 1.34102 converts kW to HP
+ */
+export function calcHorsepower(torqueNm: number, rpm: number): number {
+  return (torqueNm * rpm) / 9549 * 1.34102;
+}
+
+/**
+ * Calculate wheel torque from engine torque and gear ratios
+ */
+export function calcWheelTorque(engineTorqueNm: number, gearRatio: number, finalDrive: number): number {
+  return engineTorqueNm * gearRatio * finalDrive;
+}
+
+/**
+ * Calculate longitudinal acceleration in g
+ * Formula: a = (vf - vs) / dt / g
+ * For 0-100 kph: (27.78 - 0) / time / 9.81
+ */
+export function calcLongitudinalAccelG(acceleration0to100: number): number {
+  // 100 kph = 27.78 m/s
+  return 27.78 / acceleration0to100 / 9.81;
+}
+
+/**
+ * Calculate weight transfer under acceleration
+ * Formula: (CoGHeight_m / Wheelbase) * Mass * LongAccel_g
+ */
+export function calcWeightTransfer(
+  cogHeightM: number,
+  wheelbaseM: number,
+  massKg: number,
+  longAccelG: number
+): number {
+  return (cogHeightM / wheelbaseM) * massKg * longAccelG;
+}
+
+/**
+ * Calculate traction limit as wheel torque (Nm)
+ * For RWD: rear weight dynamic * g * friction coefficient * wheel radius
+ * For FWD: front weight dynamic * g * friction coefficient * wheel radius
+ */
+export function calcTractionLimitTorque(
+  massKg: number,
+  frontWeightDist: number, // as decimal, e.g., 0.56
+  cogHeightM: number,
+  wheelbaseM: number,
+  longAccelG: number,
+  frictionCoef: number,
+  wheelRadiusM: number,
+  drivetrain: string
+): number {
+  const frontWeight = massKg * frontWeightDist;
+  const rearWeight = massKg - frontWeight;
+  const weightTransfer = calcWeightTransfer(cogHeightM, wheelbaseM, massKg, longAccelG);
+
+  if (drivetrain === 'RWD/AWD') {
+    // Rear gains weight under acceleration
+    const rearWeightDynamic = rearWeight + weightTransfer;
+    return rearWeightDynamic * 9.81 * frictionCoef * wheelRadiusM;
+  } else {
+    // FWD: front loses weight under acceleration
+    const frontWeightDynamic = frontWeight - weightTransfer;
+    return frontWeightDynamic * 9.81 * frictionCoef * wheelRadiusM;
+  }
+}
+
+/**
+ * Main function to calculate all gearbox outputs
+ */
+export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutputs {
+  const {
+    tireWidth,
+    profile,
+    wheelDiameter,
+    gearRatios,
+    torqueRpmData,
+    weight,
+    frontWeightDistribution,
+    cogHeight,
+    wheelbase,
+    drivetrain,
+    tireCompound,
+    acceleration0to100,
+  } = inputs;
+
+  // Basic wheel calculations
+  const wheelCircumference = calcWheelCircumference(tireWidth, profile, wheelDiameter);
+  const wheelRadiusM = calcWheelRadiusM(tireWidth, profile, wheelDiameter);
+
+  // Get final drive ratio (last item in gearRatios array)
+  const finalDrive = gearRatios[gearRatios.length - 1].ratio;
+
+  // Calculate effective ratios for each gear (excluding final drive)
+  const gearCount = gearRatios.length - 1; // Exclude final drive
+  const effectiveRatios: number[] = [];
+  for (let i = 0; i < gearCount; i++) {
+    effectiveRatios.push(gearRatios[i].ratio * finalDrive);
+  }
+
+  // Find peak HP and its RPM
+  let peakHp = 0;
+  let peakHpRpm = 0;
+  for (const row of torqueRpmData) {
+    const hp = calcHorsepower(row.torque, row.rpm);
+    if (hp > peakHp) {
+      peakHp = hp;
+      peakHpRpm = row.rpm;
+    }
+  }
+
+  // Calculate traction limit
+  const cogHeightM = cogHeight * 2.54 / 100; // inches to meters
+  const longAccelG = calcLongitudinalAccelG(acceleration0to100);
+  const frictionCoef = TIRE_FRICTION_COEFFICIENTS[tireCompound];
+  const tractionLimitTorque = calcTractionLimitTorque(
+    weight,
+    frontWeightDistribution / 100,
+    cogHeightM,
+    wheelbase,
+    longAccelG,
+    frictionCoef,
+    wheelRadiusM,
+    drivetrain
+  );
+
+  // Calculate speed/rpm data for each gear
+  const speedRpmData: SpeedRpmPoint[][] = [];
+  const maxSpeedPerGear: number[] = [];
+
+  for (let gearIdx = 0; gearIdx < gearCount; gearIdx++) {
+    const gearData: SpeedRpmPoint[] = [];
+    const gearRatio = gearRatios[gearIdx].ratio;
+    const totalRatio = effectiveRatios[gearIdx];
+
+    // Skip if gear ratio is 0 (unused gear)
+    if (gearRatio === 0) {
+      speedRpmData.push([]);
+      maxSpeedPerGear.push(0);
+      continue;
+    }
+
+    let maxSpeed = 0;
+
+    for (const row of torqueRpmData) {
+      const speed = calcSpeedKph(row.rpm, wheelCircumference, totalRatio);
+      const wheelTorque = calcWheelTorque(row.torque, gearRatio, finalDrive);
+      const hp = calcHorsepower(row.torque, row.rpm);
+      const exceedsTraction = wheelTorque > tractionLimitTorque;
+
+      gearData.push({
+        rpm: row.rpm,
+        speed,
+        torque: row.torque,
+        wheelTorque,
+        hp,
+        exceedsTraction,
+      });
+
+      if (speed > maxSpeed) {
+        maxSpeed = speed;
+      }
+    }
+
+    speedRpmData.push(gearData);
+    maxSpeedPerGear.push(maxSpeed);
+  }
+
+  return {
+    wheelCircumference,
+    wheelRadiusM,
+    effectiveRatios,
+    peakHp,
+    peakHpRpm,
+    tractionLimitTorque,
+    speedRpmData,
+    maxSpeedPerGear,
+  };
+}

@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@theme {
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-mono);
+  background-color: #0c0c0c;
+  color: #e2e8f0;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(30, 41, 59, 0.3) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(rgba(30, 41, 59, 0.3) 1px, transparent 1px) 0 0 / 24px 24px,
+    #0c0c0c;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+::-webkit-scrollbar-corner {
+  background: #0f172a;
+}
+
+/* Form elements */
+input,
+select {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Selection */
+::selection {
+  background: rgba(34, 211, 238, 0.2);
+  color: #22d3ee;
+}
+
+/* Custom range slider */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  background: #1e293b;
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #22d3ee;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin-top: -4px;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+}
+
+input[type='range']::-moz-range-track {
+  background: #1e293b;
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type='range']::-moz-range-thumb {
+  background: #22d3ee;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+}
+
+input[type='range']:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+}
+
+input[type='range']:focus::-moz-range-thumb {
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+}
