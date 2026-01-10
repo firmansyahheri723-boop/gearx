@@ -20,26 +20,26 @@ const getPositionStyles = (position: TooltipPosition) => {
     case "right":
       // Arrow points left (toward the button)
       return {
-        popup: "left-6 top-1/2 -translate-y-1/2",
-        arrow: "left-0 top-1/2 -translate-x-1 -translate-y-1/2 rotate-45 border-l border-b",
+        popup: "left-6 top-1/2 -tranneutral-y-1/2",
+        arrow: "left-0 top-1/2 -tranneutral-x-1 -tranneutral-y-1/2 rotate-45 border-l border-b",
       };
     case "bottom":
       // Arrow points up (toward the button)
       return {
-        popup: "top-6 left-1/2 -translate-x-1/2",
-        arrow: "top-0 left-1/2 -translate-y-1 -translate-x-1/2 rotate-45 border-l border-t",
+        popup: "top-6 left-1/2 -tranneutral-x-1/2",
+        arrow: "top-0 left-1/2 -tranneutral-y-1 -tranneutral-x-1/2 rotate-45 border-l border-t",
       };
     case "left":
       // Arrow points right (toward the button)
       return {
-        popup: "right-6 top-1/2 -translate-y-1/2",
-        arrow: "right-0 top-1/2 translate-x-1 -translate-y-1/2 rotate-45 border-r border-t",
+        popup: "right-6 top-1/2 -tranneutral-y-1/2",
+        arrow: "right-0 top-1/2 tranneutral-x-1 -tranneutral-y-1/2 rotate-45 border-r border-t",
       };
     case "top":
       // Arrow points down (toward the button)
       return {
-        popup: "bottom-6 left-1/2 -translate-x-1/2",
-        arrow: "bottom-0 left-1/2 translate-y-1 -translate-x-1/2 rotate-45 border-r border-b",
+        popup: "bottom-6 left-1/2 -tranneutral-x-1/2",
+        arrow: "bottom-0 left-1/2 tranneutral-y-1 -tranneutral-x-1/2 rotate-45 border-r border-b",
       };
   }
 };
@@ -82,8 +82,8 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
         onClick={toggle}
         class="w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full border transition-all duration-100"
         classList={{
-          "bg-cyan-500/20 text-cyan-400 border-cyan-500/50": isOpen(),
-          "bg-slate-800/50 text-slate-500 border-slate-600/50 hover:text-cyan-400 hover:border-cyan-500/50":
+          "bg-neutral-500/20 text-neutral-400 border-neutral-500/50": isOpen(),
+          "bg-neutral-800/50 text-neutral-500 border-neutral-600/50 hover:text-neutral-400 hover:border-neutral-500/50":
             !isOpen(),
         }}
         aria-label="Show help information"
@@ -95,33 +95,33 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
       {/* Tooltip Popup */}
       <Show when={isOpen()}>
         <div
-          class={`absolute z-50 w-72 border border-cyan-500/30 bg-slate-900/95 backdrop-blur-sm shadow-lg shadow-black/50 ${positionStyles().popup}`}
+          class={`absolute z-50 w-72 border border-neutral-500/30 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/50 ${positionStyles().popup}`}
           role="tooltip"
         >
           {/* Header */}
-          <div class="flex items-center gap-2 px-3 py-1.5 border-b border-slate-700/50 bg-slate-800/50">
-            <div class="w-1 h-3 bg-cyan-500" />
-            <span class="text-[10px] font-bold tracking-wider uppercase text-cyan-400">
+          <div class="flex items-center gap-2 px-3 py-1.5 border-b border-neutral-700/50 bg-neutral-800/50">
+            <div class="w-1 h-3 bg-neutral-500" />
+            <span class="text-[10px] font-bold tracking-wider uppercase text-neutral-400">
               INFO
             </span>
           </div>
 
           {/* Content */}
           <div class="px-3 py-2">
-            <p class="text-xs text-slate-300 leading-relaxed normal-case tracking-normal text-left">
+            <p class="text-xs text-neutral-300 leading-relaxed normal-case tracking-normal text-left">
               {props.description}
             </p>
           </div>
 
           {/* Links Section */}
           <Show when={hasLinks()}>
-            <div class="border-t border-slate-700/50 bg-slate-800/30">
+            <div class="border-t border-neutral-700/50 bg-neutral-800/30">
               {/* Read More Links */}
               <Show when={props.articles && props.articles.length > 0}>
                 <div class="px-3 py-2">
                   <div class="flex items-center gap-1.5 mb-1.5">
                     <svg
-                      class="w-3 h-3 text-cyan-500"
+                      class="w-3 h-3 text-neutral-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -134,7 +134,7 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
                         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                       />
                     </svg>
-                    <span class="text-[10px] font-bold tracking-wider uppercase text-cyan-400">
+                    <span class="text-[10px] font-bold tracking-wider uppercase text-neutral-400">
                       Read More
                     </span>
                   </div>
@@ -146,9 +146,9 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-cyan-300 transition-colors group"
+                            class="flex items-center gap-1.5 text-[11px] text-neutral-400 hover:text-neutral-300 transition-colors group"
                           >
-                            <span class="text-slate-600 group-hover:text-cyan-500">
+                            <span class="text-neutral-600 group-hover:text-neutral-500">
                               •
                             </span>
                             <span class="flex-1">{link.label}</span>
@@ -178,7 +178,7 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
                 <div
                   class="px-3 py-2"
                   classList={{
-                    "border-t border-slate-700/30":
+                    "border-t border-neutral-700/30":
                       props.articles && props.articles.length > 0,
                   }}
                 >
@@ -203,9 +203,9 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-red-300 transition-colors group"
+                            class="flex items-center gap-1.5 text-[11px] text-neutral-400 hover:text-red-300 transition-colors group"
                           >
-                            <span class="text-slate-600 group-hover:text-red-500">
+                            <span class="text-neutral-600 group-hover:text-red-500">
                               •
                             </span>
                             <span class="flex-1">{link.label}</span>
@@ -241,7 +241,7 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
 
           {/* Arrow pointer */}
           <div
-            class={`absolute w-2 h-2 bg-slate-900/95 border-cyan-500/30 ${positionStyles().arrow}`}
+            class={`absolute w-2 h-2 bg-neutral-900/95 border-neutral-500/30 ${positionStyles().arrow}`}
           />
         </div>
       </Show>

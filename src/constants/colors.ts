@@ -25,8 +25,8 @@ export const GEAR_COLOR_CLASSES = [
 ] as const;
 
 // Final drive gets a distinct gray color
-export const FINAL_DRIVE_COLOR = '#64748b'; // slate-500
-export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-slate-500', text: 'text-slate-500', border: 'border-slate-500', gradient: 'from-slate-600 to-slate-400' };
+export const FINAL_DRIVE_COLOR = '#737373'; // neutral-500
+export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-neutral-500', text: 'text-neutral-500', border: 'border-neutral-500', gradient: 'from-neutral-600 to-neutral-400' };
 
 // Traction limit line color (for charts)
 export const TRACTION_LIMIT_COLOR = '#ef4444'; // red-500

@@ -30,7 +30,6 @@ interface ChartDataPoint {
 }
 
 export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
-  
   const chartData = createMemo((): ChartDataPoint[] => {
     if (!props.speedRpmData.length || !props.speedRpmData[0]?.length) return [];
 
@@ -56,17 +55,14 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
     return data;
   });
 
-  
   const xAccessor = (d: ChartDataPoint) => d.rpm;
 
-  
   const yAccessors = createMemo(() => {
     return props.speedRpmData.map(
       (_, gearIdx) => (d: ChartDataPoint) => d[`gear${gearIdx}`] as number,
     );
   });
 
-  
   const lineColors = createMemo(() => {
     return props.speedRpmData.map(
       (_, idx) => GEAR_COLORS[idx % GEAR_COLORS.length],
@@ -76,7 +72,6 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
   // Traction limit accessor (horizontal line)
   const tractionLimitAccessor = (d: ChartDataPoint) => d.tractionLimit;
 
-  
   const tooltipTemplate = (d: ChartDataPoint) => {
     // Build entries with values and sort by value descending (to match visual order top to bottom)
     const entries = props.gearNames
@@ -165,7 +160,7 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
                     background: GEAR_COLORS[idx() % GEAR_COLORS.length],
                   }}
                 />
-                <span class="text-xs text-slate-400">{name}</span>
+                <span class="text-xs text-neutral-400">{name}</span>
               </div>
             )}
           </For>
@@ -175,7 +170,7 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
               class="w-3 h-0.5"
               style={{ background: TRACTION_LIMIT_COLOR }}
             />
-            <span class="text-xs text-slate-400">Traction Limit</span>
+            <span class="text-xs text-neutral-400">Traction Limit</span>
           </div>
         </div>
       </Show>

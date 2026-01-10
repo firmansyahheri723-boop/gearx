@@ -206,7 +206,7 @@ export const TransmissionSection: Component = () => {
   });
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50">
+    <div class="border border-neutral-800/50 bg-neutral-950/50">
       <SectionHeader
         title="Transmission"
         variant="input"
@@ -219,14 +219,14 @@ export const TransmissionSection: Component = () => {
       />
 
       {/* Compact Charts Row */}
-      <div class="border-t border-slate-800/30">
-        <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30">
-          <span class="text-[10px] uppercase tracking-wider text-slate-500">
+      <div class="border-t border-neutral-800/30">
+        <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30">
+          <span class="text-[10px] uppercase tracking-wider text-neutral-500">
             Speed & Torque Preview
           </span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
-          <div class="p-3 border-r border-slate-800/30">
+          <div class="p-3 border-r border-neutral-800/30">
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
@@ -248,9 +248,9 @@ export const TransmissionSection: Component = () => {
 
       <div class="flex flex-col lg:flex-row">
         {/* Torque/RPM Table */}
-        <div class="flex-1 border-r border-slate-800/30">
-          <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30 flex items-center justify-between">
-            <span class="text-[10px] uppercase tracking-wider text-slate-500">
+        <div class="flex-1 border-r border-neutral-800/30">
+          <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center justify-between">
+            <span class="text-[10px] uppercase tracking-wider text-neutral-500">
               Torque Curve Data
             </span>
             <HelpTooltip
@@ -265,9 +265,9 @@ export const TransmissionSection: Component = () => {
 
         {/* Gear Ratios with Sliders */}
         <div class="flex-1">
-          <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30 flex items-center justify-between">
+          <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="text-[10px] uppercase tracking-wider text-slate-500">
+              <span class="text-[10px] uppercase tracking-wider text-neutral-500">
                 Gear Ratios
               </span>
               <HelpTooltip
@@ -277,21 +277,21 @@ export const TransmissionSection: Component = () => {
                 position="bottom"
               />
             </div>
-            <span class="text-[9px] text-slate-600">click min/max to edit</span>
+            <span class="text-[9px] text-neutral-600">click min/max to edit</span>
           </div>
           <table class="w-full border-collapse text-sm">
             <thead>
               <tr>
-                <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-20">
+                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-20">
                   Gear
                 </th>
-                <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center">
+                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center">
                   Range
                 </th>
-                <th class="border-r border-b border-slate-800/50 bg-slate-900/50 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-24">
+                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-24">
                   Ratio
                 </th>
-                <th class="border-b border-slate-800/50 bg-slate-900/50 px-2 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center w-16">
+                <th class="border-b border-neutral-800/50 bg-neutral-900/50 px-2 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-16">
                   <div class="flex items-center justify-center gap-1">
                     Gap
                     <HelpTooltip

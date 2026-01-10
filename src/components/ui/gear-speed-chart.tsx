@@ -127,7 +127,7 @@ export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
                   class="w-3 h-3 rounded-full"
                   style={{ background: GEAR_COLORS[idx() % GEAR_COLORS.length] }}
                 />
-                <span class="text-xs text-slate-400">{name}</span>
+                <span class="text-xs text-neutral-400">{name}</span>
               </div>
             )}
           </For>

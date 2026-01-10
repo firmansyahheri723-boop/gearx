@@ -100,10 +100,10 @@ const App: Component = () => {
         </Switch>
 
         {/* Footer */}
-        <footer class="mt-6 flex items-center justify-center gap-2 text-slate-700 text-xs">
-          <span class="text-slate-600">{'///'}</span>
+        <footer class="mt-6 flex items-center justify-center gap-2 text-neutral-700 text-xs">
+          <span class="text-neutral-600">{'///'}</span>
           <span>GEARX SUSPENSION CALCULATOR v1.0.0</span>
-          <span class="text-slate-600">{'///'}</span>
+          <span class="text-neutral-600">{'///'}</span>
         </footer>
       </div>
 

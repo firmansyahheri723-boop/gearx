@@ -189,11 +189,11 @@ export const SuspensionTab: Component = () => {
             class="px-4 py-2"
             classList={{
               'bg-amber-500/5': row.highlight,
-              'bg-slate-900/30': !row.highlight,
+              'bg-neutral-900/30': !row.highlight,
             }}
           >
-            <div class="text-slate-300">{row.label}</div>
-            <div class="text-[10px] text-slate-600">{row.description}</div>
+            <div class="text-neutral-300">{row.label}</div>
+            <div class="text-[10px] text-neutral-600">{row.description}</div>
           </div>
         );
       },
@@ -209,7 +209,7 @@ export const SuspensionTab: Component = () => {
             class="block px-4 py-2 text-center"
             classList={{
               'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-slate-900/30 text-slate-300': !row.highlight,
+              'bg-neutral-900/30 text-neutral-300': !row.highlight,
             }}
           >
             {info.getValue<number>().toFixed(0)}
@@ -227,7 +227,7 @@ export const SuspensionTab: Component = () => {
             class="block px-4 py-2 text-center"
             classList={{
               'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-slate-900/30 text-slate-300': !row.highlight,
+              'bg-neutral-900/30 text-neutral-300': !row.highlight,
             }}
           >
             {info.getValue<number>().toFixed(0)}
@@ -245,7 +245,7 @@ export const SuspensionTab: Component = () => {
       {/* Top Row: Key Metrics + Input Sliders */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Suspension Parameters Input */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Suspension Parameters"
             variant="input"
@@ -259,14 +259,14 @@ export const SuspensionTab: Component = () => {
               {(slider) => (
                 <div class="space-y-1">
                   <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-400">{slider.label}</span>
+                    <span class="text-xs text-neutral-400">{slider.label}</span>
                     <div class="flex items-baseline gap-1">
-                      <span class="text-sm font-bold text-cyan-400">
+                      <span class="text-sm font-bold text-neutral-400">
                         {(vehicleInputs[slider.key] as number).toFixed(
                           slider.step < 1 ? (slider.step < 0.1 ? 2 : 1) : 0
                         )}
                       </span>
-                      <span class="text-[10px] text-slate-500">{slider.unit}</span>
+                      <span class="text-[10px] text-neutral-500">{slider.unit}</span>
                     </div>
                   </div>
                   <input
@@ -278,10 +278,10 @@ export const SuspensionTab: Component = () => {
                     onInput={(e) =>
                       setVehicleInputs(slider.key, parseFloat(e.currentTarget.value))
                     }
-                    class="w-full h-1.5 bg-slate-700 rounded appearance-none cursor-pointer accent-cyan-500"
+                    class="w-full h-1.5 bg-neutral-700 rounded appearance-none cursor-pointer accent-neutral-500"
                     aria-label={slider.label}
                   />
-                  <div class="text-[10px] text-slate-600">{slider.description}</div>
+                  <div class="text-[10px] text-neutral-600">{slider.description}</div>
                 </div>
               )}
             </For>
@@ -289,7 +289,7 @@ export const SuspensionTab: Component = () => {
         </div>
 
         {/* Springs Stiffness */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Springs Stiffness"
             variant="output"
@@ -313,22 +313,22 @@ export const SuspensionTab: Component = () => {
                 highlight
               />
             </div>
-            <div class="border-t border-slate-800/50 pt-4">
-              <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
+            <div class="border-t border-neutral-800/50 pt-4">
+              <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
                 Sprung Masses
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center">
-                  <div class="text-lg font-bold text-slate-300">
+                  <div class="text-lg font-bold text-neutral-300">
                     {outputs().springs.frontSprungMass.toFixed(1)}
                   </div>
-                  <div class="text-[10px] text-slate-500">Front kg</div>
+                  <div class="text-[10px] text-neutral-500">Front kg</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-lg font-bold text-slate-300">
+                  <div class="text-lg font-bold text-neutral-300">
                     {outputs().springs.rearSprungMass.toFixed(1)}
                   </div>
-                  <div class="text-[10px] text-slate-500">Rear kg</div>
+                  <div class="text-[10px] text-neutral-500">Rear kg</div>
                 </div>
               </div>
             </div>
@@ -336,7 +336,7 @@ export const SuspensionTab: Component = () => {
         </div>
 
         {/* Anti-Roll Bars */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Anti-Roll Bars"
             variant="output"
@@ -360,16 +360,16 @@ export const SuspensionTab: Component = () => {
                 highlight
               />
             </div>
-            <div class="border-t border-slate-800/50 pt-4 space-y-2">
+            <div class="border-t border-neutral-800/50 pt-4 space-y-2">
               <div class="flex justify-between text-xs">
-                <span class="text-slate-500">Roll Center to CoG</span>
-                <span class="text-slate-300">
+                <span class="text-neutral-500">Roll Center to CoG</span>
+                <span class="text-neutral-300">
                   {(outputs().antiRollBars.rollCenterToCoG * 100).toFixed(1)} cm
                 </span>
               </div>
               <div class="flex justify-between text-xs">
-                <span class="text-slate-500">Total Roll Rate</span>
-                <span class="text-slate-300">
+                <span class="text-neutral-500">Total Roll Rate</span>
+                <span class="text-neutral-300">
                   {outputs().antiRollBars.totalRollRate.toFixed(0)} Nm/deg
                 </span>
               </div>
@@ -379,7 +379,7 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Dampers Section */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Damper Settings"
           variant="output"
@@ -392,16 +392,16 @@ export const SuspensionTab: Component = () => {
           data={damperData()}
           columns={damperColumns}
         />
-        <div class="px-4 py-2 border-t border-slate-800/30 bg-slate-900/30 flex items-center gap-6">
-          <span class="text-[10px] text-slate-500">
+        <div class="px-4 py-2 border-t border-neutral-800/30 bg-neutral-900/30 flex items-center gap-6">
+          <span class="text-[10px] text-neutral-500">
             Critical Damping Front:{' '}
-            <span class="text-slate-400">
+            <span class="text-neutral-400">
               {outputs().dampers.critDampingFront.toFixed(0)} N·s/m
             </span>
           </span>
-          <span class="text-[10px] text-slate-500">
+          <span class="text-[10px] text-neutral-500">
             Critical Damping Rear:{' '}
-            <span class="text-slate-400">
+            <span class="text-neutral-400">
               {outputs().dampers.critDampingRear.toFixed(0)} N·s/m
             </span>
           </span>
@@ -409,7 +409,7 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Acceleration Metrics */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Acceleration & Weight Transfer"
           variant="output"
@@ -455,17 +455,17 @@ export const SuspensionTab: Component = () => {
           </div>
 
           {/* Visual weight distribution bar */}
-          <div class="mt-4 pt-4 border-t border-slate-800/50">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
+          <div class="mt-4 pt-4 border-t border-neutral-800/50">
+            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
               Weight Distribution Under Acceleration
             </div>
-            <div class="relative h-6 bg-slate-800 rounded">
+            <div class="relative h-6 bg-neutral-800 rounded">
               <div
-                class="absolute left-0 top-0 h-full bg-cyan-500/30 border-r border-cyan-400 transition-all"
+                class="absolute left-0 top-0 h-full bg-neutral-500/30 border-r border-neutral-400 transition-all"
                 style={{ width: `${outputs().acceleration.frontBiasOnAccel}%` }}
               />
               <div class="absolute inset-0 flex items-center justify-between px-2 text-[10px]">
-                <span class="text-cyan-400 font-medium">
+                <span class="text-neutral-400 font-medium">
                   Front: {outputs().acceleration.frontBiasOnAccel.toFixed(1)}%
                 </span>
                 <span class="text-amber-400 font-medium">
@@ -473,7 +473,7 @@ export const SuspensionTab: Component = () => {
                 </span>
               </div>
             </div>
-            <div class="mt-1 flex justify-between text-[10px] text-slate-600">
+            <div class="mt-1 flex justify-between text-[10px] text-neutral-600">
               <span>Static: {vehicleInputs.frontWeightDistribution}% front</span>
               <span>
                 Change: {(vehicleInputs.frontWeightDistribution - outputs().acceleration.frontBiasOnAccel).toFixed(1)}%
@@ -484,7 +484,7 @@ export const SuspensionTab: Component = () => {
       </div>
 
       {/* Formula Reference */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Formula Reference"
           variant="input"
@@ -534,10 +534,10 @@ const MetricCard: Component<{
       class="flex flex-col items-center p-3 border"
       classList={{
         'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-slate-700/50 bg-slate-900/30': !props.highlight,
+        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
       }}
     >
-      <span class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+      <span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
         {props.label}
       </span>
       <div class="flex items-baseline gap-1">
@@ -545,13 +545,13 @@ const MetricCard: Component<{
           class="text-xl font-bold"
           classList={{
             'text-amber-400': props.highlight,
-            'text-slate-300': !props.highlight,
+            'text-neutral-300': !props.highlight,
           }}
         >
           {props.value}
         </span>
         <Show when={props.unit}>
-          <span class="text-xs text-slate-500">{props.unit}</span>
+          <span class="text-xs text-neutral-500">{props.unit}</span>
         </Show>
       </div>
     </div>
@@ -565,14 +565,14 @@ const FormulaCard: Component<{
   variables: string[];
 }> = (props) => {
   return (
-    <div class="border border-slate-700/50 bg-slate-900/30 p-3">
-      <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">
+    <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
+      <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
         {props.title}
       </div>
-      <div class="text-cyan-400 mb-2">{props.formula}</div>
+      <div class="text-neutral-400 mb-2">{props.formula}</div>
       <div class="space-y-0.5">
         <For each={props.variables}>
-          {(variable) => <div class="text-slate-500 text-[10px]">{variable}</div>}
+          {(variable) => <div class="text-neutral-500 text-[10px]">{variable}</div>}
         </For>
       </div>
     </div>

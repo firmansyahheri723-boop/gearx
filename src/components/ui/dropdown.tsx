@@ -146,8 +146,8 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       <div
         class="flex items-center w-full h-full cursor-pointer transition-colors"
         classList={{
-          'bg-slate-800/40 hover:bg-cyan-900/30': !isOpen(),
-          'bg-cyan-500/10 ring-1 ring-inset ring-cyan-500/50': isOpen(),
+          'bg-neutral-800/40 hover:bg-neutral-900/30': !isOpen(),
+          'bg-neutral-500/10 ring-1 ring-inset ring-neutral-500/50': isOpen(),
           'opacity-50 cursor-not-allowed': props.disabled,
         }}
       >
@@ -160,7 +160,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
           onFocus={() => !isOpen() && openDropdown()}
           disabled={props.disabled}
           placeholder={props.placeholder ?? 'Select...'}
-          class="w-full h-full px-3 py-2 bg-transparent text-emerald-400 cursor-pointer focus:outline-none disabled:cursor-not-allowed placeholder:text-slate-500"
+          class="w-full h-full px-3 py-2 bg-transparent text-emerald-400 cursor-pointer focus:outline-none disabled:cursor-not-allowed placeholder:text-neutral-500"
           classList={{
             'cursor-text': isOpen(),
           }}
@@ -196,12 +196,12 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       <Show when={isOpen()}>
         <div
           ref={listRef}
-          class="absolute z-50 left-0 right-0 top-full mt-0.5 max-h-48 overflow-auto border border-slate-700/50 bg-slate-900/95 backdrop-blur-sm shadow-lg shadow-black/30"
+          class="absolute z-50 left-0 right-0 top-full mt-0.5 max-h-48 overflow-auto border border-neutral-700/50 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/30"
         >
           <Show
             when={filteredOptions().length > 0}
             fallback={
-              <div class="px-3 py-2 text-slate-500 text-sm">No results found</div>
+              <div class="px-3 py-2 text-neutral-500 text-sm">No results found</div>
             }
           >
             <For each={filteredOptions()}>
@@ -211,8 +211,8 @@ export const Dropdown: Component<DropdownProps> = (props) => {
                   data-highlighted={index() === highlightedIndex()}
                   class="w-full px-3 py-2 cursor-pointer text-sm transition-colors text-left bg-transparent border-none block"
                   classList={{
-                    'bg-cyan-900/40 text-cyan-400': index() === highlightedIndex(),
-                    'text-slate-300 hover:bg-slate-800/50': index() !== highlightedIndex(),
+                    'bg-neutral-900/40 text-neutral-400': index() === highlightedIndex(),
+                    'text-neutral-300 hover:bg-neutral-800/50': index() !== highlightedIndex(),
                     'text-emerald-400': option.value === props.value && index() !== highlightedIndex(),
                   }}
                   onClick={() => selectOption(option)}

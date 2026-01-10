@@ -30,9 +30,9 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
   };
 
   return (
-    <tr class="group border-b border-slate-800/30 last:border-b-0">
+    <tr class="group border-b border-neutral-800/30 last:border-b-0">
       <td
-        class="px-3 py-2.5 bg-slate-900/50 text-xs uppercase tracking-wide text-center w-20 border-r border-slate-800/50"
+        class="px-3 py-2.5 bg-neutral-900/50 text-xs uppercase tracking-wide text-center w-20 border-r border-neutral-800/50"
         style={{ color: gearColor() }}
       >
         <div class="flex items-center justify-center gap-1.5">
@@ -43,7 +43,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
           {props.label}
         </div>
       </td>
-      <td class="px-4 py-2.5 bg-slate-900/30 border-r border-slate-800/50">
+      <td class="px-4 py-2.5 bg-neutral-900/30 border-r border-neutral-800/50">
         <div class="flex items-center gap-3">
           {/* Min value */}
           <div class="w-12 flex-shrink-0">
@@ -52,7 +52,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
               fallback={
                 <button
                   type="button"
-                  class="text-slate-600 text-xs hover:text-slate-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-left"
+                  class="text-neutral-600 text-xs hover:text-neutral-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-left"
                   onClick={() => setIsEditing(true)}
                 >
                   {props.gear.min.toFixed(1)}
@@ -65,7 +65,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
                 step="0.1"
                 onInput={(e) => props.onMinChange(parseFloat(e.currentTarget.value) || 0)}
                 onBlur={() => setIsEditing(false)}
-                class="w-full px-1.5 py-0.5 bg-slate-800 text-xs border border-slate-700 focus:outline-none"
+                class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
                 style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
               />
             </Show>
@@ -73,7 +73,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
 
           {/* Slider track */}
           <div class="flex-1 relative h-6 flex items-center">
-            <div class="absolute inset-x-0 h-1 bg-slate-800 rounded-full">
+            <div class="absolute inset-x-0 h-1 bg-neutral-800 rounded-full">
               <div
                 class="absolute left-0 top-0 h-full rounded-full"
                 style={{
@@ -110,7 +110,7 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
               fallback={
                 <button
                   type="button"
-                  class="text-slate-600 text-xs hover:text-slate-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-right"
+                  class="text-neutral-600 text-xs hover:text-neutral-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-right"
                   onClick={() => setIsEditing(true)}
                 >
                   {props.gear.max.toFixed(1)}
@@ -123,14 +123,14 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
                 step="0.1"
                 onInput={(e) => props.onMaxChange(parseFloat(e.currentTarget.value) || 0)}
                 onBlur={() => setIsEditing(false)}
-                class="w-full px-1.5 py-0.5 bg-slate-800 text-xs border border-slate-700 focus:outline-none"
+                class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
                 style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
               />
             </Show>
           </div>
         </div>
       </td>
-      <td class="px-3 py-2.5 bg-slate-900/30 w-24 border-r border-slate-800/50">
+      <td class="px-3 py-2.5 bg-neutral-900/30 w-24 border-r border-neutral-800/50">
         <input
           type="number"
           value={props.gear.ratio.toFixed(2)}
@@ -140,9 +140,9 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
           style={{ color: gearColor() }}
         />
       </td>
-      <td class="px-2 py-2.5 bg-slate-900/30 w-16 text-center">
-        <Show when={props.gap !== null} fallback={<span class="text-slate-700">—</span>}>
-          <span class="text-slate-400">{props.gap!.toFixed(2)}</span>
+      <td class="px-2 py-2.5 bg-neutral-900/30 w-16 text-center">
+        <Show when={props.gap !== null} fallback={<span class="text-neutral-700">—</span>}>
+          <span class="text-neutral-400">{props.gap!.toFixed(2)}</span>
         </Show>
       </td>
     </tr>

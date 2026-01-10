@@ -21,7 +21,7 @@ interface TabMenuProps {
 
 export const TabMenu: Component<TabMenuProps> = (props) => {
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50 mb-4">
+    <div class="border border-neutral-800/50 bg-neutral-950/50 mb-4">
       <div class="flex">
         <For each={TABS}>
           {(tab) => {
@@ -32,15 +32,15 @@ export const TabMenu: Component<TabMenuProps> = (props) => {
                 onClick={() => props.onTabChange(tab.id)}
                 class="relative flex items-center gap-2 px-4 py-2.5 text-xs uppercase tracking-wider transition-colors focus:outline-none"
                 classList={{
-                  'bg-slate-900/80 text-slate-200': isActive(),
-                  'bg-transparent text-slate-500 hover:text-slate-400 hover:bg-slate-900/30': !isActive(),
+                  'bg-neutral-900/80 text-neutral-200': isActive(),
+                  'bg-transparent text-neutral-500 hover:text-neutral-400 hover:bg-neutral-900/30': !isActive(),
                 }}
               >
                 {/* Active indicator bar */}
                 <div
                   class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 transition-colors"
                   classList={{
-                    'bg-cyan-500': isActive(),
+                    'bg-neutral-500': isActive(),
                     'bg-transparent': !isActive(),
                   }}
                 />
@@ -50,7 +50,7 @@ export const TabMenu: Component<TabMenuProps> = (props) => {
           }}
         </For>
         {/* Spacer to fill remaining width */}
-        <div class="flex-1 border-b border-slate-800/30" />
+        <div class="flex-1 border-b border-neutral-800/30" />
       </div>
     </div>
   );

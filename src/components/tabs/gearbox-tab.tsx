@@ -221,7 +221,7 @@ export const GearboxTab: Component = () => {
         accessorKey: 'rpm',
         header: 'RPM',
         cell: (info) => (
-          <span class="block px-3 py-1.5 text-center text-slate-400 bg-slate-900/30">
+          <span class="block px-3 py-1.5 text-center text-neutral-400 bg-neutral-900/30">
             {info.getValue() as number}
           </span>
         ),
@@ -240,7 +240,7 @@ export const GearboxTab: Component = () => {
               class="block px-3 py-1.5 text-center"
               classList={{
                 'bg-red-500/10 text-red-400': gearData?.exceedsTraction,
-                'bg-slate-900/30 text-amber-400': !gearData?.exceedsTraction,
+                'bg-neutral-900/30 text-amber-400': !gearData?.exceedsTraction,
               }}
             >
               {gearData?.speed.toFixed(1) ?? '-'}
@@ -266,7 +266,7 @@ export const GearboxTab: Component = () => {
               class="block px-3 py-1.5 text-center"
               classList={{
                 'bg-emerald-500/10 text-emerald-400 font-medium': row.isAtPeakHp,
-                'bg-slate-900/30 text-slate-400': !row.isAtPeakHp,
+                'bg-neutral-900/30 text-neutral-400': !row.isAtPeakHp,
               }}
             >
               {row.rpm}
@@ -279,7 +279,7 @@ export const GearboxTab: Component = () => {
         accessorKey: 'torque',
         header: 'Engine Nm',
         cell: (info) => (
-          <span class="block px-3 py-1.5 text-center text-slate-300 bg-slate-900/30">
+          <span class="block px-3 py-1.5 text-center text-neutral-300 bg-neutral-900/30">
             {info.getValue() as number}
           </span>
         ),
@@ -294,7 +294,7 @@ export const GearboxTab: Component = () => {
               class="block px-3 py-1.5 text-center"
               classList={{
                 'bg-emerald-500/10 text-emerald-400 font-medium': row.isAtPeakHp,
-                'bg-slate-900/30 text-slate-400': !row.isAtPeakHp,
+                'bg-neutral-900/30 text-neutral-400': !row.isAtPeakHp,
               }}
             >
               {row.hp.toFixed(1)}
@@ -316,7 +316,7 @@ export const GearboxTab: Component = () => {
               class="block px-3 py-1.5 text-center"
               classList={{
                 'bg-red-500/10 text-red-400 font-medium': gearData?.exceedsTraction,
-                'bg-slate-900/30 text-amber-400': !gearData?.exceedsTraction,
+                'bg-neutral-900/30 text-amber-400': !gearData?.exceedsTraction,
               }}
             >
               {gearData?.wheelTorque.toFixed(0) ?? '-'}
@@ -334,7 +334,7 @@ export const GearboxTab: Component = () => {
       {/* Top Row: Metrics + Tire Selector */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Key Metrics */}
-        <div class="lg:col-span-2 border border-slate-800/50 bg-slate-950/50">
+        <div class="lg:col-span-2 border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Calculated Metrics"
             variant="output"
@@ -390,7 +390,7 @@ export const GearboxTab: Component = () => {
         </div>
 
         {/* Tire Compound Selector */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Tire Compound"
             variant="input"
@@ -407,9 +407,9 @@ export const GearboxTab: Component = () => {
                     type="button"
                     class="w-full flex items-center justify-between px-3 py-2 border transition-colors"
                     classList={{
-                      'border-cyan-500/50 bg-cyan-500/10 text-cyan-400':
+                      'border-neutral-500/50 bg-neutral-500/10 text-neutral-400':
                         tireCompound.value === option.value,
-                      'border-slate-700/50 bg-slate-900/30 text-slate-400 hover:border-slate-600/50 hover:bg-slate-800/30':
+                      'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50 hover:bg-neutral-800/30':
                         tireCompound.value !== option.value,
                     }}
                     onClick={() => setTireCompound('value', option.value)}
@@ -425,7 +425,7 @@ export const GearboxTab: Component = () => {
       </div>
 
       {/* Effective Ratios Row */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Effective Drive Ratios (Gear x Final)"
           variant="output"
@@ -439,7 +439,7 @@ export const GearboxTab: Component = () => {
             <For each={activeGears()}>
               {(gear, idx) => (
                 <div
-                  class="flex flex-col items-center px-4 py-2 border bg-slate-900/30"
+                  class="flex flex-col items-center px-4 py-2 border bg-neutral-900/30"
                   style={{ "border-color": `${GEAR_COLORS[idx() % GEAR_COLORS.length]}50` }}
                 >
                   <span
@@ -454,7 +454,7 @@ export const GearboxTab: Component = () => {
                   >
                     {outputs().effectiveRatios[gear.index].toFixed(2)}
                   </span>
-                  <span class="text-[10px] text-slate-600">
+                  <span class="text-[10px] text-neutral-600">
                     max {outputs().maxSpeedPerGear[gear.index].toFixed(0)} kph
                   </span>
                 </div>
@@ -467,7 +467,7 @@ export const GearboxTab: Component = () => {
       {/* Charts Row */}
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {/* Speed vs RPM Chart */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Speed vs RPM Chart"
             variant="output"
@@ -486,7 +486,7 @@ export const GearboxTab: Component = () => {
         </div>
 
         {/* Wheel Torque Chart */}
-        <div class="border border-slate-800/50 bg-slate-950/50">
+        <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Wheel Torque vs RPM Chart"
             variant="output"
@@ -507,7 +507,7 @@ export const GearboxTab: Component = () => {
       </div>
 
       {/* Speed vs RPM Table */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Speed vs RPM per Gear"
           variant="output"
@@ -524,7 +524,7 @@ export const GearboxTab: Component = () => {
       </div>
 
       {/* Wheel Torque Table */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Wheel Torque Output"
           variant="output"
@@ -533,11 +533,11 @@ export const GearboxTab: Component = () => {
             position: "right",
           }}
         />
-        <div class="px-3 py-2 border-b border-slate-800/30 bg-slate-900/30 flex items-center gap-4">
-          <span class="text-[10px] uppercase tracking-wider text-slate-500">
+        <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center gap-4">
+          <span class="text-[10px] uppercase tracking-wider text-neutral-500">
             Traction limit: {outputs().tractionLimitTorque.toFixed(0)} Nm
           </span>
-          <span class="flex items-center gap-2 text-[10px] text-slate-500">
+          <span class="flex items-center gap-2 text-[10px] text-neutral-500">
             <span class="w-3 h-3 bg-red-500/30 border border-red-500/50" />
             Exceeds traction
           </span>
@@ -551,7 +551,7 @@ export const GearboxTab: Component = () => {
       </div>
 
       {/* Traction Analysis */}
-      <div class="border border-slate-800/50 bg-slate-950/50">
+      <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Traction Analysis"
           variant="output"
@@ -575,9 +575,9 @@ export const GearboxTab: Component = () => {
                     : 0;
 
                 return (
-                  <div class="border border-slate-700/50 bg-slate-900/30 p-3">
+                  <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
                     <div class="flex items-center justify-between mb-3">
-                      <span class="text-sm font-medium text-slate-300">{gear.name}</span>
+                      <span class="text-sm font-medium text-neutral-300">{gear.name}</span>
                       <span
                         class="text-xs px-2 py-0.5"
                         classList={{
@@ -596,14 +596,14 @@ export const GearboxTab: Component = () => {
                     </div>
 
                     {/* Visual bar */}
-                    <div class="h-2 bg-slate-800 rounded">
+                    <div class="h-2 bg-neutral-800 rounded">
                       <div
                         class="h-full bg-red-500/70 transition-all"
                         style={{ width: `${percentExceeded()}%` }}
                       />
                     </div>
 
-                    <div class="flex justify-between text-[10px] text-slate-500">
+                    <div class="flex justify-between text-[10px] text-neutral-500">
                       <span>
                         Grip zone:{' '}
                         {tractionOkPoints().length > 0
@@ -635,10 +635,10 @@ const MetricCard: Component<{
       class="flex flex-col items-center p-3 border"
       classList={{
         'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-slate-700/50 bg-slate-900/30': !props.highlight,
+        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
       }}
     >
-      <span class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+      <span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
         {props.label}
       </span>
       <div class="flex items-baseline gap-1">
@@ -646,13 +646,13 @@ const MetricCard: Component<{
           class="text-xl font-bold"
           classList={{
             'text-amber-400': props.highlight,
-            'text-slate-300': !props.highlight,
+            'text-neutral-300': !props.highlight,
           }}
         >
           {props.value}
         </span>
         <Show when={props.unit}>
-          <span class="text-xs text-slate-500">{props.unit}</span>
+          <span class="text-xs text-neutral-500">{props.unit}</span>
         </Show>
       </div>
     </div>

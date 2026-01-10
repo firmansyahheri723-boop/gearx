@@ -99,7 +99,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     {(header) => (
                       <th
                         colSpan={header.colSpan}
-                        class="border-r border-b border-slate-800/50 bg-slate-900 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider text-center"
+                        class="border-r border-b border-neutral-800/50 bg-neutral-900 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center"
                       >
                         <Show when={!header.isPlaceholder}>
                           {flexRender(header.column.columnDef.header, header.getContext())}
@@ -124,9 +124,9 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     return (
                       <th
                         colSpan={header.colSpan}
-                        class="border-r border-b border-slate-800/50 bg-slate-900 px-3 py-2 text-slate-500 text-[10px] uppercase tracking-wider"
+                        class="border-r border-b border-neutral-800/50 bg-neutral-900 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider"
                         classList={{
-                          'cursor-pointer select-none hover:bg-slate-800/50': canSort(),
+                          'cursor-pointer select-none hover:bg-neutral-800/50': canSort(),
                           'text-left': header.column.columnDef.meta?.align === 'left',
                           'text-center': !header.column.columnDef.meta?.align || header.column.columnDef.meta?.align === 'center',
                           'text-right': header.column.columnDef.meta?.align === 'right',
@@ -138,7 +138,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                           <div class="flex items-center justify-center gap-1">
                             {flexRender(header.column.columnDef.header, header.getContext())}
                             <Show when={canSort()}>
-                              <span class="text-slate-600">
+                              <span class="text-neutral-600">
                                 {sortDir() === 'asc' ? ' ▲' : sortDir() === 'desc' ? ' ▼' : ''}
                               </span>
                             </Show>
@@ -158,11 +158,11 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               const rowClass = () => merged.getRowClass?.(row.original, index()) ?? '';
               
               const rowContent = (
-                <tr class={`hover:bg-slate-800/30 ${rowClass()}`}>
+                <tr class={`hover:bg-neutral-800/30 ${rowClass()}`}>
                   <For each={row.getVisibleCells()}>
                     {(cell) => (
                       <td
-                        class="border-r border-b border-slate-800/50"
+                        class="border-r border-b border-neutral-800/50"
                         classList={{
                           'text-left': cell.column.columnDef.meta?.align === 'left',
                           'text-center': !cell.column.columnDef.meta?.align || cell.column.columnDef.meta?.align === 'center',

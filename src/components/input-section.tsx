@@ -207,18 +207,18 @@ export const InputSection: Component = () => {
   };
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50">
+    <div class="border border-neutral-800/50 bg-neutral-950/50">
       <SectionHeader title="Vehicle Input" variant="input" />
 
       {/* Selection info banner */}
       <Show
         when={selectedCarIndex() !== null || selectedEngineIndex() !== null}
       >
-        <div class="px-3 py-1.5 border-b border-slate-800/50 bg-slate-900/50 flex items-center gap-4 text-[10px]">
+        <div class="px-3 py-1.5 border-b border-neutral-800/50 bg-neutral-900/50 flex items-center gap-4 text-[10px]">
           <Show when={getSelectedCar()}>
             <span class="flex items-center gap-1.5">
               <span class="w-2 h-2 bg-green-500 rounded-full" />
-              <span class="text-slate-400">Chassis:</span>
+              <span class="text-neutral-400">Chassis:</span>
               <span class="text-green-400 font-medium">
                 {getSelectedCar()?.car}
               </span>
@@ -227,7 +227,7 @@ export const InputSection: Component = () => {
           <Show when={getSelectedEngine()}>
             <span class="flex items-center gap-1.5">
               <span class="w-2 h-2 bg-amber-500 rounded-full" />
-              <span class="text-slate-400">Engine:</span>
+              <span class="text-neutral-400">Engine:</span>
               <span class="text-amber-400 font-medium">
                 {getSelectedEngine()?.car}
               </span>
@@ -240,13 +240,13 @@ export const InputSection: Component = () => {
         <tbody>
           {/* Car Selection */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50 w-1/3">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50 w-1/3">
               <div class="flex items-center justify-between">
                 <span>Car selection</span>
                 <HelpTooltip description={HELP_CONTENT.carSelection.description} />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0">
+            <td class="border-b border-neutral-800/50 p-0">
               <Dropdown
                 value={vehicleInputs.carSelection}
                 options={carOptions()}
@@ -259,13 +259,13 @@ export const InputSection: Component = () => {
 
           {/* Engine Selection */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Engine selection</span>
                 <HelpTooltip description={HELP_CONTENT.engineSelection.description} />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0">
+            <td class="border-b border-neutral-800/50 p-0">
               <Dropdown
                 value={vehicleInputs.engineSelection}
                 options={engineOptions()}
@@ -278,7 +278,7 @@ export const InputSection: Component = () => {
 
           {/* Weight */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Weight</span>
                 <HelpTooltip
@@ -287,7 +287,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -298,16 +298,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">kg</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
               </div>
             </td>
           </tr>
 
           {/* Front Weight Distribution */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Front weight distribution</span>
                 <HelpTooltip
@@ -316,7 +316,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -328,16 +328,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">%</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
               </div>
             </td>
           </tr>
 
           {/* Front Wheel Offset */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Front wheel offset</span>
                 <HelpTooltip
@@ -346,7 +346,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -358,16 +358,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">cm</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
               </div>
             </td>
           </tr>
 
           {/* Rear Wheel Offset */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Rear wheel offset</span>
                 <HelpTooltip
@@ -376,7 +376,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -388,16 +388,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">cm</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
               </div>
             </td>
           </tr>
 
           {/* Ride Frequency - Slider */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Ride frequency</span>
                 <HelpTooltip
@@ -406,13 +406,13 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center gap-2 px-3 py-1.5">
-                <span class="text-slate-600 text-xs w-6">3</span>
+                <span class="text-neutral-600 text-xs w-6">3</span>
                 <div class="flex-1 relative h-5 flex items-center">
-                  <div class="absolute inset-x-0 h-1 bg-slate-700 rounded-full">
+                  <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
                     <div
-                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full"
+                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
                       style={{
                         width: `${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}%`,
                       }}
@@ -433,13 +433,13 @@ export const InputSection: Component = () => {
                     class="absolute inset-0 w-full opacity-0 cursor-pointer"
                   />
                   <div
-                    class="absolute w-2.5 h-2.5 bg-cyan-400 rounded-full shadow-lg shadow-cyan-500/30 pointer-events-none border border-cyan-300"
+                    class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
                     style={{
                       left: `calc(${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}% - 5px)`,
                     }}
                   />
                 </div>
-                <span class="text-slate-600 text-xs w-6">5</span>
+                <span class="text-neutral-600 text-xs w-6">5</span>
                 <input
                   type="number"
                   value={vehicleInputs.desiredRideFrequency}
@@ -454,7 +454,7 @@ export const InputSection: Component = () => {
                         Math.min(5, Math.max(3, val)),
                       );
                   }}
-                  class="w-14 px-2 py-0.5 bg-slate-900/50 border border-slate-700/50 rounded text-cyan-400 text-sm text-center focus:outline-none focus:text-emerald-400"
+                  class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
                 />
               </div>
             </td>
@@ -462,7 +462,7 @@ export const InputSection: Component = () => {
 
           {/* Roll Gradient - Slider */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Roll gradient</span>
                 <HelpTooltip
@@ -471,13 +471,13 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center gap-2 px-3 py-1.5">
-                <span class="text-slate-600 text-xs w-6">.02</span>
+                <span class="text-neutral-600 text-xs w-6">.02</span>
                 <div class="flex-1 relative h-5 flex items-center">
-                  <div class="absolute inset-x-0 h-1 bg-slate-700 rounded-full">
+                  <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
                     <div
-                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full"
+                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
                       style={{
                         width: `${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}%`,
                       }}
@@ -498,13 +498,13 @@ export const InputSection: Component = () => {
                     class="absolute inset-0 w-full opacity-0 cursor-pointer"
                   />
                   <div
-                    class="absolute w-2.5 h-2.5 bg-cyan-400 rounded-full shadow-lg shadow-cyan-500/30 pointer-events-none border border-cyan-300"
+                    class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
                     style={{
                       left: `calc(${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}% - 5px)`,
                     }}
                   />
                 </div>
-                <span class="text-slate-600 text-xs w-6">.7</span>
+                <span class="text-neutral-600 text-xs w-6">.7</span>
                 <input
                   type="number"
                   value={vehicleInputs.desiredRollGradient}
@@ -519,7 +519,7 @@ export const InputSection: Component = () => {
                         Math.min(0.7, Math.max(0.02, val)),
                       );
                   }}
-                  class="w-14 px-2 py-0.5 bg-slate-900/50 border border-slate-700/50 rounded text-cyan-400 text-sm text-center focus:outline-none focus:text-emerald-400"
+                  class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
                 />
               </div>
             </td>
@@ -527,7 +527,7 @@ export const InputSection: Component = () => {
 
           {/* Wheel Diameter - Segmented */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Wheel diameter</span>
                 <HelpTooltip
@@ -536,7 +536,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center px-2 py-1.5">
                 <div class="flex gap-0.5">
                   <For each={[...WHEEL_DIAMETER_OPTIONS]}>
@@ -546,9 +546,9 @@ export const InputSection: Component = () => {
                         onClick={() => setVehicleInputs("wheelDiameter", size)}
                         class="px-2 py-1 text-xs transition-all duration-100"
                         classList={{
-                          "bg-cyan-500/20 text-cyan-400 border border-cyan-500/50":
+                          "bg-neutral-500/20 text-neutral-400 border border-neutral-500/50":
                             vehicleInputs.wheelDiameter === size,
-                          "bg-slate-900/50 text-slate-500 border border-slate-700/50 hover:text-slate-300":
+                          "bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300":
                             vehicleInputs.wheelDiameter !== size,
                         }}
                       >
@@ -557,14 +557,14 @@ export const InputSection: Component = () => {
                     )}
                   </For>
                 </div>
-                <span class="px-2 text-slate-500 text-xs">in</span>
+                <span class="px-2 text-neutral-500 text-xs">in</span>
               </div>
             </td>
           </tr>
 
           {/* Profile */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Profile</span>
                 <HelpTooltip
@@ -573,7 +573,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -585,16 +585,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">%</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
               </div>
             </td>
           </tr>
 
           {/* Tire Width */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Tire width</span>
                 <HelpTooltip
@@ -603,7 +603,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -615,16 +615,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">mm</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
               </div>
             </td>
           </tr>
 
           {/* CoG Height */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>CoG height</span>
                 <HelpTooltip
@@ -633,7 +633,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -645,16 +645,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">in</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
               </div>
             </td>
           </tr>
 
           {/* 0-100 km/h */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>0-100 km/h</span>
                 <HelpTooltip
@@ -663,7 +663,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -675,16 +675,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">s</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
               </div>
             </td>
           </tr>
 
           {/* Max Speed @ 118m radius */}
           <tr>
-            <td class="border-r border-b border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Max speed @ 118m</span>
                 <HelpTooltip
@@ -693,7 +693,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-b border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
                 <input
                   type="number"
@@ -705,16 +705,16 @@ export const InputSection: Component = () => {
                       parseFloat(e.currentTarget.value) || 0,
                     )
                   }
-                  class="flex-1 px-3 py-2 bg-transparent text-cyan-400 focus:outline-none focus:text-emerald-400"
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
-                <span class="px-3 py-2 text-slate-500 text-xs">km/h</span>
+                <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
               </div>
             </td>
           </tr>
 
           {/* Drivetrain - Segmented */}
           <tr>
-            <td class="border-r border-slate-800/50 px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+            <td class="border-r border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Drivetrain</span>
                 <HelpTooltip
@@ -723,7 +723,7 @@ export const InputSection: Component = () => {
                 />
               </div>
             </td>
-            <td class="border-slate-800/50 p-0 bg-slate-800/40">
+            <td class="border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center px-2 py-1.5">
                 <div class="flex gap-0.5">
                   <For each={[...DRIVETRAIN_OPTIONS]}>
@@ -733,9 +733,9 @@ export const InputSection: Component = () => {
                         onClick={() => setVehicleInputs("drivetrain", option)}
                         class="px-3 py-1 text-xs transition-all duration-100"
                         classList={{
-                          "bg-cyan-500/20 text-cyan-400 border border-cyan-500/50":
+                          "bg-neutral-500/20 text-neutral-400 border border-neutral-500/50":
                             vehicleInputs.drivetrain === option,
-                          "bg-slate-900/50 text-slate-500 border border-slate-700/50 hover:text-slate-300":
+                          "bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300":
                             vehicleInputs.drivetrain !== option,
                         }}
                       >

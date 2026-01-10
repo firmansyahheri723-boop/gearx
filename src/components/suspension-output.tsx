@@ -75,7 +75,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'label',
     header: 'Dampers',
     cell: (info) => (
-      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
         {info.getValue() as string}
       </span>
     ),
@@ -85,7 +85,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'front',
     header: 'Front',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
         {info.getValue() as number}
       </span>
     ),
@@ -94,7 +94,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'rear',
     header: 'Rear',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
         {info.getValue() as number}
       </span>
     ),
@@ -107,7 +107,7 @@ const metricColumns: ColumnDef<MetricRow>[] = [
     accessorKey: 'label',
     header: 'Metric',
     cell: (info) => (
-      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-slate-400 bg-slate-900/50">
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
         {info.getValue() as string}
       </span>
     ),
@@ -117,7 +117,7 @@ const metricColumns: ColumnDef<MetricRow>[] = [
     accessorKey: 'value',
     header: 'Value',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-slate-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
         {info.getValue() as string}
       </span>
     ),
@@ -142,13 +142,13 @@ export const SuspensionOutput: Component = () => {
   ];
 
   return (
-    <div class="border border-slate-800/50 bg-slate-950/50">
+    <div class="border border-neutral-800/50 bg-neutral-950/50">
       <SectionHeader title="Suspension Output" variant="output" />
 
       {/* Springs Stiffness */}
-      <div class="p-3 border-b border-slate-800/30">
+      <div class="p-3 border-b border-neutral-800/30">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
             Springs Stiffness
           </div>
           <HelpTooltip
@@ -159,31 +159,31 @@ export const SuspensionOutput: Component = () => {
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-slate-900/50 border border-slate-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
               Front
             </div>
             <div class="text-2xl font-semibold text-amber-400">
               {springsStiffness.front}
-              <span class="text-xs text-slate-500 ml-1">N/mm</span>
+              <span class="text-xs text-neutral-500 ml-1">N/mm</span>
             </div>
           </div>
-          <div class="bg-slate-900/50 border border-slate-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
               Rear
             </div>
             <div class="text-2xl font-semibold text-amber-400">
               {springsStiffness.rear}
-              <span class="text-xs text-slate-500 ml-1">N/mm</span>
+              <span class="text-xs text-neutral-500 ml-1">N/mm</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Dampers Table */}
-      <div class="border-b border-slate-800/30">
-        <div class="flex items-center justify-between px-3 py-2 bg-slate-900/30">
-          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+      <div class="border-b border-neutral-800/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-neutral-900/30">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
             Dampers
           </div>
           <HelpTooltip
@@ -200,9 +200,9 @@ export const SuspensionOutput: Component = () => {
       </div>
 
       {/* Anti-roll bars */}
-      <div class="p-3 border-t border-slate-800/30">
+      <div class="p-3 border-t border-neutral-800/30">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
             Anti-roll Bars
           </div>
           <HelpTooltip
@@ -213,31 +213,31 @@ export const SuspensionOutput: Component = () => {
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-slate-900/50 border border-slate-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
               FARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
               {antiRollBars.farb}
-              <span class="text-xs text-slate-500 ml-1">kNm</span>
+              <span class="text-xs text-neutral-500 ml-1">kNm</span>
             </div>
           </div>
-          <div class="bg-slate-900/50 border border-slate-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
               RARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
               {antiRollBars.rarb}
-              <span class="text-xs text-slate-500 ml-1">kNm</span>
+              <span class="text-xs text-neutral-500 ml-1">kNm</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Acceleration Metrics Table */}
-      <div class="border-t border-slate-800/30">
-        <div class="flex items-center justify-between px-3 py-2 bg-slate-900/30">
-          <div class="text-[10px] uppercase tracking-wider text-slate-500">
+      <div class="border-t border-neutral-800/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-neutral-900/30">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
             Acceleration Metrics
           </div>
           <HelpTooltip

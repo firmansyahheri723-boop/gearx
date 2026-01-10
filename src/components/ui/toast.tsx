@@ -22,9 +22,9 @@ const typeStyles: Record<NotificationType, { bg: string; border: string; text: s
     icon: 'WRN',
   },
   info: {
-    bg: 'bg-cyan-500/20',
-    border: 'border-cyan-500/30',
-    text: 'text-cyan-400',
+    bg: 'bg-neutral-500/20',
+    border: 'border-neutral-500/30',
+    text: 'text-neutral-400',
     icon: 'INF',
   },
 };
@@ -34,7 +34,7 @@ const progressColors: Record<NotificationType, string> = {
   success: 'bg-emerald-500',
   error: 'bg-red-500',
   warning: 'bg-amber-500',
-  info: 'bg-cyan-500',
+  info: 'bg-neutral-500',
 };
 
 // Individual toast item component
@@ -86,20 +86,20 @@ const ToastItem: Component<{ notification: Notification }> = (props) => {
       aria-live="polite"
     >
       {/* Header */}
-      <div class="flex items-center justify-between px-3 py-2 border-b border-slate-700/50 bg-slate-900/60">
+      <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-700/50 bg-neutral-900/60">
         <div class="flex items-center gap-2">
           <div class={`w-1 h-4 ${progressColors[props.notification.type]}`} />
           <span class={`text-[10px] font-bold tracking-wider uppercase ${styles().text}`}>
             {styles().icon}
           </span>
-          <span class="text-xs font-semibold tracking-wide uppercase text-slate-300">
+          <span class="text-xs font-semibold tracking-wide uppercase text-neutral-300">
             {props.notification.title}
           </span>
         </div>
         <button
           type="button"
           onClick={handleDismiss}
-          class="p-1 text-slate-500 hover:text-slate-300 transition-colors"
+          class="p-1 text-neutral-500 hover:text-neutral-300 transition-colors"
           aria-label="Dismiss notification"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -110,15 +110,15 @@ const ToastItem: Component<{ notification: Notification }> = (props) => {
 
       {/* Content */}
       <Show when={props.notification.description}>
-        <div class="px-3 py-2 bg-slate-950/50">
-          <p class="text-xs text-slate-400 leading-relaxed">
+        <div class="px-3 py-2 bg-neutral-950/50">
+          <p class="text-xs text-neutral-400 leading-relaxed">
             {props.notification.description}
           </p>
         </div>
       </Show>
 
       {/* Progress bar */}
-      <div class="h-0.5 bg-slate-800/50">
+      <div class="h-0.5 bg-neutral-800/50">
         <div
           class={`h-full ${progressColors[props.notification.type]} transition-all duration-50 ease-linear`}
           style={{ width: `${progress()}%` }}
@@ -152,22 +152,22 @@ const ToastStyles: Component = () => {
     <style>{`
       @keyframes toast-in {
         from {
-          transform: translateX(100%);
+          transform: tranneutralX(100%);
           opacity: 0;
         }
         to {
-          transform: translateX(0);
+          transform: tranneutralX(0);
           opacity: 1;
         }
       }
 
       @keyframes toast-out {
         from {
-          transform: translateX(0);
+          transform: tranneutralX(0);
           opacity: 1;
         }
         to {
-          transform: translateX(100%);
+          transform: tranneutralX(100%);
           opacity: 0;
         }
       }
