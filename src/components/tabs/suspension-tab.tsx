@@ -2,83 +2,22 @@ import { Component, For, createMemo, Show } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
 import { DataTable } from '../ui/data-table';
-import { HelpLink } from '../ui/help-tooltip';
+import { HelpLink, HelpTooltip } from '../ui/help-tooltip';
+import { Formula } from '../ui/formula';
 import { vehicleInputs, setVehicleInputs } from '../../stores/vehicle';
 import { calculateSuspensionOutputs } from '../../utils/suspension';
 import { SuspensionOutput } from '../suspension-output';
 
-// Help tooltip content for suspension sections
-const HELP_CONTENT: Record<
-  string,
-  { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
-> = {
-  suspensionParameters: {
-    description:
-      "Core suspension settings that define how your car handles bumps and cornering. Ride frequency controls how quickly the suspension oscillates, damping ratio affects how oscillations decay, and roll gradient determines body roll during turns. Higher values generally mean stiffer, more responsive handling.",
-    articles: [
-      { label: "Wikipedia: Suspension", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)" },
-    ],
-    videos: [
-      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  springsStiffness: {
-    description:
-      "Calculated spring rates based on ride frequency and sprung mass. Stiffer springs reduce body roll and improve responsiveness but compromise ride comfort. Front/rear balance affects handling characteristics - stiffer front promotes understeer, stiffer rear promotes oversteer.",
-    articles: [
-      { label: "Wikipedia: Spring Rate", url: "https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate" },
-    ],
-    videos: [
-      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  antiRollBars: {
-    description:
-      "Anti-roll bars (sway bars) connect left and right wheels to resist body roll during cornering. FARB is Front Anti-Roll Bar, RARB is Rear Anti-Roll Bar. The front/rear balance determines handling balance - more front ARB causes understeer, more rear ARB causes oversteer.",
-    articles: [
-      { label: "Wikipedia: Anti-roll Bar", url: "https://en.wikipedia.org/wiki/Anti-roll_bar" },
-    ],
-    videos: [
-      { label: "Anti-Roll Bars Guide", url: "https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  damperSettings: {
-    description:
-      "Dampers (shock absorbers) control the rate of spring compression and extension. Bump controls compression, rebound controls extension. Fast settings handle quick impacts, slow settings handle body movements. Proper damping prevents oscillation and maintains tire contact.",
-    articles: [
-      { label: "Wikipedia: Shock Absorber", url: "https://en.wikipedia.org/wiki/Shock_absorber" },
-    ],
-    videos: [
-      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  accelerationWeightTransfer: {
-    description:
-      "Under acceleration, weight transfers from front to rear, affecting traction. Longitudinal G is forward/braking acceleration, lateral G is cornering acceleration. Understanding weight transfer helps optimize suspension settings for your driving style and track characteristics.",
-    articles: [
-      { label: "Wikipedia: Weight Transfer", url: "https://en.wikipedia.org/wiki/Weight_transfer" },
-    ],
-    videos: [
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  formulaReference: {
-    description:
-      "Reference formulas used to calculate suspension parameters. These physics-based equations ensure your suspension is properly matched to your vehicle's weight and desired handling characteristics. Spring stiffness, critical damping, and damping ratios all follow established engineering principles.",
-    articles: [
-      { label: "Wikipedia: Suspension Geometry", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)#Geometry" },
-    ],
-    videos: [
-      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
-    ],
-  },
-};
+// Help content type for reusable definitions
+interface HelpContent {
+  description: string;
+  formula?: string;
+  variables?: string[];
+  articles?: HelpLink[];
+  videos?: HelpLink[];
+}
 
-// Input slider configuration
+// Input slider configuration with inline help
 interface SliderConfig {
   key: keyof typeof vehicleInputs;
   label: string;
@@ -87,6 +26,7 @@ interface SliderConfig {
   step: number;
   unit: string;
   description: string;
+  help: string;
 }
 
 const SUSPENSION_SLIDERS: SliderConfig[] = [
@@ -98,6 +38,7 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
     step: 0.1,
     unit: 'Hz',
     description: 'Racecars: 3.0 - 5.0+ Hz',
+    help: 'Natural frequency of suspension oscillation. Higher values = stiffer suspension. Race cars typically use 3.0-5.0+ Hz.',
   },
   {
     key: 'dampingRatio',
@@ -107,6 +48,7 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
     step: 0.05,
     unit: 'ζ',
     description: 'Racecars: 0.65+',
+    help: 'Ratio of actual damping to critical damping. 1.0 = critically damped (no oscillation). Race cars typically use 0.65+.',
   },
   {
     key: 'desiredRollGradient',
@@ -116,6 +58,7 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
     step: 0.01,
     unit: 'deg/g',
     description: 'Lower = stiffer roll',
+    help: 'Degrees of body roll per g of lateral acceleration. Lower values = stiffer roll resistance. Race cars typically use 0.02-0.3 deg/g.',
   },
   {
     key: 'magicNumber',
@@ -125,6 +68,7 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
     step: 0.5,
     unit: '%',
     description: 'Front roll stiffness distribution',
+    help: 'Front ARB bias percentage. Controls understeer/oversteer balance. Higher values = more understeer tendency.',
   },
   {
     key: 'wheelWeight',
@@ -134,8 +78,30 @@ const SUSPENSION_SLIDERS: SliderConfig[] = [
     step: 0.5,
     unit: 'kg',
     description: 'Per wheel (unsprung mass)',
+    help: 'Unsprung mass per wheel (wheel, tire, brake, hub). Subtracted from axle weight to get sprung mass.',
+  },
+  {
+    key: 'rollCenterHeight',
+    label: 'Roll Center Height',
+    min: 0.05,
+    max: 0.4,
+    step: 0.01,
+    unit: 'm',
+    description: 'Height from ground to roll center',
+    help: 'Height of the roll center above ground. The distance from roll center to CoG (H) determines roll moment arm.',
   },
 ];
+
+// Shared help content for items that are reused (like ARB stiffness for both FARB and RARB)
+const ARB_STIFFNESS_HELP: HelpContent = {
+  description: 'Individual ARB stiffness is derived from total roll rate and the front bias percentage (magic number).',
+  formula: 'ARB = \\frac{K_{\\phi F/R} \\cdot \\pi}{180 \\cdot t^2}',
+  variables: [
+    'ARB = anti-roll bar stiffness (kNm)',
+    'K_φF/R = front/rear roll rate (Nm/deg)',
+    't = average track width (m)',
+  ],
+};
 
 // Type for damper table row
 interface DamperTableRow {
@@ -166,6 +132,7 @@ export const SuspensionTab: Component = () => {
       desiredRollGradient: vehicleInputs.desiredRollGradient,
       magicNumber: vehicleInputs.magicNumber,
       tireRate: vehicleInputs.tireRate,
+      rollCenterHeight: vehicleInputs.rollCenterHeight,
     })
   );
 
@@ -240,7 +207,7 @@ export const SuspensionTab: Component = () => {
   return (
     <div class="space-y-4">
       {/* Suspension Output Card */}
-      <SuspensionOutput />
+      <SuspensionOutput outputs={outputs()} />
 
       {/* Top Row: Key Metrics + Input Sliders */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -250,8 +217,15 @@ export const SuspensionTab: Component = () => {
             title="Suspension Parameters"
             variant="input"
             help={{
-              ...HELP_CONTENT.suspensionParameters,
-              position: "bottom",
+              description: 'Core suspension settings that define how your car handles bumps and cornering. Ride frequency controls how quickly the suspension oscillates, damping ratio affects how oscillations decay, and roll gradient determines body roll during turns.',
+              position: 'bottom',
+              articles: [
+                { label: 'Wikipedia: Suspension', url: 'https://en.wikipedia.org/wiki/Suspension_(vehicle)' },
+              ],
+              videos: [
+                { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
+                { label: 'Suspension Talk', url: 'https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq' },
+              ],
             }}
           />
           <div class="p-4 space-y-4">
@@ -259,7 +233,10 @@ export const SuspensionTab: Component = () => {
               {(slider) => (
                 <div class="space-y-1">
                   <div class="flex items-center justify-between">
-                    <span class="text-xs text-neutral-400">{slider.label}</span>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-xs text-neutral-400">{slider.label}</span>
+                      <HelpTooltip description={slider.help} position="right" />
+                    </div>
                     <div class="flex items-baseline gap-1">
                       <span class="text-sm font-bold text-neutral-400">
                         {(vehicleInputs[slider.key] as number).toFixed(
@@ -294,8 +271,20 @@ export const SuspensionTab: Component = () => {
             title="Springs Stiffness"
             variant="output"
             help={{
-              ...HELP_CONTENT.springsStiffness,
-              position: "bottom",
+              description: 'Spring stiffness calculated from ride frequency and sprung mass per corner. Higher values mean stiffer springs with less body roll but harsher ride.',
+              formula: 'K = 4 \\pi^2 f^2 m',
+              variables: [
+                'K = spring stiffness (N/m)',
+                'f = ride frequency (Hz)',
+                'm = sprung mass per corner (kg)',
+              ],
+              position: 'bottom',
+              articles: [
+                { label: 'Wikipedia: Spring Rate', url: 'https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate' },
+              ],
+              videos: [
+                { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
+              ],
             }}
           />
           <div class="p-4 space-y-4">
@@ -314,8 +303,20 @@ export const SuspensionTab: Component = () => {
               />
             </div>
             <div class="border-t border-neutral-800/50 pt-4">
-              <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
-                Sprung Masses
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+                  Sprung Masses (per corner)
+                </span>
+                <HelpTooltip
+                  description="Sprung mass is the portion of the vehicle supported by the suspension. Calculated per corner by taking half the axle weight minus the wheel weight (unsprung mass)."
+                  formula="m_{sprung} = \frac{W_{axle}}{2} - W_{wheel}"
+                  variables={[
+                    'm_sprung = sprung mass per corner (kg)',
+                    'W_axle = axle weight (kg)',
+                    'W_wheel = wheel weight (kg)',
+                  ]}
+                  position="bottom"
+                />
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center">
@@ -341,34 +342,62 @@ export const SuspensionTab: Component = () => {
             title="Anti-Roll Bars"
             variant="output"
             help={{
-              ...HELP_CONTENT.antiRollBars,
-              position: "bottom",
+              description: 'Anti-roll bars resist body roll during cornering. FARB (Front) and RARB (Rear) stiffness determines handling balance - more front ARB causes understeer, more rear ARB causes oversteer.',
+              formula: 'K_{\\phi DES} = \\frac{W \\cdot H}{\\phi / A_y}',
+              variables: [
+                'K_φDES = desired roll rate (Nm/deg)',
+                'W = vehicle weight (kg)',
+                'H = roll center to CoG height (m)',
+                'φ/Ay = desired roll gradient (deg/g)',
+              ],
+              position: 'bottom',
+              articles: [
+                { label: 'Wikipedia: Anti-roll Bar', url: 'https://en.wikipedia.org/wiki/Anti-roll_bar' },
+              ],
+              videos: [
+                { label: 'Anti-Roll Bars Guide', url: 'https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY' },
+              ],
             }}
           />
           <div class="p-4 space-y-4">
             <div class="grid grid-cols-2 gap-4">
-              <MetricCard
+              <MetricCardWithHelp
                 label="FARB"
                 value={outputs().antiRollBars.farb.toFixed(2)}
                 unit="kNm"
                 highlight
+                help={ARB_STIFFNESS_HELP}
               />
-              <MetricCard
+              <MetricCardWithHelp
                 label="RARB"
                 value={outputs().antiRollBars.rarb.toFixed(2)}
                 unit="kNm"
                 highlight
+                help={ARB_STIFFNESS_HELP}
               />
             </div>
             <div class="border-t border-neutral-800/50 pt-4 space-y-2">
-              <div class="flex justify-between text-xs">
+              <div class="flex justify-between items-center text-xs">
                 <span class="text-neutral-500">Roll Center to CoG</span>
                 <span class="text-neutral-300">
                   {(outputs().antiRollBars.rollCenterToCoG * 100).toFixed(1)} cm
                 </span>
               </div>
-              <div class="flex justify-between text-xs">
-                <span class="text-neutral-500">Total Roll Rate</span>
+              <div class="flex justify-between items-center text-xs">
+                <div class="flex items-center gap-1">
+                  <span class="text-neutral-500">Total Roll Rate</span>
+                  <HelpTooltip
+                    description="Total roll rate combines spring, tire, and ARB contributions. This complex formula accounts for tire compliance and wheel rates."
+                    formula="K_{\phi A} = \frac{\frac{\pi}{180} \cdot K_{\phi DES} \cdot K_t \cdot \frac{t^2}{2}}{K_t \cdot \frac{t^2}{2} \cdot \frac{\pi}{180} - K_{\phi DES}} - \frac{\pi \cdot K_w \cdot \frac{t^2}{2}}{180}"
+                    variables={[
+                      'K_φA = total roll rate (Nm/deg)',
+                      'K_t = tire rate (N/m)',
+                      'K_w = average wheel rate (N/m)',
+                      't = average track width (m)',
+                    ]}
+                    position="left"
+                  />
+                </div>
                 <span class="text-neutral-300">
                   {outputs().antiRollBars.totalRollRate.toFixed(0)} Nm/deg
                 </span>
@@ -384,8 +413,20 @@ export const SuspensionTab: Component = () => {
           title="Damper Settings"
           variant="output"
           help={{
-            ...HELP_CONTENT.damperSettings,
-            position: "bottom",
+            description: 'Dampers control spring oscillation. Critical damping prevents oscillation; damping ratio adjusts this. Different multipliers set bump (compression) and rebound (extension) rates.',
+            formula: 'C_{crit} = 2\\sqrt{K \\cdot m}',
+            variables: [
+              'C_crit = critical damping (N·s/m)',
+              'K = spring stiffness (N/m)',
+              'm = sprung mass (kg)',
+            ],
+            position: 'bottom',
+            articles: [
+              { label: 'Wikipedia: Shock Absorber', url: 'https://en.wikipedia.org/wiki/Shock_absorber' },
+            ],
+            videos: [
+              { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
+            ],
           }}
         />
         <DataTable
@@ -393,18 +434,36 @@ export const SuspensionTab: Component = () => {
           columns={damperColumns}
         />
         <div class="px-4 py-2 border-t border-neutral-800/30 bg-neutral-900/30 flex items-center gap-6">
-          <span class="text-[10px] text-neutral-500">
-            Critical Damping Front:{' '}
-            <span class="text-neutral-400">
-              {outputs().dampers.critDampingFront.toFixed(0)} N·s/m
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] text-neutral-500">
+              Critical Damping Front:{' '}
+              <span class="text-neutral-400">
+                {outputs().dampers.critDampingFront.toFixed(0)} N·s/m
+              </span>
             </span>
-          </span>
-          <span class="text-[10px] text-neutral-500">
-            Critical Damping Rear:{' '}
-            <span class="text-neutral-400">
-              {outputs().dampers.critDampingRear.toFixed(0)} N·s/m
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] text-neutral-500">
+              Critical Damping Rear:{' '}
+              <span class="text-neutral-400">
+                {outputs().dampers.critDampingRear.toFixed(0)} N·s/m
+              </span>
             </span>
-          </span>
+          </div>
+          <HelpTooltip
+            description="Actual damping force is critical damping multiplied by damping ratio. Different settings use fractions of this base value."
+            formula="C = C_{crit} \cdot \zeta"
+            variables={[
+              'C = damping force (N·s/m)',
+              'C_crit = critical damping (N·s/m)',
+              'ζ = damping ratio',
+              'Bump = C × 2/3',
+              'Fast Bump = C × 1/3',
+              'Rebound = C × 3/2',
+              'Fast Rebound = C × 3/4',
+            ]}
+            position="top"
+          />
         </div>
       </div>
 
@@ -414,28 +473,67 @@ export const SuspensionTab: Component = () => {
           title="Acceleration & Weight Transfer"
           variant="output"
           help={{
-            ...HELP_CONTENT.accelerationWeightTransfer,
-            position: "bottom",
+            description: 'Weight transfers from front to rear under acceleration, affecting traction distribution.',
+            formula: '\\Delta W = \\frac{h}{L} \\cdot W \\cdot a',
+            variables: [
+              'ΔW = weight transfer (kg)',
+              'h = CoG height (m)',
+              'L = wheelbase (m)',
+              'W = total weight (kg)',
+              'a = longitudinal acceleration (g)',
+            ],
+            position: 'bottom',
           }}
         />
         <div class="p-4">
           <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <MetricCard
+            <MetricCardWithHelp
               label="Long. Accel"
               value={outputs().acceleration.longitudinalAccelG.toFixed(2)}
               unit="g"
               highlight
+              help={{
+                description: 'Longitudinal acceleration calculated from 0-100 kph time. This determines how much weight transfers under acceleration.',
+                formula: 'a = \\frac{v_f - v_s}{\\Delta t \\cdot g} = \\frac{27.78}{t_{0-100} \\cdot 9.81}',
+                variables: [
+                  'a = acceleration (g)',
+                  'v_f = final velocity (27.78 m/s = 100 kph)',
+                  'v_s = starting velocity (0 m/s)',
+                  't = 0-100 kph time (s)',
+                ],
+              }}
             />
-            <MetricCard
+            <MetricCardWithHelp
               label="Lat. Accel"
               value={outputs().acceleration.lateralAccelG.toFixed(2)}
               unit="g"
               highlight
+              help={{
+                description: 'Lateral acceleration at a given corner speed and radius. Uses 118m radius as a standard reference corner.',
+                formula: 'A_a = \\frac{V^2}{R \\cdot g}',
+                variables: [
+                  'A_a = lateral acceleration (g)',
+                  'V = velocity (m/s)',
+                  'R = corner radius (118 m)',
+                  'g = gravity (9.81 m/s²)',
+                ],
+              }}
             />
-            <MetricCard
+            <MetricCardWithHelp
               label="Weight Transfer"
               value={outputs().acceleration.weightTransfer.toFixed(1)}
               unit="kg"
+              help={{
+                description: 'Weight transfers from front to rear under acceleration, affecting traction distribution.',
+                formula: '\\Delta W = \\frac{h}{L} \\cdot W \\cdot a',
+                variables: [
+                  'ΔW = weight transfer (kg)',
+                  'h = CoG height (m)',
+                  'L = wheelbase (m)',
+                  'W = total weight (kg)',
+                  'a = longitudinal acceleration (g)',
+                ],
+              }}
             />
             <MetricCard
               label="Front on Accel"
@@ -485,35 +583,43 @@ export const SuspensionTab: Component = () => {
 
       {/* Formula Reference */}
       <div class="border border-neutral-800/50 bg-neutral-950/50">
-        <SectionHeader
-          title="Formula Reference"
-          variant="input"
-          help={{
-            ...HELP_CONTENT.formulaReference,
-            position: "top",
-          }}
-        />
+        <SectionHeader title="Formula Reference" variant="input" />
         <div class="p-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <FormulaCard
               title="Spring Stiffness"
-              formula="K = 4 × π² × f² × m"
+              formula="K = 4 \pi^2 f^2 m"
               variables={['K = stiffness (N/m)', 'f = ride frequency (Hz)', 'm = sprung mass (kg)']}
             />
             <FormulaCard
               title="Critical Damping"
-              formula="Ccrit = 2 × √(K × m)"
-              variables={['Ccrit = critical damping (N·s/m)', 'K = stiffness', 'm = sprung mass']}
+              formula="C_{crit} = 2\sqrt{K \cdot m}"
+              variables={['C_crit = critical damping (N·s/m)', 'K = stiffness', 'm = sprung mass']}
             />
             <FormulaCard
               title="Damping Ratios"
-              formula="C = Ccrit × ζ"
+              formula="C = C_{crit} \times \zeta"
               variables={[
                 'Bump = C × 2/3',
                 'Fast Bump = C × 1/3',
                 'Rebound = C × 3/2',
                 'Fast Rebound = C × 3/4',
               ]}
+            />
+            <FormulaCard
+              title="Desired Roll Rate"
+              formula="K_{\phi DES} = \frac{W \cdot H}{\phi / A_y}"
+              variables={['W = weight (kg)', 'H = roll center to CoG (m)', 'φ/Ay = roll gradient (deg/g)']}
+            />
+            <FormulaCard
+              title="Longitudinal Accel"
+              formula="a = \frac{27.78}{t_{0-100} \times 9.81}"
+              variables={['a = acceleration (g)', 't = 0-100 kph time (s)', '27.78 = 100 kph in m/s']}
+            />
+            <FormulaCard
+              title="Lateral Accel"
+              formula="A_a = \frac{V^2}{R \times g}"
+              variables={['A_a = lateral accel (g)', 'V = velocity (m/s)', 'R = radius (m)']}
             />
           </div>
         </div>
@@ -558,7 +664,52 @@ const MetricCard: Component<{
   );
 };
 
-// Helper component for formula reference cards
+// Metric card with help tooltip
+const MetricCardWithHelp: Component<{
+  label: string;
+  value: string;
+  unit: string;
+  highlight?: boolean;
+  help: HelpContent;
+}> = (props) => {
+  return (
+    <div
+      class="flex flex-col items-center p-3 border relative"
+      classList={{
+        'border-amber-500/30 bg-amber-500/5': props.highlight,
+        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
+      }}
+    >
+      <div class="flex items-center gap-1 mb-1">
+        <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+          {props.label}
+        </span>
+        <HelpTooltip
+          description={props.help.description}
+          formula={props.help.formula}
+          variables={props.help.variables}
+          position="top"
+        />
+      </div>
+      <div class="flex items-baseline gap-1">
+        <span
+          class="text-xl font-bold"
+          classList={{
+            'text-amber-400': props.highlight,
+            'text-neutral-300': !props.highlight,
+          }}
+        >
+          {props.value}
+        </span>
+        <Show when={props.unit}>
+          <span class="text-xs text-neutral-500">{props.unit}</span>
+        </Show>
+      </div>
+    </div>
+  );
+};
+
+// Helper component for formula reference cards with KaTeX
 const FormulaCard: Component<{
   title: string;
   formula: string;
@@ -569,10 +720,12 @@ const FormulaCard: Component<{
       <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
         {props.title}
       </div>
-      <div class="text-neutral-400 mb-2">{props.formula}</div>
+      <div class="bg-neutral-950/50 px-2 py-1.5 rounded mb-2 overflow-x-auto">
+        <Formula math={props.formula} class="text-neutral-300" />
+      </div>
       <div class="space-y-0.5">
         <For each={props.variables}>
-          {(variable) => <div class="text-neutral-500 text-[10px]">{variable}</div>}
+          {(variable) => <div class="text-neutral-500 text-[10px] font-mono">{variable}</div>}
         </For>
       </div>
     </div>

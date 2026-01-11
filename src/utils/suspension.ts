@@ -18,6 +18,7 @@ export interface SuspensionInputs {
   desiredRollGradient: number; // φ/Ay (0.02 - 0.7)
   magicNumber: number; // % front/rear roll stiffness distribution (e.g., 58.8)
   tireRate: number; // N/m - tire spring rate
+  rollCenterHeight: number; // meters - height of roll center from ground
 }
 
 export interface SpringsOutput {
@@ -28,10 +29,10 @@ export interface SpringsOutput {
 }
 
 export interface DampersOutput {
-  critDampingFront: number; // N
-  critDampingRear: number; // N
-  dampingForceFront: number; // N
-  dampingForceRear: number; // N
+  critDampingFront: number; // N·s/m
+  critDampingRear: number; // N·s/m
+  dampingForceFront: number; // N·s/m
+  dampingForceRear: number; // N·s/m
   bumpFront: number;
   bumpRear: number;
   fastBumpFront: number;
@@ -69,43 +70,57 @@ export interface SuspensionOutputs {
   acceleration: AccelerationOutput;
 }
 
+// Use 3.14 to match Excel formulas exactly
+const PI = 3.14;
+
 /**
- * Calculate sprung mass (total mass minus unsprung mass from wheels)
- * Front sprung mass = (weight * frontDist%) - (wheelWeight * 2)
+ * Calculate sprung mass per corner (total mass minus unsprung mass from wheels)
+ * Excel: A10 = A7/2 - C4 (front axle weight / 2 - wheel weight)
+ * Front sprung mass per corner = (weight * frontDist% / 2) - wheelWeight
  */
 function calcSprungMass(
   weight: number,
   frontWeightDist: number,
   wheelWeight: number
 ): { front: number; rear: number } {
-  const frontWeight = weight * (frontWeightDist / 100);
-  const rearWeight = weight * (1 - frontWeightDist / 100);
+  // Front/rear axle weights
+  const frontAxleWeight = weight * (frontWeightDist / 100);
+  const rearAxleWeight = weight * (1 - frontWeightDist / 100);
 
-  // Subtract unsprung mass (2 wheels per axle)
-  const frontSprung = frontWeight - wheelWeight * 2;
-  const rearSprung = rearWeight - wheelWeight * 2;
+  // Sprung mass per corner (Excel formula: axle weight / 2 - wheel weight)
+  const frontSprungPerCorner = frontAxleWeight / 2 - wheelWeight;
+  const rearSprungPerCorner = rearAxleWeight / 2 - wheelWeight;
 
-  return { front: frontSprung, rear: rearSprung };
+  return { front: frontSprungPerCorner, rear: rearSprungPerCorner };
 }
 
 /**
  * Calculate spring stiffness using ride frequency formula
- * K = 4 * π² * f² * m
+ * Excel: D4 = 4 * 3.14^2 * f^2 * m / 1000 (result in kN/m)
+ * K = 4 × π² × f² × m
  */
-function calcSpringStiffness(sprungMass: number, rideFrequency: number): number {
-  return 4 * Math.PI * Math.PI * rideFrequency * rideFrequency * sprungMass;
+function calcSpringStiffness(sprungMassPerCorner: number, rideFrequency: number): number {
+  // Returns N/m (multiply by 1000 from kN/m in Excel, but we keep as N/m)
+  return 4 * PI * PI * rideFrequency * rideFrequency * sprungMassPerCorner;
 }
 
 /**
  * Calculate critical damping force
- * Ccrit = 2 * √(K * m)
+ * Excel: D8 = 2 * SQRT(D4 * 1000 * A10)
+ * Ccrit = 2 × √(K × m)
  */
-function calcCriticalDamping(stiffness: number, sprungMass: number): number {
-  return 2 * Math.sqrt(stiffness * sprungMass);
+function calcCriticalDamping(stiffnessNm: number, sprungMassPerCorner: number): number {
+  return 2 * Math.sqrt(stiffnessNm * sprungMassPerCorner);
 }
 
 /**
  * Calculate damping forces from critical damping and damping ratio
+ * Excel formulas for damper settings:
+ * - Damping force C = Ccrit × ζ
+ * - Bump = C × 2/3
+ * - Fast bump = C × 1/3
+ * - Rebound = C × 3/2
+ * - Fast rebound = C × 3/4
  */
 function calcDampingForces(
   critDampingFront: number,
@@ -120,16 +135,16 @@ function calcDampingForces(
     critDampingRear,
     dampingForceFront,
     dampingForceRear,
-    // Bump = C * 2/3
+    // Bump = C × 2/3
     bumpFront: dampingForceFront * (2 / 3),
     bumpRear: dampingForceRear * (2 / 3),
-    // Fast bump = C * 1/3
+    // Fast bump = C × 1/3
     fastBumpFront: dampingForceFront * (1 / 3),
     fastBumpRear: dampingForceRear * (1 / 3),
-    // Rebound = C * 3/2
+    // Rebound = C × 3/2
     reboundFront: dampingForceFront * (3 / 2),
     reboundRear: dampingForceRear * (3 / 2),
-    // Fast rebound = C * 3/4
+    // Fast rebound = C × 3/4
     fastReboundFront: dampingForceFront * (3 / 4),
     fastReboundRear: dampingForceRear * (3 / 4),
   };
@@ -137,6 +152,7 @@ function calcDampingForces(
 
 /**
  * Calculate longitudinal acceleration in g
+ * Excel: A43 = (27.78 - 0) / A19 / 9.81
  * a = (vf - vs) / dt / g
  * For 0-100 kph: (27.78 - 0) / time / 9.81
  */
@@ -147,17 +163,18 @@ function calcLongitudinalAccelG(acceleration0to100: number): number {
 
 /**
  * Calculate lateral acceleration in g at given speed and radius
- * Aa = V² / (R * g)
+ * Excel: B43 = (speed * 0.277778)^2 / (118 * 9.81)
+ * Aa = V² / (R × g)
  * V in m/s, R in meters
  */
 function calcLateralAccelG(speedKph: number, radiusM: number): number {
-  const speedMs = speedKph / 3.6;
+  const speedMs = speedKph * 0.277778; // kph to m/s
   return (speedMs * speedMs) / (radiusM * 9.81);
 }
 
 /**
  * Calculate weight transfer under acceleration
- * Weight transfer = (CoG_height / wheelbase) * mass * long_accel_g * g
+ * Weight transfer = (CoG_height / wheelbase) × mass × long_accel_g
  */
 function calcWeightTransfer(
   cogHeightM: number,
@@ -171,15 +188,22 @@ function calcWeightTransfer(
 /**
  * Calculate anti-roll bar stiffness
  * Based on Excel formulas:
- * KφDES = W * H / (φ/Ay)
- * KφA = π/180 * (KφDES * Kt * (t²/2)) / ((Kt * (t²/2) * π/180 - KφDES) - (π * Kw * (t²/2) / 180))
- * KφFA = KφA * Nmag / 100
- * KφRA = KφA * (100 - Nmag) / 100
- * FARB = KφFA * π / (180 * t²)
- * RARB = KφRA * π / (180 * t²)
+ * 
+ * KφDES = W × H / (φ/Ay)  [W in kg, result in Nm/deg]
+ * 
+ * t = average track width = (front + rear) / 2
+ * Kw = average wheel rate = (front + rear) / 2
+ * 
+ * KφA = (π/180) × (KφDES × Kt × (t²/2)) / ((Kt × (t²/2) × π/180 - KφDES) - (π × Kw × (t²/2) / 180))
+ * 
+ * KφFA = KφA × Nmag / 100
+ * KφRA = KφA × (100 - Nmag) / 100
+ * 
+ * FARB = KφFA × π / (180 × t²)
+ * RARB = KφRA × π / (180 × t²)
  */
 function calcAntiRollBars(
-  weight: number, // kg
+  weight: number, // kg (NOT converted to N - Excel uses kg)
   rollCenterToCoG: number, // H in meters
   desiredRollGradient: number, // φ/Ay
   frontWheelRate: number, // Kw front in N/m
@@ -189,35 +213,42 @@ function calcAntiRollBars(
   rearTrackWidth: number, // meters
   magicNumber: number // % for front distribution
 ): AntiRollBarsOutput {
-  const W = weight * 9.81; // Convert to N
+  const W = weight; // Keep in kg as per Excel formula D28 = A4 * A24 / D24
   const H = rollCenterToCoG;
   const phiAy = desiredRollGradient;
   const Kt = tireRate;
-  const t = (frontTrackWidth + rearTrackWidth) / 2; // average track width
+
+  // Average track width (Excel: B25 = (B24 + C24) / 2)
+  const t = (frontTrackWidth + rearTrackWidth) / 2;
+
+  // Average wheel rate (Excel: A29 = (A28 + B28) / 2)
   const Kw = (frontWheelRate + rearWheelRate) / 2;
 
-  // Desired roll rate (Nm/deg)
+  // Desired roll rate (Excel: D28 = A4 * A24 / D24)
+  // Note: Excel uses weight in kg, not N
   const KphiDES = (W * H) / phiAy;
 
-  // Total roll rate calculation using the complex formula from Excel
-  // KφA = π/180 * (KφDES * Kt * (t²/2)) / ((Kt * (t²/2) * π/180 - KφDES) - (π * Kw * (t²/2) / 180))
-  const piOver180 = Math.PI / 180;
+  // Total roll rate calculation (Excel: A32)
+  // = (3.14/180) * (D28*C28*(B25^2/2)) / (C28*(B25^2/2)*3.14/180 - D28) - (3.14*A29*B25^2/2)/180
+  const piOver180 = PI / 180;
   const tSquaredHalf = (t * t) / 2;
 
   const numerator = piOver180 * KphiDES * Kt * tSquaredHalf;
-  const denomPart1 = Kt * tSquaredHalf * piOver180 - KphiDES;
-  const denomPart2 = piOver180 * Kw * tSquaredHalf;
-  const denominator = denomPart1 - denomPart2;
+  const denom1 = Kt * tSquaredHalf * piOver180 - KphiDES;
+  const subtractTerm = (PI * Kw * tSquaredHalf) / 180;
 
-  const KphiA = denominator !== 0 ? numerator / denominator : 0;
+  // Excel formula structure: numerator / denom1 - subtractTerm
+  const KphiA = denom1 !== 0 ? (numerator / denom1) - subtractTerm : 0;
 
-  // Front and rear roll rates
+  // Front and rear roll rates (Excel: A35, B35)
   const KphiFA = KphiA * (magicNumber / 100);
   const KphiRA = KphiA * ((100 - magicNumber) / 100);
 
-  // ARB values (convert to kNm by dividing by 1000)
-  const farb = (KphiFA * Math.PI) / (180 * frontTrackWidth * frontTrackWidth) / 1000;
-  const rarb = (KphiRA * Math.PI) / (180 * rearTrackWidth * rearTrackWidth) / 1000;
+  // ARB values using average track width (Excel: A38, B38)
+  // Excel: = A35 * 3.14 / (180 * B25^2)
+  const tSquared = t * t;
+  const farb = (KphiFA * PI) / (180 * tSquared) / 1000; // Convert to kNm
+  const rarb = (KphiRA * PI) / (180 * tSquared) / 1000; // Convert to kNm
 
   return {
     rollCenterToCoG: H,
@@ -249,12 +280,13 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
     desiredRollGradient,
     magicNumber,
     tireRate,
+    rollCenterHeight,
   } = inputs;
 
-  // Calculate sprung masses
+  // Calculate sprung masses per corner (Excel approach)
   const sprungMass = calcSprungMass(weight, frontWeightDistribution, wheelWeight);
 
-  // Calculate spring stiffness
+  // Calculate spring stiffness (N/m)
   const frontStiffness = calcSpringStiffness(sprungMass.front, rideFrequency);
   const rearStiffness = calcSpringStiffness(sprungMass.rear, rideFrequency);
 
@@ -293,15 +325,15 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
   };
 
   // Calculate anti-roll bars
-  // Roll center to CoG is approximately CoG height * 0.6 (simplified assumption)
-  // In the Excel, H = 0.3m for a CoG of 0.508m (20 inches)
-  const rollCenterToCoG = cogHeight * 0.59; // Approximation based on Excel data
+  // Roll center to CoG (H) = CoG height - roll center height
+  const rollCenterToCoG = cogHeight - rollCenterHeight;
 
+  // Wheel rates are spring stiffness (N/m) - matching Excel A28, B28
   const antiRollBars = calcAntiRollBars(
     weight,
     rollCenterToCoG,
     desiredRollGradient,
-    frontStiffness, // Using spring stiffness as wheel rate approximation
+    frontStiffness,
     rearStiffness,
     tireRate,
     frontTrackWidth,

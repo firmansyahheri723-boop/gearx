@@ -36,8 +36,9 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   // Suspension-specific inputs
   wheelWeight: 12, // kg per wheel
   dampingRatio: 1.0, // ζ (0.65+ for racecars)
-  tireRate: 343232.75, // N/m - tire spring rate
+  tireRate: 343232.75, // N/m - tire spring rate (35 * 9.80665 * 1000 from Excel)
   magicNumber: 58.8, // % front/rear roll stiffness distribution
+  rollCenterHeight: 0.208, // meters - height of roll center from ground (H = 0.3m to CoG in Excel means ~0.2m from ground)
   // Engine redline
   redlineRpm: 8000, // RPM limit
 });

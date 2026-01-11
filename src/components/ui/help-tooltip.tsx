@@ -1,4 +1,5 @@
 import { Component, Show, For, createSignal, onCleanup, onMount } from "solid-js";
+import { Formula } from "./formula";
 
 export interface HelpLink {
   label: string;
@@ -9,6 +10,10 @@ export type TooltipPosition = "right" | "bottom" | "left" | "top";
 
 export interface HelpTooltipProps {
   description: string;
+  /** LaTeX formula to display */
+  formula?: string;
+  /** Variable definitions for the formula */
+  variables?: string[];
   articles?: HelpLink[];
   videos?: HelpLink[];
   position?: TooltipPosition;
@@ -95,7 +100,7 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
       {/* Tooltip Popup */}
       <Show when={isOpen()}>
         <div
-          class={`absolute z-50 w-72 border border-neutral-500/30 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/50 ${positionStyles().popup}`}
+          class={`absolute z-50 w-80 border border-neutral-500/30 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/50 ${positionStyles().popup}`}
           role="tooltip"
         >
           {/* Header */}
@@ -112,6 +117,45 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
               {props.description}
             </p>
           </div>
+
+          {/* Formula Section */}
+          <Show when={props.formula}>
+            <div class="border-t border-neutral-700/50 bg-neutral-800/20 px-3 py-2">
+              <div class="flex items-center gap-1.5 mb-2">
+                <svg
+                  class="w-3 h-3 text-amber-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                </svg>
+                <span class="text-[10px] font-bold tracking-wider uppercase text-amber-400">
+                  Formula
+                </span>
+              </div>
+              <div class="bg-neutral-950/50 border border-neutral-700/30 px-3 py-2 rounded overflow-x-auto">
+                <Formula math={props.formula!} displayMode class="text-neutral-200" />
+              </div>
+              <Show when={props.variables && props.variables.length > 0}>
+                <div class="mt-2 space-y-0.5">
+                  <For each={props.variables}>
+                    {(variable) => (
+                      <div class="text-[10px] text-neutral-500 font-mono">
+                        {variable}
+                      </div>
+                    )}
+                  </For>
+                </div>
+              </Show>
+            </div>
+          </Show>
 
           {/* Links Section */}
           <Show when={hasLinks()}>

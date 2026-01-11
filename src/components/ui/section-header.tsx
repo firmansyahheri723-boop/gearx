@@ -6,6 +6,8 @@ interface SectionHeaderProps {
   variant?: 'input' | 'output';
   help?: {
     description: string;
+    formula?: string;
+    variables?: string[];
     articles?: HelpLink[];
     videos?: HelpLink[];
     position?: TooltipPosition;
@@ -53,6 +55,8 @@ export const SectionHeader: Component<SectionHeaderProps> = (props) => {
         <Show when={props.help}>
           <HelpTooltip
             description={props.help!.description}
+            formula={props.help!.formula}
+            variables={props.help!.variables}
             articles={props.help!.articles}
             videos={props.help!.videos}
             position={props.help!.position}

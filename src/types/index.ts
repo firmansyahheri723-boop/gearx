@@ -50,6 +50,7 @@ export interface VehicleInputs {
   dampingRatio: number; // ζ (0.65+ for racecars)
   tireRate: number; // N/m - tire spring rate
   magicNumber: number; // % front/rear roll stiffness distribution
+  rollCenterHeight: number; // meters - height of roll center from ground
   // Engine redline
   redlineRpm: number; // RPM limit
 }

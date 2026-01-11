@@ -3,12 +3,7 @@ import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from './ui/section-header';
 import { DataTable } from './ui/data-table';
 import { HelpTooltip, HelpLink } from './ui/help-tooltip';
-import {
-  springsStiffness,
-  dampers,
-  antiRollBars,
-  accelerationMetrics,
-} from '../stores/vehicle';
+import type { SuspensionOutputs } from '../utils/suspension';
 
 // Help tooltip content for suspension output sections
 const HELP_CONTENT: Record<
@@ -124,21 +119,25 @@ const metricColumns: ColumnDef<MetricRow>[] = [
   },
 ];
 
-export const SuspensionOutput: Component = () => {
+interface SuspensionOutputProps {
+  outputs: SuspensionOutputs;
+}
+
+export const SuspensionOutput: Component<SuspensionOutputProps> = (props) => {
   // Create reactive data for Dampers table
   const damperData = (): DamperRow[] => [
-    { label: 'Bump', front: dampers.bump.front, rear: dampers.bump.rear },
-    { label: 'Fast bump', front: dampers.fastBump.front, rear: dampers.fastBump.rear },
-    { label: 'Rebound', front: dampers.rebound.front, rear: dampers.rebound.rear },
-    { label: 'Fast rebound', front: dampers.fastRebound.front, rear: dampers.fastRebound.rear },
+    { label: 'Bump', front: Math.round(props.outputs.dampers.bumpFront), rear: Math.round(props.outputs.dampers.bumpRear) },
+    { label: 'Fast bump', front: Math.round(props.outputs.dampers.fastBumpFront), rear: Math.round(props.outputs.dampers.fastBumpRear) },
+    { label: 'Rebound', front: Math.round(props.outputs.dampers.reboundFront), rear: Math.round(props.outputs.dampers.reboundRear) },
+    { label: 'Fast rebound', front: Math.round(props.outputs.dampers.fastReboundFront), rear: Math.round(props.outputs.dampers.fastReboundRear) },
   ];
 
   // Create reactive data for Acceleration Metrics table
   const metricsData = (): MetricRow[] => [
-    { label: 'Weight transfer on accel', value: `${accelerationMetrics.weightTransfer} kg` },
-    { label: 'Front weight dist on accel', value: accelerationMetrics.frontWeightDistOnAccel },
-    { label: 'Max longitudinal accel', value: `${accelerationMetrics.maxLongitudinalAccel} g` },
-    { label: 'Max lateral accel', value: `${accelerationMetrics.maxLateralAccel} g` },
+    { label: 'Weight transfer on accel', value: `${props.outputs.acceleration.weightTransfer.toFixed(1)} kg` },
+    { label: 'Front weight dist on accel', value: `${props.outputs.acceleration.frontBiasOnAccel.toFixed(1)}%` },
+    { label: 'Max longitudinal accel', value: `${props.outputs.acceleration.longitudinalAccelG.toFixed(2)} g` },
+    { label: 'Max lateral accel', value: `${props.outputs.acceleration.lateralAccelG.toFixed(2)} g` },
   ];
 
   return (
@@ -164,8 +163,8 @@ export const SuspensionOutput: Component = () => {
               Front
             </div>
             <div class="text-2xl font-semibold text-amber-400">
-              {springsStiffness.front}
-              <span class="text-xs text-neutral-500 ml-1">N/mm</span>
+              {(props.outputs.springs.frontStiffness / 1000).toFixed(2)}
+              <span class="text-xs text-neutral-500 ml-1">kN/m</span>
             </div>
           </div>
           <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
@@ -173,8 +172,8 @@ export const SuspensionOutput: Component = () => {
               Rear
             </div>
             <div class="text-2xl font-semibold text-amber-400">
-              {springsStiffness.rear}
-              <span class="text-xs text-neutral-500 ml-1">N/mm</span>
+              {(props.outputs.springs.rearStiffness / 1000).toFixed(2)}
+              <span class="text-xs text-neutral-500 ml-1">kN/m</span>
             </div>
           </div>
         </div>
@@ -218,7 +217,7 @@ export const SuspensionOutput: Component = () => {
               FARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
-              {antiRollBars.farb}
+              {props.outputs.antiRollBars.farb.toFixed(2)}
               <span class="text-xs text-neutral-500 ml-1">kNm</span>
             </div>
           </div>
@@ -227,7 +226,7 @@ export const SuspensionOutput: Component = () => {
               RARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
-              {antiRollBars.rarb}
+              {props.outputs.antiRollBars.rarb.toFixed(2)}
               <span class="text-xs text-neutral-500 ml-1">kNm</span>
             </div>
           </div>
