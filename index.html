@@ -8,14 +8,14 @@
     <meta property="og:title" content="GearX" />
     <meta property="og:description" content="A dashboard for CarX Street — suspension calculator, gearbox tuning, and more" />
     <meta property="og:type" content="website" />
-    <title>GearX</title>
+    <title>GearX Dashboard</title>
     <!-- Inline script to prevent FOUC (Flash of Unstyled Content) -->
     <script>
       (function() {
         var STORAGE_KEY = 'gearx-theme';
         var saved = localStorage.getItem(STORAGE_KEY);
         var theme;
-        
+
         if (saved === 'dark' || saved === 'light') {
           // Explicit theme preference
           theme = saved;
@@ -27,7 +27,7 @@
             theme = 'dark';
           }
         }
-        
+
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
