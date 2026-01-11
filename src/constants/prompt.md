@@ -7,10 +7,10 @@ Current vehicle setup:
 - weight: @weight kg
 - front_weight_distribution: @front_weight%
 - drivetrain: @drivetrain
-- wheelbase: @wheelbase mm
-- cog_height: @cog_height mm
-- front_track_width: @f_track_width mm
-- rear_track_width: @r_track_width mm
+- wheelbase: @wheelbase m
+- cog_height: @cog_height cm
+- front_track_width: @f_track_width m
+- rear_track_width: @r_track_width m
 - front_wheel_offset: @f_wheel_offset cm
 - rear_wheel_offset: @r_wheel_offset cm
 
