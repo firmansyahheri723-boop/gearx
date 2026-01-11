@@ -7,7 +7,9 @@ import {
 import { DashboardHeader } from "../components/dashboard-header";
 import { initThemeListener } from "../stores/theme";
 import { clearSelection } from "../stores/selection";
-import { onMount, onCleanup, For } from "solid-js";
+import { onMount, onCleanup, For, createSignal, Show } from "solid-js";
+import { deserializeSetup } from "../utils/share";
+import { applySharedSetup } from "../stores/vehicle";
 
 const TABS = [
   { id: "main", label: "Input", to: "/" },
@@ -22,6 +24,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const location = useLocation();
+  const [showLoadedBanner, setShowLoadedBanner] = createSignal(false);
 
   onMount(() => {
     const cleanupThemeListener = initThemeListener();
@@ -34,6 +37,17 @@ function RootComponent() {
 
     document.addEventListener("keydown", handleKeyDown);
 
+    const hash = window.location.hash;
+    if (hash.startsWith("#setup=")) {
+      const encoded = hash.slice(7);
+      const data = deserializeSetup(encoded);
+      if (data) {
+        applySharedSetup(data);
+        setShowLoadedBanner(true);
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }
+
     onCleanup(() => {
       cleanupThemeListener();
       document.removeEventListener("keydown", handleKeyDown);
@@ -44,6 +58,32 @@ function RootComponent() {
     <div class="min-h-screen p-2 sm:p-4 lg:p-6 font-mono flex justify-center">
       <div class="w-full max-w-full lg:max-w-7xl">
         <DashboardHeader />
+
+        <Show when={showLoadedBanner()}>
+          <div class="mb-4 px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary text-xs uppercase tracking-wider flex items-center justify-between">
+            <span>Setup loaded from URL</span>
+            <button
+              type="button"
+              onClick={() => setShowLoadedBanner(false)}
+              class="hover:text-foreground"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+        </Show>
 
         <div class="border border-border/50 bg-background/50 mb-4">
           <div class="flex overflow-x-auto scrollbar-hide">

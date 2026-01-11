@@ -4,6 +4,7 @@ import {
   changeThemePreference,
   type ThemePreference,
 } from "../stores/theme";
+import { ShareModal } from "./share-modal";
 
 const THEME_OPTIONS: {
   value: ThemePreference;
@@ -84,6 +85,7 @@ export function DashboardHeader() {
   const now = new Date();
   const timestamp = now.toISOString().replace("T", " ").slice(0, 19) + " UTC";
   const [isOpen, setIsOpen] = createSignal(false);
+  const [showShareModal, setShowShareModal] = createSignal(false);
 
   const currentOption = () =>
     THEME_OPTIONS.find((o) => o.value === themePreference()) ??
@@ -104,106 +106,136 @@ export function DashboardHeader() {
   };
 
   return (
-    <header class="border border-border/50 bg-surface/50 mb-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2.5 sm:py-3 gap-2 sm:gap-4">
-        {/* Logo / Title */}
-        <div class="text-foreground-secondary font-bold text-base sm:text-lg tracking-widest uppercase">
-          GearX Dashboard
-        </div>
+    <>
+      <header class="border border-border/50 bg-surface/50 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2.5 sm:py-3 gap-2 sm:gap-4">
+          {/* Logo / Title */}
+          <div class="text-foreground-secondary font-bold text-base sm:text-lg tracking-widest uppercase">
+            GearX Dashboard
+          </div>
 
-        {/* Right side - Status & Theme Selector */}
-        <div class="flex items-center gap-2 sm:gap-4">
-          {/* Theme Dropdown */}
-          <div
-            ref={dropdownRef}
-            class="relative"
-            onFocusOut={(e) => {
-              // Close if focus leaves the dropdown entirely
-              if (!dropdownRef?.contains(e.relatedTarget as Node)) {
-                setIsOpen(false);
-              }
-            }}
-          >
+          {/* Right side - Share Button & Theme Selector */}
+          <div class="flex items-center gap-2 sm:gap-4">
+            {/* Share Button */}
             <button
               type="button"
-              onClick={() => {
-                setIsOpen(!isOpen());
-                if (!isOpen()) {
-                  document.addEventListener("click", handleClickOutside, {
-                    once: true,
-                  });
-                }
-              }}
-              class="flex items-center gap-1.5 px-2 py-1 border border-border/50 bg-surface/50 hover:bg-surface-elevated/50 text-muted hover:text-foreground-secondary transition-colors text-[10px] uppercase tracking-wider"
-              aria-haspopup="listbox"
-              aria-expanded={isOpen()}
+              onClick={() => setShowShareModal(true)}
+              class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider"
             >
-              <ThemeIcon type={currentOption().icon} />
-              <span class="hidden sm:inline">{currentOption().label}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="10"
-                height="10"
+                width="12"
+                height="12"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="transition-transform"
-                classList={{ "rotate-180": isOpen() }}
               >
-                <path d="m6 9 6 6 6-6" />
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" x2="12" y1="2" y2="15" />
               </svg>
+              <span class="hidden sm:inline">Share</span>
             </button>
 
-            {/* Dropdown Menu */}
-            <Show when={isOpen()}>
-              <div
-                class="absolute right-0 top-full mt-1 z-50 border border-border/50 bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/20 min-w-[100px]"
-                role="listbox"
+            {/* Theme Dropdown */}
+            <div
+              ref={dropdownRef}
+              class="relative"
+              onFocusOut={(e) => {
+                // Close if focus leaves the dropdown entirely
+                if (!dropdownRef?.contains(e.relatedTarget as Node)) {
+                  setIsOpen(false);
+                }
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(!isOpen());
+                  if (!isOpen()) {
+                    document.addEventListener("click", handleClickOutside, {
+                      once: true,
+                    });
+                  }
+                }}
+                class="flex items-center gap-1.5 px-2 py-1 border border-border/50 bg-surface/50 hover:bg-surface-elevated/50 text-muted hover:text-foreground-secondary transition-colors text-[10px] uppercase tracking-wider"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen()}
               >
-                <For each={THEME_OPTIONS}>
-                  {(option) => (
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={themePreference() === option.value}
-                      onClick={() => handleSelect(option.value)}
-                      class="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider transition-colors"
-                      classList={{
-                        "bg-foreground/10 text-foreground":
-                          themePreference() === option.value,
-                        "text-muted hover:bg-surface-elevated hover:text-foreground-secondary":
-                          themePreference() !== option.value,
-                      }}
-                    >
-                      <ThemeIcon type={option.icon} />
-                      <span>{option.label}</span>
-                      <Show when={themePreference() === option.value}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="10"
-                          height="10"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="ml-auto"
-                        >
-                          <path d="M20 6 9 17l-5-5" />
-                        </svg>
-                      </Show>
-                    </button>
-                  )}
-                </For>
-              </div>
-            </Show>
+                <ThemeIcon type={currentOption().icon} />
+                <span class="hidden sm:inline">{currentOption().label}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="transition-transform"
+                  classList={{ "rotate-180": isOpen() }}
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              <Show when={isOpen()}>
+                <div
+                  class="absolute right-0 top-full mt-1 z-50 border border-border/50 bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/20 min-w-[100px]"
+                  role="listbox"
+                >
+                  <For each={THEME_OPTIONS}>
+                    {(option) => (
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={themePreference() === option.value}
+                        onClick={() => handleSelect(option.value)}
+                        class="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider transition-colors"
+                        classList={{
+                          "bg-foreground/10 text-foreground":
+                            themePreference() === option.value,
+                          "text-muted hover:bg-surface-elevated hover:text-foreground-secondary":
+                            themePreference() !== option.value,
+                        }}
+                      >
+                        <ThemeIcon type={option.icon} />
+                        <span>{option.label}</span>
+                        <Show when={themePreference() === option.value}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="10"
+                            height="10"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="ml-auto"
+                          >
+                            <path d="M20 6 9 17l-5-5" />
+                          </svg>
+                        </Show>
+                      </button>
+                    )}
+                  </For>
+                </div>
+              </Show>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <Show when={showShareModal()}>
+        <ShareModal onClose={() => setShowShareModal(false)} />
+      </Show>
+    </>
   );
 }

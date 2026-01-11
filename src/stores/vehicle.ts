@@ -12,6 +12,7 @@ import type {
   Drivetrain,
   TractionMode,
 } from '../types';
+import type { ShareSetupData } from '../utils/share';
 
 // Vehicle Input Parameters
 export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
@@ -134,3 +135,12 @@ export const [tireCompound, setTireCompound] = createStore<{ value: TireCompound
 export const [tractionMode, setTractionMode] = createStore<{ value: TractionMode }>({
   value: 'launch',
 });
+
+export function applySharedSetup(data: ShareSetupData): void {
+  setVehicleInputs(data.inputs);
+  setTorqueRpmData(data.torqueRpmData);
+  setGearRatios(data.gearRatios);
+  setFinalDrive(data.finalDrive);
+  setTireCompound({ value: data.tireCompound });
+  setTractionMode({ value: data.tractionMode });
+}
