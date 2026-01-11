@@ -1,14 +1,14 @@
-import { Component, onMount, onCleanup, createEffect } from 'solid-js';
+import { onMount, onCleanup, createEffect } from 'solid-js';
 import L from 'leaflet';
 import type { Landmark, GameMapConfig } from '../../types/map';
 
-interface GameMapProps {
+type GameMapProps = {
   config: GameMapConfig;
   onLandmarkClick?: (landmark: Landmark) => void;
   selectedLandmark?: Landmark | null;
 }
 
-export const GameMap: Component<GameMapProps> = (props) => {
+export function GameMap(props: GameMapProps) {
   let containerRef: HTMLDivElement | undefined;
   let map: L.Map | null = null;
   let markers: L.Marker[] = [];
@@ -156,4 +156,4 @@ export const GameMap: Component<GameMapProps> = (props) => {
       class="w-full aspect-square bg-neutral-900 border border-neutral-800"
     />
   );
-};
+}

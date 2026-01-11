@@ -1,11 +1,11 @@
-import { Component, For, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
+import { For, Show, createSignal, createMemo, onMount, onCleanup } from 'solid-js';
 
-export interface DropdownOption {
+export type DropdownOption = {
   value: string;
   label: string;
 }
 
-export interface DropdownProps {
+export type DropdownProps = {
   value: string;
   options: DropdownOption[];
   onChange: (value: string) => void;
@@ -14,7 +14,7 @@ export interface DropdownProps {
   class?: string;
 }
 
-export const Dropdown: Component<DropdownProps> = (props) => {
+export function Dropdown(props: DropdownProps) {
   const [isOpen, setIsOpen] = createSignal(false);
   const [search, setSearch] = createSignal('');
   const [highlightedIndex, setHighlightedIndex] = createSignal(0);
@@ -227,4 +227,4 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       </Show>
     </div>
   );
-};
+}

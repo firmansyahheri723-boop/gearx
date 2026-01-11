@@ -3,36 +3,43 @@
  * Based on formula.xlsx "Suspension calculator" sheet
  */
 
-export interface SuspensionInputs {
-  weight: number; // kg
-  frontWeightDistribution: number; // % (e.g., 56)
-  wheelWeight: number; // kg per wheel
-  rideFrequency: number; // Hz (3.0 - 5.0+ for racecars)
-  dampingRatio: number; // ζ (0.65+ for racecars)
-  acceleration0to100: number; // seconds
-  maxSpeed118mRadius: number; // kph - max speed at 118m radius corner
-  cogHeight: number; // meters
-  wheelbase: number; // meters
-  frontTrackWidth: number; // meters
-  rearTrackWidth: number; // meters
-  desiredRollGradient: number; // φ/Ay (0.02 - 0.7)
-  magicNumber: number; // % front/rear roll stiffness distribution (e.g., 58.8)
-  tireRate: number; // N/m - tire spring rate
-  rollCenterHeight: number; // meters - height of roll center from ground
-}
+import {
+  GRAVITY_MS2,
+  KPH_100_IN_MS,
+  REFERENCE_CORNER_RADIUS_M,
+  PI,
+} from '../constants/physics';
 
-export interface SpringsOutput {
-  frontSprungMass: number; // kg
-  rearSprungMass: number; // kg
-  frontStiffness: number; // N/m (display as kN/m by dividing by 1000)
-  rearStiffness: number; // N/m
-}
+export type SuspensionInputs = {
+  weight: number;
+  frontWeightDistribution: number;
+  wheelWeight: number;
+  rideFrequency: number;
+  dampingRatio: number;
+  acceleration0to100: number;
+  maxSpeed118mRadius: number;
+  cogHeight: number;
+  wheelbase: number;
+  frontTrackWidth: number;
+  rearTrackWidth: number;
+  desiredRollGradient: number;
+  magicNumber: number;
+  tireRate: number;
+  rollCenterHeight: number;
+};
 
-export interface DampersOutput {
-  critDampingFront: number; // N·s/m
-  critDampingRear: number; // N·s/m
-  dampingForceFront: number; // N·s/m
-  dampingForceRear: number; // N·s/m
+export type SpringsOutput = {
+  frontSprungMass: number;
+  rearSprungMass: number;
+  frontStiffness: number;
+  rearStiffness: number;
+};
+
+export type DampersOutput = {
+  critDampingFront: number;
+  critDampingRear: number;
+  dampingForceFront: number;
+  dampingForceRear: number;
   bumpFront: number;
   bumpRear: number;
   fastBumpFront: number;
@@ -41,37 +48,34 @@ export interface DampersOutput {
   reboundRear: number;
   fastReboundFront: number;
   fastReboundRear: number;
-}
+};
 
-export interface AntiRollBarsOutput {
-  rollCenterToCoG: number; // H in meters
-  desiredRollRate: number; // KφDES Nm/deg
-  totalRollRate: number; // KφA Nm/deg
-  frontRollRate: number; // KφFA Nm/deg
-  rearRollRate: number; // KφRA Nm/deg
-  farb: number; // kNm
-  rarb: number; // kNm
-}
+export type AntiRollBarsOutput = {
+  rollCenterToCoG: number;
+  desiredRollRate: number;
+  totalRollRate: number;
+  frontRollRate: number;
+  rearRollRate: number;
+  farb: number;
+  rarb: number;
+};
 
-export interface AccelerationOutput {
-  longitudinalAccelG: number; // g
-  lateralAccelG: number; // g
-  weightTransfer: number; // kg
-  frontWeightOnAccel: number; // kg
-  rearWeightOnAccel: number; // kg
-  frontBiasOnAccel: number; // %
-  rearBiasOnAccel: number; // %
-}
+export type AccelerationOutput = {
+  longitudinalAccelG: number;
+  lateralAccelG: number;
+  weightTransfer: number;
+  frontWeightOnAccel: number;
+  rearWeightOnAccel: number;
+  frontBiasOnAccel: number;
+  rearBiasOnAccel: number;
+};
 
-export interface SuspensionOutputs {
+export type SuspensionOutputs = {
   springs: SpringsOutput;
   dampers: DampersOutput;
   antiRollBars: AntiRollBarsOutput;
   acceleration: AccelerationOutput;
-}
-
-// Use 3.14 to match Excel formulas exactly
-const PI = 3.14;
+};
 
 /**
  * Calculate sprung mass per corner (total mass minus unsprung mass from wheels)
@@ -157,8 +161,7 @@ function calcDampingForces(
  * For 0-100 kph: (27.78 - 0) / time / 9.81
  */
 function calcLongitudinalAccelG(acceleration0to100: number): number {
-  // 100 kph = 27.78 m/s
-  return 27.78 / acceleration0to100 / 9.81;
+  return KPH_100_IN_MS / acceleration0to100 / GRAVITY_MS2;
 }
 
 /**
@@ -168,8 +171,8 @@ function calcLongitudinalAccelG(acceleration0to100: number): number {
  * V in m/s, R in meters
  */
 function calcLateralAccelG(speedKph: number, radiusM: number): number {
-  const speedMs = speedKph * 0.277778; // kph to m/s
-  return (speedMs * speedMs) / (radiusM * 9.81);
+  const speedMs = speedKph * 0.277778;
+  return (speedMs * speedMs) / (radiusM * GRAVITY_MS2);
 }
 
 /**

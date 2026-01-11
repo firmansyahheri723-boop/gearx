@@ -1,12 +1,12 @@
-import { Component, For } from "solid-js";
+import { For } from "solid-js";
 import type { GameMapConfig } from "../../types/map";
 
-interface MapSelectorProps {
+type MapSelectorProps = {
   maps: GameMapConfig[];
   onSelect: (map: GameMapConfig) => void;
 }
 
-export const MapSelector: Component<MapSelectorProps> = (props) => {
+export function MapSelector(props: MapSelectorProps) {
   return (
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       <For each={props.maps}>
@@ -53,4 +53,4 @@ export const MapSelector: Component<MapSelectorProps> = (props) => {
       </For>
     </div>
   );
-};
+}

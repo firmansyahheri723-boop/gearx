@@ -1,11 +1,9 @@
-import type { Component } from 'solid-js';
-import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from './ui/section-header';
 import { DataTable } from './ui/data-table';
-import { HelpTooltip, HelpLink } from './ui/help-tooltip';
+import { HelpTooltip, type HelpLink } from './ui/help-tooltip';
 import type { SuspensionOutputs } from '../utils/suspension';
+import type { ColumnDef } from '@tanstack/solid-table';
 
-// Help tooltip content for suspension output sections
 const HELP_CONTENT: Record<
   string,
   { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
@@ -52,19 +50,17 @@ const HELP_CONTENT: Record<
   },
 };
 
-// Types for table data
-interface DamperRow {
+type DamperRow = {
   label: string;
   front: number;
   rear: number;
 }
 
-interface MetricRow {
+type MetricRow = {
   label: string;
   value: string;
 }
 
-// Column definitions for Dampers table
 const damperColumns: ColumnDef<DamperRow>[] = [
   {
     accessorKey: 'label',
@@ -96,7 +92,6 @@ const damperColumns: ColumnDef<DamperRow>[] = [
   },
 ];
 
-// Column definitions for Acceleration Metrics table
 const metricColumns: ColumnDef<MetricRow>[] = [
   {
     accessorKey: 'label',
@@ -119,11 +114,11 @@ const metricColumns: ColumnDef<MetricRow>[] = [
   },
 ];
 
-interface SuspensionOutputProps {
+type SuspensionOutputProps = {
   outputs: SuspensionOutputs;
 }
 
-export const SuspensionOutput: Component<SuspensionOutputProps> = (props) => {
+export function SuspensionOutput(props: SuspensionOutputProps) {
   // Create reactive data for Dampers table
   const damperData = (): DamperRow[] => [
     { label: 'Bump', front: Math.round(props.outputs.dampers.bumpFront), rear: Math.round(props.outputs.dampers.bumpRear) },
@@ -253,4 +248,4 @@ export const SuspensionOutput: Component<SuspensionOutputProps> = (props) => {
       </div>
     </div>
   );
-};
+}

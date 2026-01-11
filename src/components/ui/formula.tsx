@@ -1,21 +1,14 @@
-import { Component, createEffect, onMount } from 'solid-js';
+import { createEffect, onMount } from 'solid-js';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
-export interface FormulaProps {
-  /** LaTeX formula string */
+export type FormulaProps = {
   math: string;
-  /** Display mode (block) vs inline */
   displayMode?: boolean;
-  /** Additional CSS classes */
   class?: string;
 }
 
-/**
- * KaTeX formula rendering component
- * Renders LaTeX math formulas using KaTeX
- */
-export const Formula: Component<FormulaProps> = (props) => {
+export function Formula(props: FormulaProps) {
   let containerRef: HTMLSpanElement | undefined;
 
   const render = () => {
@@ -45,4 +38,4 @@ export const Formula: Component<FormulaProps> = (props) => {
       }}
     />
   );
-};
+}

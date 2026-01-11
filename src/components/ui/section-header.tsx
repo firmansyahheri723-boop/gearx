@@ -1,7 +1,7 @@
-import { Component, Show } from 'solid-js';
-import { HelpTooltip, HelpLink, TooltipPosition } from './help-tooltip';
+import { Show } from 'solid-js';
+import { HelpTooltip, type HelpLink, type TooltipPosition } from './help-tooltip';
 
-interface SectionHeaderProps {
+type SectionHeaderProps = {
   title: string;
   variant?: 'input' | 'output';
   help?: {
@@ -14,7 +14,7 @@ interface SectionHeaderProps {
   };
 }
 
-export const SectionHeader: Component<SectionHeaderProps> = (props) => {
+export function SectionHeader(props: SectionHeaderProps) {
   const isOutput = () => props.variant === 'output';
 
   return (
@@ -64,4 +64,4 @@ export const SectionHeader: Component<SectionHeaderProps> = (props) => {
       </Show>
     </div>
   );
-};
+}

@@ -1,11 +1,11 @@
-import { Component, createSignal, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import type { GearRatio } from '../../types';
 import { GEAR_COLORS, FINAL_DRIVE_COLOR } from '../../constants/colors';
 import { NumberInput } from './number-input';
 
-interface GearSliderProps {
+type GearSliderProps = {
   gear: GearRatio;
-  label: string; // e.g. "1st", "2nd", "Final drive"
+  label: string;
   index: number;
   gap: number | null;
   isFinalDrive?: boolean;
@@ -14,7 +14,7 @@ interface GearSliderProps {
   onMaxChange: (value: number) => void;
 }
 
-export const GearSlider: Component<GearSliderProps> = (props) => {
+export function GearSlider(props: GearSliderProps) {
   const [isEditing, setIsEditing] = createSignal(false);
 
   
@@ -145,4 +145,4 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
       </td>
     </tr>
   );
-};
+}

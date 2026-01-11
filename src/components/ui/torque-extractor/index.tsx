@@ -1,11 +1,11 @@
-import { Component, createSignal, createMemo, Show } from 'solid-js';
+import { createSignal, createMemo, Show } from 'solid-js';
 import type { TorqueExtractorCalibration, ExtractedDataPoint, ExtractionStep } from '../../../types/extraction';
 import { extractTorqueCurve } from '../../../utils/image-extraction';
 import { CalibrationOverlay } from './calibration';
 import { CurveEditor } from './curve-editor';
 import { DataPreview } from './data-preview';
 
-interface TorqueExtractorProps {
+type TorqueExtractorProps = {
   onClose: () => void;
   onApply: (data: { torque: number; rpm: number }[], imageUrl?: string) => void;
 }
@@ -20,7 +20,7 @@ const STEPS: { id: ExtractionStep; label: string }[] = [
   { id: 'preview', label: 'PREVIEW' },
 ];
 
-export const TorqueExtractor: Component<TorqueExtractorProps> = (props) => {
+export function TorqueExtractor(props: TorqueExtractorProps) {
   const [step, setStep] = createSignal<ExtractionStep>('upload');
   const [imageData, setImageData] = createSignal<ImageData | null>(null);
   const [imageUrl, setImageUrl] = createSignal<string | null>(null);
@@ -273,4 +273,4 @@ export const TorqueExtractor: Component<TorqueExtractorProps> = (props) => {
       </div>
     </div>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { Component, createSignal, For, Show } from 'solid-js';
+import { createSignal, For, Show } from 'solid-js';
 import { GameMap } from '../ui/game-map';
 import { MapSelector } from '../ui/map-selector';
 import { SectionHeader } from '../ui/section-header';
@@ -130,7 +130,7 @@ const getCategories = (landmarks: Landmark[]): string[] => {
   return Array.from(categories);
 };
 
-export const MapTab: Component = () => {
+export function MapTab() {
   const [selectedMap, setSelectedMap] = createSignal<GameMapConfig | null>(null);
   const [selectedLandmark, setSelectedLandmark] = createSignal<Landmark | null>(null);
 
@@ -264,4 +264,4 @@ export const MapTab: Component = () => {
       </Show>
     </div>
   );
-};
+}

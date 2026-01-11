@@ -1,4 +1,4 @@
-import { Component, For, createMemo, createSignal } from 'solid-js';
+import { For, createMemo, createSignal } from 'solid-js';
 import type { ColumnDef, SortingState } from '@tanstack/solid-table';
 import { DataTable } from '../ui/data-table';
 import { carData, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '../../stores/car-data';
@@ -80,7 +80,6 @@ function getColumnGroup(key: string) {
   return COLUMN_GROUPS.find((g) => g.columns.includes(key));
 }
 
-// Format cell value for display
 function formatCellValue(value: string | number | null): string {
   if (value === null || value === undefined) {
     return '-';
@@ -94,12 +93,11 @@ function formatCellValue(value: string | number | null): string {
   return value;
 }
 
-// Extended row type with original index for selection tracking
-interface CarDataRow extends CarData {
+type CarDataRow = CarData & {
   _originalIndex: number;
 }
 
-export const DatabaseTab: Component = () => {
+export function DatabaseTab() {
   // Sorting state
   const [sorting, setSorting] = createSignal<SortingState>([]);
 
@@ -202,8 +200,7 @@ export const DatabaseTab: Component = () => {
         }}
       />
 
-      {/* Scroll hint */}
       <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none" />
     </div>
   );
-};
+}

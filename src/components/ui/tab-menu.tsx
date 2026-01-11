@@ -1,8 +1,8 @@
-import { Component, For } from 'solid-js';
+import { For } from 'solid-js';
 
 export type TabId = 'main' | 'suspension' | 'gearbox' | 'data' | 'map';
 
-interface Tab {
+type Tab = {
   id: TabId;
   label: string;
 }
@@ -15,12 +15,12 @@ const TABS: Tab[] = [
   { id: 'map', label: 'Map' },
 ];
 
-interface TabMenuProps {
+type TabMenuProps = {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
 }
 
-export const TabMenu: Component<TabMenuProps> = (props) => {
+export function TabMenu(props: TabMenuProps) {
   return (
     <div class="border border-neutral-800/50 bg-neutral-950/50 mb-4">
       <div class="flex">
@@ -55,4 +55,4 @@ export const TabMenu: Component<TabMenuProps> = (props) => {
       </div>
     </div>
   );
-};
+}

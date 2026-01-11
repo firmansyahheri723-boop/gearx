@@ -1,6 +1,6 @@
-import { Component, createSignal, createEffect, JSX, splitProps } from "solid-js";
+import { createSignal, createEffect, type JSX, splitProps } from "solid-js";
 
-interface NumberInputProps {
+type NumberInputProps = {
   value: number;
   onChange: (value: number) => void;
   onBlur?: () => void;
@@ -13,12 +13,7 @@ interface NumberInputProps {
   disabled?: boolean;
 }
 
-/**
- * A number input component that only clamps values on blur.
- * This allows users to freely type intermediate values (like "3." or clearing the field)
- * without immediate validation interfering with their input.
- */
-export const NumberInput: Component<NumberInputProps> = (props) => {
+export function NumberInput(props: NumberInputProps) {
   const [local, inputProps] = splitProps(props, [
     "value",
     "onChange",
@@ -102,4 +97,4 @@ export const NumberInput: Component<NumberInputProps> = (props) => {
       {...inputProps}
     />
   );
-};
+}

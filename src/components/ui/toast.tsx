@@ -1,8 +1,14 @@
-import { Component, For, Show, createSignal, onMount, onCleanup } from 'solid-js';
+import { For, Show, createSignal, onMount, onCleanup } from 'solid-js';
 import { notifications, toast, type Notification, type NotificationType } from '../../stores/notifications';
 
-// Style configurations for each notification type
-const typeStyles: Record<NotificationType, { bg: string; border: string; text: string; icon: string }> = {
+type TypeStyle = {
+  bg: string;
+  border: string;
+  text: string;
+  icon: string;
+}
+
+const typeStyles: Record<NotificationType, TypeStyle> = {
   success: {
     bg: 'bg-emerald-500/20',
     border: 'border-emerald-500/30',
@@ -29,7 +35,6 @@ const typeStyles: Record<NotificationType, { bg: string; border: string; text: s
   },
 };
 
-// Progress bar colors
 const progressColors: Record<NotificationType, string> = {
   success: 'bg-emerald-500',
   error: 'bg-red-500',
@@ -37,8 +42,11 @@ const progressColors: Record<NotificationType, string> = {
   info: 'bg-neutral-500',
 };
 
-// Individual toast item component
-const ToastItem: Component<{ notification: Notification }> = (props) => {
+type ToastItemProps = {
+  notification: Notification;
+}
+
+function ToastItem(props: ToastItemProps) {
   const [isExiting, setIsExiting] = createSignal(false);
   const [progress, setProgress] = createSignal(100);
 
@@ -126,10 +134,9 @@ const ToastItem: Component<{ notification: Notification }> = (props) => {
       </div>
     </div>
   );
-};
+}
 
-// Main Toaster component - renders all notifications
-export const Toaster: Component = () => {
+export function Toaster() {
   return (
     <section
       class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"
@@ -144,10 +151,9 @@ export const Toaster: Component = () => {
       </For>
     </section>
   );
-};
+}
 
-// CSS animations - inject via style tag
-const ToastStyles: Component = () => {
+function ToastStyles() {
   return (
     <style>{`
       @keyframes toast-in {
@@ -181,14 +187,13 @@ const ToastStyles: Component = () => {
       }
     `}</style>
   );
-};
+}
 
-// Combined component that includes styles
-export const ToasterWithStyles: Component = () => {
+export function ToasterWithStyles() {
   return (
     <>
       <ToastStyles />
       <Toaster />
     </>
   );
-};
+}

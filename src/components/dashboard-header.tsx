@@ -1,6 +1,4 @@
-import type { Component } from 'solid-js';
-
-export const DashboardHeader: Component = () => {
+export function DashboardHeader() {
   const now = new Date();
   const timestamp = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 
@@ -39,4 +37,4 @@ export const DashboardHeader: Component = () => {
       </div>
     </header>
   );
-};
+}

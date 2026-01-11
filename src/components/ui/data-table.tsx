@@ -14,28 +14,18 @@ import { For, Show, createSignal, type JSX, splitProps, mergeProps } from 'solid
 export type { ColumnDef, SortingState };
 export { createColumnHelper } from '@tanstack/solid-table';
 
-export interface DataTableProps<TData> {
+export type DataTableProps<TData> = {
   data: TData[];
   columns: ColumnDef<TData, any>[];
-  /** Enable sorting on columns */
   enableSorting?: boolean;
-  /** Initial sorting state */
   initialSorting?: SortingState;
-  /** Callback when sorting changes */
   onSortingChange?: (sorting: SortingState) => void;
-  /** Enable sticky header */
   stickyHeader?: boolean;
-  /** Max height for scrollable area */
   maxHeight?: string;
-  /** CSS class for the table wrapper */
   class?: string;
-  /** Column pinning (e.g., stick first column) */
   columnPinning?: ColumnPinningState;
-  /** Show header groups row */
   showHeaderGroups?: boolean;
-  /** Custom row class based on row data */
   getRowClass?: (row: TData, index: number) => string;
-  /** Render custom row wrapper (for full row control) */
   renderRow?: (props: { row: TData; index: number; children: JSX.Element }) => JSX.Element;
 }
 
@@ -200,7 +190,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
 // Type extension for column meta
 declare module '@tanstack/solid-table' {
-  interface ColumnMeta<TData, TValue> {
+interface ColumnMeta<TData, TValue> {
     align?: 'left' | 'center' | 'right';
     headerClass?: string;
     cellClass?: string;

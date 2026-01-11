@@ -1,8 +1,8 @@
-import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
+import { createSignal, createEffect, onMount, onCleanup } from 'solid-js';
 import type { TorqueExtractorCalibration, ExtractedDataPoint } from '../../../types/extraction';
 import { pixelToValues } from '../../../utils/image-extraction';
 
-interface CurveEditorProps {
+type CurveEditorProps = {
   imageData: ImageData;
   canvasWidth: number;
   canvasHeight: number;
@@ -13,7 +13,7 @@ interface CurveEditorProps {
   onNext: () => void;
 }
 
-export const CurveEditor: Component<CurveEditorProps> = (props) => {
+export function CurveEditor(props: CurveEditorProps) {
   let canvasRef: HTMLCanvasElement | undefined;
 
   const [dragIndex, setDragIndex] = createSignal<number | null>(null);
@@ -207,4 +207,4 @@ export const CurveEditor: Component<CurveEditorProps> = (props) => {
       </div>
     </div>
   );
-};
+}

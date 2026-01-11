@@ -1,13 +1,13 @@
-import { Component, For } from 'solid-js';
+import { For } from 'solid-js';
 import type { ExtractedDataPoint } from '../../../types/extraction';
 
-interface DataPreviewProps {
+type DataPreviewProps = {
   extractedPoints: ExtractedDataPoint[];
   onBack: () => void;
   onApply: () => void;
 }
 
-export const DataPreview: Component<DataPreviewProps> = (props) => {
+export function DataPreview(props: DataPreviewProps) {
   return (
     <div class="flex flex-col gap-4">
       <div class="flex items-center justify-between">
@@ -62,4 +62,4 @@ export const DataPreview: Component<DataPreviewProps> = (props) => {
       </div>
     </div>
   );
-};
+}

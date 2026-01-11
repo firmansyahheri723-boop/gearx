@@ -1,8 +1,8 @@
-import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
+import { createSignal, createEffect, onMount, onCleanup } from 'solid-js';
 import type { TorqueExtractorCalibration } from '../../../types/extraction';
 import { NumberInput } from '../number-input';
 
-interface CalibrationOverlayProps {
+type CalibrationOverlayProps = {
   imageData: ImageData;
   canvasWidth: number;
   canvasHeight: number;
@@ -15,7 +15,7 @@ interface CalibrationOverlayProps {
 
 type DragTarget = 'top' | 'bottom' | 'left' | 'right' | null;
 
-export const CalibrationOverlay: Component<CalibrationOverlayProps> = (props) => {
+export function CalibrationOverlay(props: CalibrationOverlayProps) {
   let canvasRef: HTMLCanvasElement | undefined;
 
   const [dragTarget, setDragTarget] = createSignal<DragTarget>(null);
@@ -284,4 +284,4 @@ export const CalibrationOverlay: Component<CalibrationOverlayProps> = (props) =>
       </div>
     </div>
   );
-};
+}

@@ -1,7 +1,8 @@
 import type { GearRatio, TorqueRpmRow, SpeedRpmPoint, GearboxOutputs, TireCompound } from '../types';
 import { TIRE_FRICTION_COEFFICIENTS } from '../types';
+import { GRAVITY_MS2, KPH_100_IN_MS, INCHES_PER_MILE, MM_TO_INCHES, KW_TO_HP } from '../constants/physics';
 
-interface GearboxCalcInputs {
+type GearboxCalcInputs = {
   tireWidth: number; // mm
   profile: number; // %
   wheelDiameter: number; // inches
@@ -21,12 +22,8 @@ interface GearboxCalcInputs {
  * Calculate wheel circumference in inches
  */
 export function calcWheelCircumference(tireWidth: number, profile: number, wheelDiameter: number): number {
-  // tireWidth in mm, profile in %, wheelDiameter in inches
-  // sidewall height = tireWidth * profile / 100 (in mm)
-  // total diameter = wheelDiameter + 2 * sidewall height (converted to inches)
-  // circumference = π * diameter
   const sidewallHeightMm = tireWidth * (profile / 100);
-  const sidewallHeightInches = sidewallHeightMm / 25.4;
+  const sidewallHeightInches = sidewallHeightMm / MM_TO_INCHES;
   const totalDiameter = wheelDiameter + 2 * sidewallHeightInches;
   return totalDiameter * Math.PI;
 }
@@ -36,9 +33,8 @@ export function calcWheelCircumference(tireWidth: number, profile: number, wheel
  */
 export function calcWheelRadiusM(tireWidth: number, profile: number, wheelDiameter: number): number {
   const sidewallHeightMm = tireWidth * (profile / 100);
-  const sidewallHeightInches = sidewallHeightMm / 25.4;
+  const sidewallHeightInches = sidewallHeightMm / MM_TO_INCHES;
   const totalDiameterInches = wheelDiameter + 2 * sidewallHeightInches;
-  // Convert to meters: inches * 2.54 / 100 / 2
   return (totalDiameterInches * 2.54) / 100 / 2;
 }
 
@@ -48,9 +44,7 @@ export function calcWheelRadiusM(tireWidth: number, profile: number, wheelDiamet
  */
 export function calcSpeedKph(rpm: number, circumferenceInches: number, totalRatio: number): number {
   if (totalRatio === 0) return 0;
-  // 63360 = inches per mile
-  // Result is mph, then * 1.60934 to convert to kph
-  return (rpm * 60 * circumferenceInches) / 63360 / totalRatio * 1.60934;
+  return (rpm * 60 * circumferenceInches) / INCHES_PER_MILE / totalRatio * 1.60934;
 }
 
 /**
@@ -60,7 +54,7 @@ export function calcSpeedKph(rpm: number, circumferenceInches: number, totalRati
  * 1.34102 converts kW to HP
  */
 export function calcHorsepower(torqueNm: number, rpm: number): number {
-  return (torqueNm * rpm) / 9549 * 1.34102;
+  return (torqueNm * rpm) / 9549 * KW_TO_HP;
 }
 
 /**
@@ -76,8 +70,7 @@ export function calcWheelTorque(engineTorqueNm: number, gearRatio: number, final
  * For 0-100 kph: (27.78 - 0) / time / 9.81
  */
 export function calcLongitudinalAccelG(acceleration0to100: number): number {
-  // 100 kph = 27.78 m/s
-  return 27.78 / acceleration0to100 / 9.81;
+  return KPH_100_IN_MS / acceleration0to100 / GRAVITY_MS2;
 }
 
 /**
@@ -113,13 +106,11 @@ export function calcTractionLimitTorque(
   const weightTransfer = calcWeightTransfer(cogHeightM, wheelbaseM, massKg, longAccelG);
 
   if (drivetrain === 'RWD/AWD') {
-    // Rear gains weight under acceleration
     const rearWeightDynamic = rearWeight + weightTransfer;
-    return rearWeightDynamic * 9.81 * frictionCoef * wheelRadiusM;
+    return rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
   } else {
-    // FWD: front loses weight under acceleration
     const frontWeightDynamic = frontWeight - weightTransfer;
-    return frontWeightDynamic * 9.81 * frictionCoef * wheelRadiusM;
+    return frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
   }
 }
 

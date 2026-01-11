@@ -1,10 +1,11 @@
-import { Component, For, createMemo, Show } from 'solid-js';
+import { For, createMemo } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
 import { DataTable } from '../ui/data-table';
 import { GearSpeedChart } from '../ui/gear-speed-chart';
 import { GearTorqueChart } from '../ui/gear-torque-chart';
-import { HelpLink } from '../ui/help-tooltip';
+import { MetricCard } from '../ui/metric-card';
+import type { HelpLink } from '../ui/help-tooltip';
 import { GEAR_COLORS } from '../../constants/colors';
 import {
   vehicleInputs,
@@ -129,7 +130,7 @@ interface WheelTorqueTableRow {
   gearTorques: { gearIndex: number; gearName: string; wheelTorque: number; exceedsTraction: boolean }[];
 }
 
-export const GearboxTab: Component = () => {
+export function GearboxTab() {
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
       tireWidth: vehicleInputs.tireWidth,
@@ -622,40 +623,4 @@ export const GearboxTab: Component = () => {
       </div>
     </div>
   );
-};
-
-// Helper component for metric cards
-const MetricCard: Component<{
-  label: string;
-  value: string;
-  unit: string;
-  highlight?: boolean;
-}> = (props) => {
-  return (
-    <div
-      class="flex flex-col items-center p-3 border"
-      classList={{
-        'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
-      }}
-    >
-      <span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
-        {props.label}
-      </span>
-      <div class="flex items-baseline gap-1">
-        <span
-          class="text-xl font-bold"
-          classList={{
-            'text-amber-400': props.highlight,
-            'text-neutral-300': !props.highlight,
-          }}
-        >
-          {props.value}
-        </span>
-        <Show when={props.unit}>
-          <span class="text-xs text-neutral-500">{props.unit}</span>
-        </Show>
-      </div>
-    </div>
-  );
-};
+}

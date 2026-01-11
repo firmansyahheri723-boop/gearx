@@ -1,4 +1,4 @@
-import { Component, onMount, onCleanup, createSignal, Match, Switch } from 'solid-js';
+import { onMount, onCleanup, createSignal, Match, Switch } from 'solid-js';
 import { DashboardHeader } from './components/dashboard-header';
 import { TabMenu, type TabId } from './components/ui/tab-menu';
 import { InputTab } from './components/tabs/main-tab';
@@ -25,7 +25,7 @@ const getInitialTab = (): TabId => {
   return 'main';
 };
 
-const App: Component = () => {
+function App() {
   const [activeTab, setActiveTab] = createSignal<TabId>(getInitialTab());
 
   const handleTabChange = (tab: TabId) => {
@@ -129,10 +129,9 @@ const App: Component = () => {
         </footer>
       </div>
 
-      {/* Toast notifications */}
       <ToasterWithStyles />
     </div>
   );
-};
+}
 
 export default App;

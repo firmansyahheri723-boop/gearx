@@ -1,9 +1,10 @@
-import { Component, For, createMemo, Show } from 'solid-js';
+import { For, createMemo } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
 import { SectionHeader } from '../ui/section-header';
 import { DataTable } from '../ui/data-table';
-import { HelpLink, HelpTooltip } from '../ui/help-tooltip';
-import { Formula } from '../ui/formula';
+import { MetricCard, MetricCardWithHelp, FormulaCard } from '../ui/metric-card';
+import type { HelpLink } from '../ui/help-tooltip';
+import { HelpTooltip } from '../ui/help-tooltip';
 import { vehicleInputs, setVehicleInputs } from '../../stores/vehicle';
 import { calculateSuspensionOutputs } from '../../utils/suspension';
 import { SuspensionOutput } from '../suspension-output';
@@ -112,7 +113,7 @@ interface DamperTableRow {
   highlight?: boolean;
 }
 
-export const SuspensionTab: Component = () => {
+export function SuspensionTab() {
   // Convert cogHeight from inches to meters for calculation
   const cogHeightM = () => vehicleInputs.cogHeight * 0.0254;
 
@@ -626,108 +627,4 @@ export const SuspensionTab: Component = () => {
       </div>
     </div>
   );
-};
-
-// Helper component for metric cards
-const MetricCard: Component<{
-  label: string;
-  value: string;
-  unit: string;
-  highlight?: boolean;
-}> = (props) => {
-  return (
-    <div
-      class="flex flex-col items-center p-3 border"
-      classList={{
-        'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
-      }}
-    >
-      <span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
-        {props.label}
-      </span>
-      <div class="flex items-baseline gap-1">
-        <span
-          class="text-xl font-bold"
-          classList={{
-            'text-amber-400': props.highlight,
-            'text-neutral-300': !props.highlight,
-          }}
-        >
-          {props.value}
-        </span>
-        <Show when={props.unit}>
-          <span class="text-xs text-neutral-500">{props.unit}</span>
-        </Show>
-      </div>
-    </div>
-  );
-};
-
-// Metric card with help tooltip
-const MetricCardWithHelp: Component<{
-  label: string;
-  value: string;
-  unit: string;
-  highlight?: boolean;
-  help: HelpContent;
-}> = (props) => {
-  return (
-    <div
-      class="flex flex-col items-center p-3 border relative"
-      classList={{
-        'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
-      }}
-    >
-      <div class="flex items-center gap-1 mb-1">
-        <span class="text-[10px] uppercase tracking-wider text-neutral-500">
-          {props.label}
-        </span>
-        <HelpTooltip
-          description={props.help.description}
-          formula={props.help.formula}
-          variables={props.help.variables}
-          position="top"
-        />
-      </div>
-      <div class="flex items-baseline gap-1">
-        <span
-          class="text-xl font-bold"
-          classList={{
-            'text-amber-400': props.highlight,
-            'text-neutral-300': !props.highlight,
-          }}
-        >
-          {props.value}
-        </span>
-        <Show when={props.unit}>
-          <span class="text-xs text-neutral-500">{props.unit}</span>
-        </Show>
-      </div>
-    </div>
-  );
-};
-
-// Helper component for formula reference cards with KaTeX
-const FormulaCard: Component<{
-  title: string;
-  formula: string;
-  variables: string[];
-}> = (props) => {
-  return (
-    <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
-      <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
-        {props.title}
-      </div>
-      <div class="bg-neutral-950/50 px-2 py-1.5 rounded mb-2 overflow-x-auto">
-        <Formula math={props.formula} class="text-neutral-300" />
-      </div>
-      <div class="space-y-0.5">
-        <For each={props.variables}>
-          {(variable) => <div class="text-neutral-500 text-[10px] font-mono">{variable}</div>}
-        </For>
-      </div>
-    </div>
-  );
-};
+}
