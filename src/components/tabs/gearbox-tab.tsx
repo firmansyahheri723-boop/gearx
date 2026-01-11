@@ -15,11 +15,13 @@ import {
   finalDrive,
   tireCompound,
   setTireCompound,
+  tractionMode,
+  setTractionMode,
 } from '../../stores/vehicle';
 import { calculateGearboxOutputs } from '../../utils/gearbox';
-import type { TireCompound, SpeedRpmPoint } from '../../types';
+import type { TireCompound, TractionMode, SpeedRpmPoint } from '../../types';
 import { GEAR_LABELS } from '../../types';
-import { TIRE_OPTIONS } from './gearbox/gearbox-tab-constants';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from './gearbox/gearbox-tab-constants';
 
 const HELP_CONTENT: Record<
   string,
@@ -119,6 +121,7 @@ export function GearboxTab() {
       wheelbase: vehicleInputs.wheelbase,
       drivetrain: vehicleInputs.drivetrain,
       tireCompound: tireCompound.value,
+      tractionMode: tractionMode.value,
       acceleration0to100: vehicleInputs.acceleration0to100,
     })
   );
@@ -206,17 +209,17 @@ export function GearboxTab() {
 
           <div class="border border-neutral-800/50 bg-neutral-950/50">
             <SectionHeader
-              title="Tire Compound"
+              title="Tire & Traction"
               variant="input"
               help={{
                 ...HELP_CONTENT.tireCompound,
                 position: "bottom",
               }}
             />
-            <div class="p-4">
+            <div class="p-4 space-y-4">
               <RadioGroupRoot
                 value={tireCompound.value}
-                onValueChange={(details: RadioGroupValueChangeDetails) => setTireCompound('value', details.value as any)}
+                onValueChange={(details: RadioGroupValueChangeDetails) => setTireCompound('value', details.value as TireCompound)}
                 class="space-y-2"
               >
                 <For each={TIRE_OPTIONS}>
@@ -239,6 +242,29 @@ export function GearboxTab() {
                   )}
                 </For>
               </RadioGroupRoot>
+
+              <div class="border-t border-neutral-800/50 pt-4">
+                <div class="text-xs uppercase tracking-wide text-neutral-400 mb-2">Traction Mode</div>
+                <div class="flex gap-2">
+                  <For each={TRACTION_MODE_OPTIONS}>
+                    {(option) => (
+                      <button
+                        type="button"
+                        onClick={() => setTractionMode('value', option.value)}
+                        class="flex-1 px-3 py-2 border text-sm font-medium transition-colors"
+                        classList={{
+                          'border-neutral-500/50 bg-neutral-500/10 text-neutral-300':
+                            tractionMode.value === option.value,
+                          'border-neutral-700/50 bg-neutral-900/30 text-neutral-500 hover:border-neutral-600/50 hover:bg-neutral-800/30':
+                            tractionMode.value !== option.value,
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    )}
+                  </For>
+                </div>
+              </div>
             </div>
           </div>
       </div>

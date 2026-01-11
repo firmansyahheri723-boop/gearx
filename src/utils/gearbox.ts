@@ -1,4 +1,4 @@
-import type { GearRatio, TorqueRpmRow, SpeedRpmPoint, GearboxOutputs, TireCompound, WheelData, Drivetrain } from '../types';
+import type { GearRatio, TorqueRpmRow, SpeedRpmPoint, GearboxOutputs, TireCompound, WheelData, Drivetrain, TractionMode } from '../types';
 import { TIRE_FRICTION_COEFFICIENTS, AWD_TRACTION_MULTIPLIER } from '../types';
 import { GRAVITY_MS2, KPH_100_IN_MS, INCHES_PER_MILE, MM_TO_INCHES, KW_TO_HP } from '../constants/physics';
 
@@ -14,6 +14,7 @@ type GearboxCalcInputs = {
   wheelbase: number;
   drivetrain: Drivetrain;
   tireCompound: TireCompound;
+  tractionMode: TractionMode;
   acceleration0to100: number;
 }
 
@@ -118,19 +119,21 @@ export function calcTractionLimitTorque(
   const rearWeight = massKg - frontWeight;
   const weightTransfer = calcWeightTransfer(cogHeightM, wheelbaseM, massKg, longAccelG);
   const wheelRadiusM = calcWheelRadiusM(wheel.width, wheel.profile, wheel.diameter);
+  const frontWeightDynamic = frontWeight - weightTransfer;
+  const rearWeightDynamic = rearWeight + weightTransfer;
 
   switch (drivetrain) {
     case 'AWD': {
-      const totalWeightDynamic = massKg * GRAVITY_MS2;
-      return totalWeightDynamic * frictionCoef * AWD_TRACTION_MULTIPLIER * wheelRadiusM;
+      // AWD uses traction from both axles with weight transfer applied
+      const frontTraction = frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
+      const rearTraction = rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
+      return (frontTraction + rearTraction) * AWD_TRACTION_MULTIPLIER;
     }
     case 'RWD': {
-      const rearWeightDynamic = rearWeight + weightTransfer;
       return rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
     }
     case 'FWD':
     default: {
-      const frontWeightDynamic = frontWeight - weightTransfer;
       return frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
     }
   }
@@ -152,6 +155,7 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
     wheelbase,
     drivetrain,
     tireCompound,
+    tractionMode,
     acceleration0to100,
   } = inputs;
 
@@ -183,8 +187,10 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
   }
 
   // Calculate traction limit
+  // For launch mode, use 0 acceleration (static weight distribution)
+  // For rolling mode, use actual acceleration for weight transfer
   const cogHeightM = cogHeight * 2.54 / 100;
-  const longAccelG = calcLongitudinalAccelG(acceleration0to100);
+  const longAccelG = tractionMode === 'launch' ? 0 : calcLongitudinalAccelG(acceleration0to100);
   const frictionCoef = TIRE_FRICTION_COEFFICIENTS[tireCompound];
   const tractionLimitTorque = calcTractionLimitTorque(
     weight,

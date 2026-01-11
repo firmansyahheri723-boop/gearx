@@ -17,6 +17,7 @@ import {
   setFinalDrive,
   vehicleInputs,
   tireCompound,
+  tractionMode,
 } from "../stores/vehicle";
 import { calculateGearboxOutputs } from "../utils/gearbox";
 import type { TorqueRpmRow } from "../types";
@@ -195,6 +196,7 @@ export const TransmissionSection: Component = () => {
       wheelbase: vehicleInputs.wheelbase,
       drivetrain: vehicleInputs.drivetrain,
       tireCompound: tireCompound.value,
+      tractionMode: tractionMode.value,
       acceleration0to100: vehicleInputs.acceleration0to100,
     }),
   );

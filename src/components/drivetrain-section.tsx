@@ -3,13 +3,15 @@ import { SectionHeader } from './ui/section-header';
 import { NumberInput } from './ui/number-input';
 import { HelpTooltip } from './ui/help-tooltip';
 import { DrivetrainViz } from './ui/drivetrain-viz';
-import { vehicleInputs, setVehicleInputs } from '../stores/vehicle';
+import { vehicleInputs, setVehicleInputs, tireCompound, setTireCompound, tractionMode, setTractionMode } from '../stores/vehicle';
 import {
   DRIVETRAIN_OPTIONS,
   WHEEL_DIAMETER_OPTIONS,
   HELP_CONTENT,
   type DrivetrainOption,
 } from './input-section-constants';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from './tabs/gearbox/gearbox-tab-constants';
+import type { TireCompound, TractionMode } from '../types';
 
 function InputCell(props: { children: any }) {
   return (
@@ -41,7 +43,7 @@ export const DrivetrainSection: Component = () => {
           <tbody>
             {/* Row 1: Drivetrain selector */}
             <tr>
-              <td rowspan={9} class="border-r border-b border-neutral-800/50 bg-neutral-900/30 align-middle w-20">
+              <td rowspan={11} class="border-r border-b border-neutral-800/50 bg-neutral-900/30 align-middle w-20">
                 <div class="flex items-center justify-center p-2">
                   <DrivetrainViz />
                 </div>
@@ -213,6 +215,54 @@ export const DrivetrainSection: Component = () => {
                 </div>
               </InputCell>
             </tr>
+
+            {/* Row 10: Tire compound */}
+            <tr>
+              <LabelCell label="Tire compound" />
+              <InputCell>
+                <div class="flex items-center gap-1 px-2 py-1.5 flex-wrap">
+                  <For each={TIRE_OPTIONS}>
+                    {(option) => (
+                      <button
+                        type="button"
+                        onClick={() => setTireCompound('value', option.value)}
+                        class="px-2 py-1.5 border text-xs font-medium transition-colors"
+                        classList={{
+                          'border-neutral-500/50 bg-neutral-500/10 text-neutral-300': tireCompound.value === option.value,
+                          'border-neutral-700/50 bg-transparent text-neutral-500 hover:border-neutral-600/50': tireCompound.value !== option.value,
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    )}
+                  </For>
+                </div>
+              </InputCell>
+            </tr>
+
+            {/* Row 11: Traction mode */}
+            <tr>
+              <LabelCell label="Traction mode" />
+              <InputCell>
+                <div class="flex items-center gap-1 px-2 py-1.5">
+                  <For each={TRACTION_MODE_OPTIONS}>
+                    {(option) => (
+                      <button
+                        type="button"
+                        onClick={() => setTractionMode('value', option.value)}
+                        class="px-3 py-1.5 border text-xs font-medium transition-colors"
+                        classList={{
+                          'border-neutral-500/50 bg-neutral-500/10 text-neutral-300': tractionMode.value === option.value,
+                          'border-neutral-700/50 bg-transparent text-neutral-500 hover:border-neutral-600/50': tractionMode.value !== option.value,
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    )}
+                  </For>
+                </div>
+              </InputCell>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -369,6 +419,48 @@ export const DrivetrainSection: Component = () => {
               class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
             />
             <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs uppercase tracking-wide text-neutral-400">Tire compound</div>
+          <div class="flex items-center gap-1 flex-wrap">
+            <For each={TIRE_OPTIONS}>
+              {(option) => (
+                <button
+                  type="button"
+                  onClick={() => setTireCompound('value', option.value)}
+                  class="px-2 py-2 border text-[10px] font-medium transition-colors"
+                  classList={{
+                    'border-neutral-500/50 bg-neutral-500/10 text-neutral-400': tireCompound.value === option.value,
+                    'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50': tireCompound.value !== option.value,
+                  }}
+                >
+                  {option.label}
+                </button>
+              )}
+            </For>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs uppercase tracking-wide text-neutral-400">Traction mode</div>
+          <div class="flex items-center gap-1">
+            <For each={TRACTION_MODE_OPTIONS}>
+              {(option) => (
+                <button
+                  type="button"
+                  onClick={() => setTractionMode('value', option.value)}
+                  class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors"
+                  classList={{
+                    'border-neutral-500/50 bg-neutral-500/10 text-neutral-400': tractionMode.value === option.value,
+                    'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50': tractionMode.value !== option.value,
+                  }}
+                >
+                  {option.label}
+                </button>
+              )}
+            </For>
           </div>
         </div>
       </div>

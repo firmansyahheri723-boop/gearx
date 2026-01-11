@@ -84,6 +84,8 @@ export type TireCompound = 'street' | 'street+' | 'sport' | 'sport+' | 'racing' 
 
 export type Drivetrain = 'FWD' | 'RWD' | 'AWD';
 
+export type TractionMode = 'launch' | 'rolling';
+
 export const AWD_TRACTION_MULTIPLIER = 1.2;
 
 export type WheelData = {

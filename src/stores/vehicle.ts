@@ -10,6 +10,7 @@ import type {
   FinalDrive,
   TireCompound,
   Drivetrain,
+  TractionMode,
 } from '../types';
 
 // Vehicle Input Parameters
@@ -127,4 +128,9 @@ export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
 // Tire compound selection for traction calculations
 export const [tireCompound, setTireCompound] = createStore<{ value: TireCompound }>({
   value: 'racing',
+});
+
+// Traction mode selection (launch = static weight, rolling = with weight transfer)
+export const [tractionMode, setTractionMode] = createStore<{ value: TractionMode }>({
+  value: 'launch',
 });

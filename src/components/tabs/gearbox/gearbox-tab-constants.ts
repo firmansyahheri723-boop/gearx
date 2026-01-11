@@ -1,5 +1,5 @@
 import type { HelpLink } from '../../ui/help-tooltip';
-import type { TireCompound } from '../../../types';
+import type { TireCompound, TractionMode } from '../../../types';
 
 export type TireOption = {
   value: TireCompound;
@@ -14,4 +14,14 @@ export const TIRE_OPTIONS: TireOption[] = [
   { value: 'sport+', label: 'Sport+', friction: 1.45 },
   { value: 'racing', label: 'Racing', friction: 1.70 },
   { value: 'racing+', label: 'Racing+', friction: 1.836 },
+];
+
+export type TractionModeOption = {
+  value: TractionMode;
+  label: string;
+}
+
+export const TRACTION_MODE_OPTIONS: TractionModeOption[] = [
+  { value: 'launch', label: 'Launch' },
+  { value: 'rolling', label: 'Rolling' },
 ];
