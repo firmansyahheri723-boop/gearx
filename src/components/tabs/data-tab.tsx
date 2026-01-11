@@ -1,13 +1,13 @@
 import { Component, For, createMemo, createSignal } from 'solid-js';
 import type { ColumnDef, SortingState } from '@tanstack/solid-table';
 import { DataTable } from '../ui/data-table';
-import { carData, selectedCarIndex, selectedEngineIndex } from '../../stores/car-data';
+import { carData, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '../../stores/car-data';
 import { CSV_COLUMNS } from '../../utils/csv';
 import type { CarData } from '../../types';
 
 // Sort car data: regular cars first, then engines, then transmissions
 // Within each group, items are sorted alphabetically
-function defaultSortCarData(data: CarData[]): CarData[] {
+function defaultSortCarData<T extends CarData>(data: T[]): T[] {
   const getCategory = (car: CarData): number => {
     const name = car.car.toLowerCase();
     if (name.endsWith('engine')) return 1;
@@ -94,9 +94,9 @@ function formatCellValue(value: string | number | null): string {
   return value;
 }
 
-// Extended row type with index for selection tracking
+// Extended row type with original index for selection tracking
 interface CarDataRow extends CarData {
-  _rowIndex: number;
+  _originalIndex: number;
 }
 
 export const DatabaseTab: Component = () => {
@@ -104,12 +104,16 @@ export const DatabaseTab: Component = () => {
   const [sorting, setSorting] = createSignal<SortingState>([]);
 
   // Sort data based on current sort state, or use default sorting
+  // Track the original index in carData for each row
   const sortedData = createMemo((): CarDataRow[] => {
-    const sorted = sorting().length === 0
-      ? defaultSortCarData(carData)
-      : carData; // Let TanStack Table handle sorting when active
+    // First, create array with original indices
+    const dataWithIndices = carData.map((car, index) => ({ ...car, _originalIndex: index }));
 
-    return sorted.map((car, index) => ({ ...car, _rowIndex: index }));
+    const sorted = sorting().length === 0
+      ? defaultSortCarData(dataWithIndices)
+      : dataWithIndices; // Let TanStack Table handle sorting when active
+
+    return sorted;
   });
 
   // Build column definitions dynamically
@@ -124,8 +128,8 @@ export const DatabaseTab: Component = () => {
           const row = info.row.original;
           const value = row[col.key as keyof CarData];
           const isCarColumn = col.key === 'car';
-          const isSelectedCar = selectedCarIndex() === row._rowIndex;
-          const isSelectedEngine = selectedEngineIndex() === row._rowIndex;
+          const isSelectedCar = selectedCarIndex() === row._originalIndex;
+          const isSelectedEngine = selectedEngineIndex() === row._originalIndex;
 
           if (isCarColumn) {
             return (
@@ -144,7 +148,7 @@ export const DatabaseTab: Component = () => {
                 )}
                 {isSelectedEngine && (
                   <span class="px-1 py-0.5 text-[8px] font-bold tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                    ENG
+                    ENGINE
                   </span>
                 )}
               </div>
@@ -192,8 +196,8 @@ export const DatabaseTab: Component = () => {
         columnPinning={{ left: ['car'] }}
         maxHeight="70vh"
         getRowClass={(row, index) => {
-          const isSelectedCar = selectedCarIndex() === row._rowIndex;
-          const isSelectedEngine = selectedEngineIndex() === row._rowIndex;
+          const isSelectedCar = selectedCarIndex() === row._originalIndex;
+          const isSelectedEngine = selectedEngineIndex() === row._originalIndex;
           return (isSelectedCar || isSelectedEngine) ? 'bg-neutral-500/10' : '';
         }}
       />

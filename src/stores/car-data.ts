@@ -159,3 +159,14 @@ export const clearEngineSelection = (): void => {
   localStorage.removeItem(SELECTED_ENGINE_KEY);
   setVehicleInputs('engineSelection', '');
 };
+
+// Initialize selections on module load - sync vehicleInputs with persisted selections
+const initCarIdx = selectedCarIndex();
+if (initCarIdx !== null && initCarIdx >= 0 && initCarIdx < carData.length) {
+  applyCarData(carData[initCarIdx]);
+}
+
+const initEngineIdx = selectedEngineIndex();
+if (initEngineIdx !== null && initEngineIdx >= 0 && initEngineIdx < carData.length) {
+  applyEngineData(carData[initEngineIdx]);
+}
