@@ -240,11 +240,11 @@ export function GearboxTab() {
 
       <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
-          title="Effective Drive Ratios (Gear x Final)"
+          title="Effective Drive Ratios"
           variant="output"
           help={{
             ...HELP_CONTENT.effectiveDriveRatios,
-            position: "right",
+            position: "bottom",
           }}
         />
         <div class="p-4">
@@ -291,6 +291,7 @@ export function GearboxTab() {
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
+              redlineRpm={vehicleInputs.redlineRpm}
               height={220}
             />
           </div>
