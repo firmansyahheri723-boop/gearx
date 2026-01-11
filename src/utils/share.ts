@@ -34,7 +34,7 @@ export function deserializeSetup(encoded: string): ShareSetupData | null {
 export function getShareUrl(data: ShareSetupData): string {
   const compressed = serializeSetup(data);
   const url = new URL(window.location.href);
-  url.hash = `setup=${compressed}`;
+  url.search = `setup=${compressed}`;
   return url.toString();
 }
 

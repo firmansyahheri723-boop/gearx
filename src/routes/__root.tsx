@@ -37,9 +37,9 @@ function RootComponent() {
 
     document.addEventListener("keydown", handleKeyDown);
 
-    const hash = window.location.hash;
-    if (hash.startsWith("#setup=")) {
-      const encoded = hash.slice(7);
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get("setup");
+    if (encoded) {
       const data = deserializeSetup(encoded);
       if (data) {
         applySharedSetup(data);
