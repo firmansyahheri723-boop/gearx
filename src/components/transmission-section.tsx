@@ -6,7 +6,8 @@ import { GearSlider } from "./ui/gear-slider";
 import { DataTable } from "./ui/data-table";
 import { GearSpeedChart } from "./ui/gear-speed-chart";
 import { GearTorqueChart } from "./ui/gear-torque-chart";
-import { HelpTooltip, HelpLink } from "./ui/help-tooltip";
+import { HelpTooltip } from "./ui/help-tooltip";
+import type { HelpLink } from "../types";
 import { TorqueExtractor } from "./ui/torque-extractor";
 import {
   torqueRpmData,

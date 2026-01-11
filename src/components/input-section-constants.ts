@@ -1,4 +1,4 @@
-import type { HelpLink } from './ui/help-tooltip';
+import type { HelpLink } from '../types';
 
 const HELP_CONTENT: Record<
   string,

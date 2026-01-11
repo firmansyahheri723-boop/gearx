@@ -6,7 +6,7 @@ import { DataTable } from '../components/ui/data-table';
 import { GearSpeedChart } from '../components/ui/gear-speed-chart';
 import { GearTorqueChart } from '../components/ui/gear-torque-chart';
 import { MetricCard } from '../components/ui/metric-card';
-import type { HelpLink } from '../components/ui/help-tooltip';
+import type { HelpLink } from '../types';
 import { RadioGroupRoot, RadioGroupItem, RadioGroupItemControl, RadioGroupItemText, RadioGroupItemHiddenInput, type RadioGroupValueChangeDetails } from '@ark-ui/solid/radio-group';
 import { GEAR_COLORS } from '../constants/colors';
 import {

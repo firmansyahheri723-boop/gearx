@@ -9,5 +9,3 @@ export const MM_TO_INCHES = 25.4;
 export const REFERENCE_CORNER_RADIUS_M = 118;
 
 export const KW_TO_HP = 1.34102;
-
-export const PI = 3.14;

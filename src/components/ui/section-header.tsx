@@ -1,5 +1,6 @@
 import { Show } from 'solid-js';
-import { HelpTooltip, type HelpLink, type TooltipPosition } from './help-tooltip';
+import { HelpTooltip, type TooltipPosition } from './help-tooltip';
+import type { HelpLink } from '../../types';
 
 type SectionHeaderProps = {
   title: string;

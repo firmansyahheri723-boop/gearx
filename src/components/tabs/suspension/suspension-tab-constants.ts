@@ -1,5 +1,4 @@
-import type { HelpLink } from '../../ui/help-tooltip';
-import type { VehicleInputs } from '../../../types';
+import type { VehicleInputs, HelpContent } from '../../../types';
 
 export type SliderConfig = {
   key: keyof VehicleInputs;
@@ -74,14 +73,6 @@ export const SUSPENSION_SLIDERS: SliderConfig[] = [
     help: 'Height of the roll center above ground. The distance from roll center to CoG (H) determines roll moment arm.',
   },
 ];
-
-export type HelpContent = {
-  description: string;
-  formula?: string;
-  variables?: string[];
-  articles?: HelpLink[];
-  videos?: HelpLink[];
-};
 
 export const ARB_STIFFNESS_HELP: HelpContent = {
   description: 'Individual ARB stiffness is derived from total roll rate and the front bias percentage (magic number).',

@@ -198,3 +198,16 @@ export type AeroExperimentalOutput = {
 export type AeroOutputs = AeroStandardOutput & {
   experimental: AeroExperimentalOutput & { enabled: boolean };
 };
+
+export type HelpLink = {
+  label: string;
+  url: string;
+};
+
+export type HelpContent = {
+  description: string;
+  formula?: string;
+  variables?: string[];
+  articles?: HelpLink[];
+  videos?: HelpLink[];
+};

@@ -8,11 +8,7 @@ import {
   PopoverArrow,
   PopoverArrowTip,
 } from "@ark-ui/solid/popover";
-
-export interface HelpLink {
-  label: string;
-  url: string;
-}
+import type { HelpLink } from "../../types";
 
 export type TooltipPosition = "right" | "bottom" | "left" | "top";
 

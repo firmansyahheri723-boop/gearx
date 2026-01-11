@@ -1,6 +1,7 @@
 import { Component, splitProps } from 'solid-js';
 import { SliderRoot, SliderControl, SliderTrack, SliderRange, SliderThumb, type SliderValueChangeDetails } from '@ark-ui/solid/slider';
-import { HelpTooltip, type HelpLink } from './help-tooltip';
+import { HelpTooltip } from './help-tooltip';
+import type { HelpLink } from '../../types';
 
 export type SliderRowProps = {
   label: string;

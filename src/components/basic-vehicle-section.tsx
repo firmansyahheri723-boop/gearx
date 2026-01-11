@@ -248,7 +248,7 @@ export const BasicVehicleSection: Component = () => {
           </InputRow>
 
           <InputRow
-            label="Redline RPM"
+            label="Rev Limiter (RPM)"
             description={HELP_CONTENT.redlineRpm.description}
             articles={HELP_CONTENT.redlineRpm.articles}
             videos={HELP_CONTENT.redlineRpm.videos}
@@ -397,7 +397,7 @@ export const BasicVehicleSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-redline" class="block text-xs uppercase tracking-wide text-foreground-secondary">Redline RPM</label>
+          <label for="mobile-redline" class="block text-xs uppercase tracking-wide text-foreground-secondary">Rev Limiter (RPM)</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-redline"

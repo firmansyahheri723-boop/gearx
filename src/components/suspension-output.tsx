@@ -1,6 +1,7 @@
 import { SectionHeader } from './ui/section-header';
 import { DataTable } from './ui/data-table';
-import { HelpTooltip, type HelpLink } from './ui/help-tooltip';
+import { HelpTooltip } from './ui/help-tooltip';
+import type { HelpLink } from '../types';
 import type { SuspensionOutputs } from '../utils/suspension';
 import type { ColumnDef } from '@tanstack/solid-table';
 

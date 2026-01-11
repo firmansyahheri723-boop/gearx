@@ -7,8 +7,8 @@ import {
   GRAVITY_MS2,
   KPH_100_IN_MS,
   REFERENCE_CORNER_RADIUS_M,
-  PI,
 } from '../constants/physics';
+import { calcLongitudinalAccelG } from './gearbox';
 
 export type SuspensionInputs = {
   weight: number;
@@ -113,7 +113,7 @@ function calcSprungMass(
  */
 function calcSpringStiffness(sprungMassPerCorner: number, rideFrequency: number): number {
   // Returns N/m (multiply by 1000 from kN/m in Excel, but we keep as N/m)
-  return 4 * PI * PI * rideFrequency * rideFrequency * sprungMassPerCorner;
+  return 4 * Math.PI * Math.PI * rideFrequency * rideFrequency * sprungMassPerCorner;
 }
 
 /**
@@ -160,16 +160,6 @@ function calcDampingForces(
     fastReboundFront: dampingForceFront * (3 / 4),
     fastReboundRear: dampingForceRear * (3 / 4),
   };
-}
-
-/**
- * Calculate longitudinal acceleration in g
- * Excel: A43 = (27.78 - 0) / A19 / 9.81
- * a = (vf - vs) / dt / g
- * For 0-100 kph: (27.78 - 0) / time / 9.81
- */
-function calcLongitudinalAccelG(acceleration0to100: number): number {
-  return KPH_100_IN_MS / acceleration0to100 / GRAVITY_MS2;
 }
 
 /**
@@ -241,12 +231,12 @@ function calcAntiRollBars(
 
   // Total roll rate calculation (Excel: A32)
   // = (3.14/180) * (D28*C28*(B25^2/2)) / (C28*(B25^2/2)*3.14/180 - D28) - (3.14*A29*B25^2/2)/180
-  const piOver180 = PI / 180;
+  const piOver180 = Math.PI / 180;
   const tSquaredHalf = (t * t) / 2;
 
   const numerator = piOver180 * KphiDES * Kt * tSquaredHalf;
   const denom1 = Kt * tSquaredHalf * piOver180 - KphiDES;
-  const subtractTerm = (PI * Kw * tSquaredHalf) / 180;
+  const subtractTerm = (Math.PI * Kw * tSquaredHalf) / 180;
 
   // Excel formula structure: numerator / denom1 - subtractTerm
   const KphiA = denom1 !== 0 ? (numerator / denom1) - subtractTerm : 0;
@@ -258,8 +248,8 @@ function calcAntiRollBars(
   // ARB values using average track width (Excel: A38, B38)
   // Excel: = A35 * 3.14 / (180 * B25^2)
   const tSquared = t * t;
-  const farb = (KphiFA * PI) / (180 * tSquared) / 1000; // Convert to kNm
-  const rarb = (KphiRA * PI) / (180 * tSquared) / 1000; // Convert to kNm
+  const farb = (KphiFA * Math.PI) / (180 * tSquared) / 1000; // Convert to kNm
+  const rarb = (KphiRA * Math.PI) / (180 * tSquared) / 1000; // Convert to kNm
 
   return {
     rollCenterToCoG: H,

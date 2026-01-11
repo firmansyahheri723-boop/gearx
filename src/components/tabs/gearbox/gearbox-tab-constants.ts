@@ -1,4 +1,3 @@
-import type { HelpLink } from '../../ui/help-tooltip';
 import type { TireCompound, TractionMode } from '../../../types';
 
 export type TireOption = {
