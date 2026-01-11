@@ -19,6 +19,7 @@ import {
   HELP_CONTENT,
   DRIVETRAIN_OPTIONS,
   WHEEL_DIAMETER_OPTIONS,
+  type DrivetrainOption,
 } from "./input-section-constants";
 
 export const InputSection: Component = () => {
@@ -243,24 +244,34 @@ export const InputSection: Component = () => {
           </tr>
 
           <SegmentedRow
-            label="Wheel diameter"
+            label="Front wheel diameter"
             description={HELP_CONTENT.wheelDiameter.description}
             articles={HELP_CONTENT.wheelDiameter.articles}
-            value={vehicleInputs.wheelDiameter}
-            onChange={(val) => setVehicleInputs("wheelDiameter", val as number)}
+            value={vehicleInputs.frontWheel.diameter}
+            onChange={(val) => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, diameter: val as number })}
+            unit="in"
+            options={WHEEL_DIAMETER_OPTIONS.map((size) => ({ label: size.toString(), value: size })) as SegmentedRowOption[]}
+          />
+
+          <SegmentedRow
+            label="Rear wheel diameter"
+            description={HELP_CONTENT.wheelDiameter.description}
+            articles={HELP_CONTENT.wheelDiameter.articles}
+            value={vehicleInputs.rearWheel.diameter}
+            onChange={(val) => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, diameter: val as number })}
             unit="in"
             options={WHEEL_DIAMETER_OPTIONS.map((size) => ({ label: size.toString(), value: size })) as SegmentedRowOption[]}
           />
 
           <InputRow
-            label="Profile"
+            label="Front profile"
             description={HELP_CONTENT.profile.description}
             articles={HELP_CONTENT.profile.articles}
           >
             <div class="flex items-center">
               <NumberInput
-                value={vehicleInputs.profile}
-                onChange={(val) => setVehicleInputs("profile", val)}
+                value={vehicleInputs.frontWheel.profile}
+                onChange={(val) => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, profile: val })}
                 step={1}
                 class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
               />
@@ -269,14 +280,46 @@ export const InputSection: Component = () => {
           </InputRow>
 
           <InputRow
-            label="Tire width"
+            label="Rear profile"
+            description={HELP_CONTENT.profile.description}
+            articles={HELP_CONTENT.profile.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.rearWheel.profile}
+                onChange={(val) => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, profile: val })}
+                step={1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+            </div>
+          </InputRow>
+
+          <InputRow
+            label="Front tire width"
             description={HELP_CONTENT.tireWidth.description}
             articles={HELP_CONTENT.tireWidth.articles}
           >
             <div class="flex items-center">
               <NumberInput
-                value={vehicleInputs.tireWidth}
-                onChange={(val) => setVehicleInputs("tireWidth", val)}
+                value={vehicleInputs.frontWheel.width}
+                onChange={(val) => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, width: val })}
+                step={5}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
+            </div>
+          </InputRow>
+
+          <InputRow
+            label="Rear tire width"
+            description={HELP_CONTENT.tireWidth.description}
+            articles={HELP_CONTENT.tireWidth.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.rearWheel.width}
+                onChange={(val) => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, width: val })}
                 step={5}
                 class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
               />
@@ -356,7 +399,7 @@ export const InputSection: Component = () => {
             description={HELP_CONTENT.drivetrain.description}
             articles={HELP_CONTENT.drivetrain.articles}
             value={vehicleInputs.drivetrain}
-            onChange={(val) => setVehicleInputs("drivetrain", val as string)}
+            onChange={(val) => setVehicleInputs("drivetrain", val as DrivetrainOption)}
             options={DRIVETRAIN_OPTIONS.map((opt) => ({ label: opt, value: opt })) as SegmentedRowOption[]}
           />
         </tbody>
@@ -475,17 +518,17 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Wheel diameter</div>
+          <div class="text-xs uppercase tracking-wide text-neutral-400">Front wheel diameter</div>
           <div class="flex items-center gap-1">
             <For each={WHEEL_DIAMETER_OPTIONS}>
               {(size) => (
                 <button
                   type="button"
-                  onClick={() => setVehicleInputs("wheelDiameter", size)}
+                  onClick={() => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, diameter: size })}
                   class="flex-1 px-3 py-2 border text-xs font-medium transition-colors"
                   classList={{
-                    'border-neutral-500/50 bg-neutral-500/10 text-neutral-400': vehicleInputs.wheelDiameter === size,
-                    'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50': vehicleInputs.wheelDiameter !== size,
+                    'border-neutral-500/50 bg-neutral-500/10 text-neutral-400': vehicleInputs.frontWheel.diameter === size,
+                    'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50': vehicleInputs.frontWheel.diameter !== size,
                   }}
                 >
                   {size}
@@ -497,12 +540,34 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-profile" class="block text-xs uppercase tracking-wide text-neutral-400">Profile</label>
+          <div class="text-xs uppercase tracking-wide text-neutral-400">Rear wheel diameter</div>
+          <div class="flex items-center gap-1">
+            <For each={WHEEL_DIAMETER_OPTIONS}>
+              {(size) => (
+                <button
+                  type="button"
+                  onClick={() => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, diameter: size })}
+                  class="flex-1 px-3 py-2 border text-xs font-medium transition-colors"
+                  classList={{
+                    'border-neutral-500/50 bg-neutral-500/10 text-neutral-400': vehicleInputs.rearWheel.diameter === size,
+                    'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50': vehicleInputs.rearWheel.diameter !== size,
+                  }}
+                >
+                  {size}
+                </button>
+              )}
+            </For>
+            <span class="px-2 text-neutral-500 text-xs">in</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="mobile-front-profile" class="block text-xs uppercase tracking-wide text-neutral-400">Front profile</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-profile"
-              value={vehicleInputs.profile}
-              onChange={(val) => setVehicleInputs("profile", val)}
+              id="mobile-front-profile"
+              value={vehicleInputs.frontWheel.profile}
+              onChange={(val) => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, profile: val })}
               step={1}
               class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
             />
@@ -511,12 +576,40 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-tire-width" class="block text-xs uppercase tracking-wide text-neutral-400">Tire width</label>
+          <label for="mobile-rear-profile" class="block text-xs uppercase tracking-wide text-neutral-400">Rear profile</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-tire-width"
-              value={vehicleInputs.tireWidth}
-              onChange={(val) => setVehicleInputs("tireWidth", val)}
+              id="mobile-rear-profile"
+              value={vehicleInputs.rearWheel.profile}
+              onChange={(val) => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, profile: val })}
+              step={1}
+              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+            />
+            <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="mobile-front-tire-width" class="block text-xs uppercase tracking-wide text-neutral-400">Front tire width</label>
+          <div class="flex items-center">
+            <NumberInput
+              id="mobile-front-tire-width"
+              value={vehicleInputs.frontWheel.width}
+              onChange={(val) => setVehicleInputs("frontWheel", { ...vehicleInputs.frontWheel, width: val })}
+              step={5}
+              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+            />
+            <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="mobile-rear-tire-width" class="block text-xs uppercase tracking-wide text-neutral-400">Rear tire width</label>
+          <div class="flex items-center">
+            <NumberInput
+              id="mobile-rear-tire-width"
+              value={vehicleInputs.rearWheel.width}
+              onChange={(val) => setVehicleInputs("rearWheel", { ...vehicleInputs.rearWheel, width: val })}
               step={5}
               class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
             />

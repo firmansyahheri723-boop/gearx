@@ -9,6 +9,7 @@ import type {
   GearRatio,
   FinalDrive,
   TireCompound,
+  Drivetrain,
 } from '../types';
 
 // Vehicle Input Parameters
@@ -21,13 +22,12 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   rearWheelOffset: -3,
   desiredRideFrequency: 3,
   desiredRollGradient: 0.05,
-  wheelDiameter: 20,
-  profile: 40,
-  tireWidth: 345,
+  frontWheel: { diameter: 20, profile: 40, width: 345 },
+  rearWheel: { diameter: 20, profile: 40, width: 345 },
   cogHeight: 20,
   acceleration0to100: 4.7,
   maxSpeed118mRadius: 140,
-  drivetrain: 'RWD/AWD',
+  drivetrain: 'RWD' as Drivetrain,
   wheelbase: 2.934,
   frontTrackWidth: 1.63,
   rearTrackWidth: 1.62,

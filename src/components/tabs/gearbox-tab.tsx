@@ -108,9 +108,8 @@ const HELP_CONTENT: Record<
 export function GearboxTab() {
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
-      tireWidth: vehicleInputs.tireWidth,
-      profile: vehicleInputs.profile,
-      wheelDiameter: vehicleInputs.wheelDiameter,
+      frontWheel: vehicleInputs.frontWheel,
+      rearWheel: vehicleInputs.rearWheel,
       gearRatios: [...gearRatios],
       finalDrive: finalDrive.ratio,
       torqueRpmData: [...torqueRpmData],

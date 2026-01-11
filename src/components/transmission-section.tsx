@@ -184,9 +184,8 @@ export const TransmissionSection: Component = () => {
   // Calculate gearbox outputs for charts
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
-      tireWidth: vehicleInputs.tireWidth,
-      profile: vehicleInputs.profile,
-      wheelDiameter: vehicleInputs.wheelDiameter,
+      frontWheel: vehicleInputs.frontWheel,
+      rearWheel: vehicleInputs.rearWheel,
       gearRatios: [...gearRatios],
       finalDrive: finalDrive.ratio,
       torqueRpmData: [...torqueRpmData],

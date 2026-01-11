@@ -32,13 +32,12 @@ export type VehicleInputs = {
   rearWheelOffset: number;
   desiredRideFrequency: number;
   desiredRollGradient: number;
-  wheelDiameter: number;
-  profile: number;
-  tireWidth: number;
+  frontWheel: WheelData;
+  rearWheel: WheelData;
   cogHeight: number;
   acceleration0to100: number;
   maxSpeed118mRadius: number;
-  drivetrain: string;
+  drivetrain: Drivetrain;
   wheelbase: number;
   frontTrackWidth: number;
   rearTrackWidth: number;
@@ -82,6 +81,16 @@ export type AccelerationMetrics = {
 };
 
 export type TireCompound = 'street' | 'street+' | 'sport' | 'sport+' | 'racing' | 'racing+';
+
+export type Drivetrain = 'FWD' | 'RWD' | 'AWD';
+
+export const AWD_TRACTION_MULTIPLIER = 1.2;
+
+export type WheelData = {
+  diameter: number;
+  profile: number;
+  width: number;
+};
 
 export const TIRE_FRICTION_COEFFICIENTS: Record<TireCompound, number> = {
   'street': 1.12,

@@ -127,7 +127,7 @@ const HELP_CONTENT: Record<
   },
   drivetrain: {
     description:
-      "Power delivery configuration. FWD (front-wheel drive) is efficient but limited by weight transfer under acceleration. RWD (rear-wheel drive) allows better weight transfer utilization. AWD distributes power to all wheels for maximum traction but adds weight and complexity.",
+      "Power delivery configuration. FWD sends power to front wheels only. RWD sends power to rear wheels only. AWD sends power to all four wheels for ~20% more traction but adds weight.",
     articles: [{ label: "Wikipedia: Drivetrain", url: "https://en.wikipedia.org/wiki/Drivetrain" }],
     videos: [
       { label: "Transmission Talk", url: "https://youtu.be/oGohWF7HZrw?si=yFHI1mTFhoMXlQ2M" },
@@ -135,7 +135,8 @@ const HELP_CONTENT: Record<
   },
 };
 
-const DRIVETRAIN_OPTIONS = ["FWD", "RWD/AWD"] as const;
+const DRIVETRAIN_OPTIONS = ["FWD", "RWD", "AWD"] as const;
+export type DrivetrainOption = typeof DRIVETRAIN_OPTIONS[number];
 
 const WHEEL_DIAMETER_OPTIONS = [16, 17, 18, 19, 20, 21, 22] as const;
 
