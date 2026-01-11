@@ -13,17 +13,23 @@ type MetricCardProps = {
   value: string;
   unit: string;
   highlight?: boolean;
+  badge?: string;
 };
 
 export function MetricCard(props: MetricCardProps) {
   return (
     <div
-      class="flex flex-col items-center p-3 border"
+      class="flex flex-col items-center p-3 border relative"
       classList={{
         'border-amber-500/30 bg-amber-500/5': props.highlight,
         'border-border/50 bg-surface/30': !props.highlight,
       }}
     >
+      <Show when={props.badge}>
+        <span class="absolute top-1 right-1 text-[8px] px-1 py-0.5 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 uppercase tracking-wider">
+          {props.badge}
+        </span>
+      </Show>
       <span class="text-[10px] uppercase tracking-wider text-muted mb-1">
         {props.label}
       </span>

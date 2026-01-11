@@ -15,6 +15,7 @@ const TABS = [
   { id: "main", label: "Input", to: "/" },
   { id: "suspension", label: "Suspension", to: "/suspension" },
   { id: "gearbox", label: "Gearbox", to: "/gearbox" },
+  { id: "aero", label: "Aero", to: "/aero" },
   { id: "data", label: "Database", to: "/database" },
 ] as const;
 

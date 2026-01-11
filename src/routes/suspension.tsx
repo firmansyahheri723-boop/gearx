@@ -5,6 +5,10 @@ import { DataTable } from '../components/ui/data-table';
 import { SuspensionOutput } from '../components/suspension-output';
 import { vehicleInputs } from '../stores/vehicle';
 import { calculateSuspensionOutputs } from '../utils/suspension';
+import { aeroSettings, aeroExperimentalEnabled } from '../stores/vehicle';
+import { getSelectedCar } from '../stores/car-data';
+import { calculateExperimentalAero } from '../utils/aero';
+import type { AeroExperimentalOutput } from '../types';
 
 import { SuspensionParametersSection } from '../components/tabs/suspension/suspension-parameters-section';
 import { SpringsStiffnessSection } from '../components/tabs/suspension/springs-stiffness-section';
@@ -19,6 +23,12 @@ export const Route = createFileRoute('/suspension')({
 
 function Suspension() {
   const cogHeightM = () => vehicleInputs.cogHeight * 0.0254;
+
+  const aeroData = createMemo((): AeroExperimentalOutput | null => {
+    if (!aeroExperimentalEnabled.value) return null;
+    const carData = getSelectedCar();
+    return calculateExperimentalAero(aeroSettings, carData, 200);
+  });
 
   const outputs = createMemo(() =>
     calculateSuspensionOutputs({
@@ -37,6 +47,10 @@ function Suspension() {
       magicNumber: vehicleInputs.magicNumber,
       tireRate: vehicleInputs.tireRate,
       rollCenterHeight: vehicleInputs.rollCenterHeight,
+      ...(aeroData() && {
+        aeroFrontDownforceN: aeroData()!.frontDownforceN,
+        aeroRearDownforceN: aeroData()!.rearDownforceN,
+      }),
     })
   );
 

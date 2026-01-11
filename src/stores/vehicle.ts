@@ -11,6 +11,8 @@ import type {
   TireCompound,
   Drivetrain,
   TractionMode,
+  AeroSettings,
+  AeroOutputs,
 } from '../types';
 import type { ShareSetupData } from '../utils/share';
 
@@ -136,6 +138,37 @@ export const [tractionMode, setTractionMode] = createStore<{ value: TractionMode
   value: 'launch',
 });
 
+// Aero settings (0-10 scale for game units)
+export const [aeroSettings, setAeroSettings] = createStore<AeroSettings>({
+  frontAero: 10,
+  rearAero: 5,
+  airResistance: 0,
+});
+
+// Experimental mode toggle for advanced physics estimates
+const AERO_EXPERIMENTAL_KEY = 'gearx-aero-experimental';
+const loadAeroExperimental = (): boolean => {
+  try {
+    const stored = localStorage.getItem(AERO_EXPERIMENTAL_KEY);
+    return stored === 'true';
+  } catch {
+    return false;
+  }
+};
+export const [aeroExperimentalEnabled, setAeroExperimentalEnabled] = createStore<{ value: boolean }>({
+  value: loadAeroExperimental(),
+});
+
+// Persist experimental toggle
+const persistAeroExperimental = (value: boolean) => {
+  localStorage.setItem(AERO_EXPERIMENTAL_KEY, value.toString());
+};
+export const toggleAeroExperimental = (): void => {
+  const newValue = !aeroExperimentalEnabled.value;
+  setAeroExperimentalEnabled({ value: newValue });
+  persistAeroExperimental(newValue);
+};
+
 export function applySharedSetup(data: ShareSetupData): void {
   setVehicleInputs(data.inputs);
   setTorqueRpmData(data.torqueRpmData);
@@ -143,4 +176,7 @@ export function applySharedSetup(data: ShareSetupData): void {
   setFinalDrive(data.finalDrive);
   setTireCompound({ value: data.tireCompound });
   setTractionMode({ value: data.tractionMode });
+  if (data.aeroSettings) {
+    setAeroSettings(data.aeroSettings);
+  }
 }

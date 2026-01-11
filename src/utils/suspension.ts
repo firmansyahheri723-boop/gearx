@@ -26,6 +26,8 @@ export type SuspensionInputs = {
   magicNumber: number;
   tireRate: number;
   rollCenterHeight: number;
+  aeroFrontDownforceN?: number;
+  aeroRearDownforceN?: number;
 };
 
 export type SpringsOutput = {
@@ -75,6 +77,12 @@ export type SuspensionOutputs = {
   dampers: DampersOutput;
   antiRollBars: AntiRollBarsOutput;
   acceleration: AccelerationOutput;
+  experimental?: {
+    aeroFrontLoadKg: number;
+    aeroRearLoadKg: number;
+    adjustedFrontSprungMass: number;
+    adjustedRearSprungMass: number;
+  };
 };
 
 /**
@@ -284,25 +292,43 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
     magicNumber,
     tireRate,
     rollCenterHeight,
+    aeroFrontDownforceN = 0,
+    aeroRearDownforceN = 0,
   } = inputs;
 
+  // Calculate aero load in kg (force / gravity)
+  const aeroFrontLoadKg = aeroFrontDownforceN / GRAVITY_MS2;
+  const aeroRearLoadKg = aeroRearDownforceN / GRAVITY_MS2;
+  const hasAero = aeroFrontDownforceN > 0 || aeroRearDownforceN > 0;
+
   // Calculate sprung masses per corner (Excel approach)
-  const sprungMass = calcSprungMass(weight, frontWeightDistribution, wheelWeight);
+  let sprungMass = calcSprungMass(weight, frontWeightDistribution, wheelWeight);
+
+  // When aero is active, adjust sprung mass to account for downforce
+  // This simulates the additional load on springs from aerodynamic forces
+  let adjustedFrontSprungMass = sprungMass.front;
+  let adjustedRearSprungMass = sprungMass.rear;
+
+  if (hasAero) {
+    // Divide aero load by 2 for per-corner values
+    adjustedFrontSprungMass = sprungMass.front + (aeroFrontLoadKg / 2);
+    adjustedRearSprungMass = sprungMass.rear + (aeroRearLoadKg / 2);
+  }
 
   // Calculate spring stiffness (N/m)
-  const frontStiffness = calcSpringStiffness(sprungMass.front, rideFrequency);
-  const rearStiffness = calcSpringStiffness(sprungMass.rear, rideFrequency);
+  const frontStiffness = calcSpringStiffness(adjustedFrontSprungMass, rideFrequency);
+  const rearStiffness = calcSpringStiffness(adjustedRearSprungMass, rideFrequency);
 
   const springs: SpringsOutput = {
-    frontSprungMass: sprungMass.front,
-    rearSprungMass: sprungMass.rear,
+    frontSprungMass: adjustedFrontSprungMass,
+    rearSprungMass: adjustedRearSprungMass,
     frontStiffness,
     rearStiffness,
   };
 
   // Calculate damping
-  const critDampingFront = calcCriticalDamping(frontStiffness, sprungMass.front);
-  const critDampingRear = calcCriticalDamping(rearStiffness, sprungMass.rear);
+  const critDampingFront = calcCriticalDamping(frontStiffness, adjustedFrontSprungMass);
+  const critDampingRear = calcCriticalDamping(rearStiffness, adjustedRearSprungMass);
   const dampers = calcDampingForces(critDampingFront, critDampingRear, dampingRatio);
 
   // Calculate acceleration metrics
@@ -349,5 +375,13 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
     dampers,
     antiRollBars,
     acceleration,
+    ...(hasAero && {
+      experimental: {
+        aeroFrontLoadKg: Math.round(aeroFrontLoadKg * 10) / 10,
+        aeroRearLoadKg: Math.round(aeroRearLoadKg * 10) / 10,
+        adjustedFrontSprungMass: Math.round(adjustedFrontSprungMass * 10) / 10,
+        adjustedRearSprungMass: Math.round(adjustedRearSprungMass * 10) / 10,
+      },
+    }),
   };
 }

@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
 import { TabsRoot, TabList, TabTrigger } from '@ark-ui/solid/tabs';
 
-export type TabId = 'main' | 'suspension' | 'gearbox' | 'data' | 'map';
+export type TabId = 'main' | 'suspension' | 'gearbox' | 'aero' | 'data' | 'map';
 
 type Tab = {
   id: TabId;
@@ -12,6 +12,7 @@ const TABS: Tab[] = [
   { id: 'main', label: 'Input' },
   { id: 'suspension', label: 'Suspension' },
   { id: 'gearbox', label: 'Gearbox' },
+  { id: 'aero', label: 'Aero' },
   { id: 'data', label: 'Database' },
   { id: 'map', label: 'Map' },
 ];

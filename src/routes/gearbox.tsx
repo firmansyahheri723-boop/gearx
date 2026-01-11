@@ -18,7 +18,12 @@ import {
   setTireCompound,
   tractionMode,
   setTractionMode,
+  aeroSettings,
+  aeroExperimentalEnabled,
 } from '../stores/vehicle';
+import { getSelectedCar } from '../stores/car-data';
+import { calculateExperimentalAero } from '../utils/aero';
+import type { AeroExperimentalOutput } from '../types';
 import { calculateGearboxOutputs } from '../utils/gearbox';
 import type { TireCompound, TractionMode, SpeedRpmPoint } from '../types';
 import { GEAR_LABELS } from '../types';
@@ -113,6 +118,12 @@ export const Route = createFileRoute('/gearbox')({
 });
 
 function Gearbox() {
+  const aeroData = createMemo((): AeroExperimentalOutput | null => {
+    if (!aeroExperimentalEnabled.value) return null;
+    const carData = getSelectedCar();
+    return calculateExperimentalAero(aeroSettings, carData, 200);
+  });
+
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
       frontWheel: vehicleInputs.frontWheel,
@@ -128,6 +139,9 @@ function Gearbox() {
       tireCompound: tireCompound.value,
       tractionMode: tractionMode.value,
       acceleration0to100: vehicleInputs.acceleration0to100,
+      ...(aeroData() && {
+        aeroTractionMultiplier: 1 + (aeroData()!.tractionLimitIncreasePct / 100),
+      }),
     })
   );
 
@@ -193,6 +207,7 @@ function Gearbox() {
               value={outputs().tractionLimitTorque.toFixed(0)}
               unit="Nm"
               highlight
+              badge={aeroData() ? 'Aero+' : undefined}
             />
             <MetricCard
               label="Final Drive"

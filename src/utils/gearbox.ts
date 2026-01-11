@@ -16,6 +16,7 @@ type GearboxCalcInputs = {
   tireCompound: TireCompound;
   tractionMode: TractionMode;
   acceleration0to100: number;
+  aeroTractionMultiplier?: number;
 }
 
 function getAverageWheel(front: WheelData, rear: WheelData): WheelData {
@@ -192,13 +193,15 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
   const cogHeightM = cogHeight * 2.54 / 100;
   const longAccelG = tractionMode === 'launch' ? 0 : calcLongitudinalAccelG(acceleration0to100);
   const frictionCoef = TIRE_FRICTION_COEFFICIENTS[tireCompound];
+  const aeroMultiplier = inputs.aeroTractionMultiplier ?? 1.0;
+  const adjustedFrictionCoef = frictionCoef * aeroMultiplier;
   const tractionLimitTorque = calcTractionLimitTorque(
     weight,
     frontWeightDistribution / 100,
     cogHeightM,
     wheelbase,
     longAccelG,
-    frictionCoef,
+    adjustedFrictionCoef,
     tractionWheel,
     drivetrain
   );

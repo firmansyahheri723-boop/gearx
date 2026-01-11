@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuspensionRouteImport } from './routes/suspension'
 import { Route as GearboxRouteImport } from './routes/gearbox'
 import { Route as DatabaseRouteImport } from './routes/database'
+import { Route as AeroRouteImport } from './routes/aero'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SuspensionRoute = SuspensionRouteImport.update({
@@ -29,6 +30,11 @@ const DatabaseRoute = DatabaseRouteImport.update({
   path: '/database',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AeroRoute = AeroRouteImport.update({
+  id: '/aero',
+  path: '/aero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aero': typeof AeroRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
   '/suspension': typeof SuspensionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aero': typeof AeroRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
   '/suspension': typeof SuspensionRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aero': typeof AeroRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
   '/suspension': typeof SuspensionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/database' | '/gearbox' | '/suspension'
+  fullPaths: '/' | '/aero' | '/database' | '/gearbox' | '/suspension'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/database' | '/gearbox' | '/suspension'
-  id: '__root__' | '/' | '/database' | '/gearbox' | '/suspension'
+  to: '/' | '/aero' | '/database' | '/gearbox' | '/suspension'
+  id: '__root__' | '/' | '/aero' | '/database' | '/gearbox' | '/suspension'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AeroRoute: typeof AeroRoute
   DatabaseRoute: typeof DatabaseRoute
   GearboxRoute: typeof GearboxRoute
   SuspensionRoute: typeof SuspensionRoute
@@ -92,6 +102,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof DatabaseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aero': {
+      id: '/aero'
+      path: '/aero'
+      fullPath: '/aero'
+      preLoaderRoute: typeof AeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/solid-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AeroRoute: AeroRoute,
   DatabaseRoute: DatabaseRoute,
   GearboxRoute: GearboxRoute,
   SuspensionRoute: SuspensionRoute,
