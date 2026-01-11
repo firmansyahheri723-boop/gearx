@@ -68,17 +68,17 @@ export const BasicVehicleSection: Component = () => {
   const decimals = (step: number) => (step < 1 ? (step < 0.1 ? 2 : 1) : 0);
 
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader title="Vehicle Input" variant="input" />
 
       <Show
         when={selectedCarIndex() !== null || selectedEngineIndex() !== null}
       >
-        <div class="px-3 py-1.5 border-b border-neutral-800/50 bg-neutral-900/50 flex items-center gap-4 text-[10px]">
+        <div class="px-3 py-1.5 border-b border-border/50 bg-surface/50 flex items-center gap-4 text-[10px]">
           <Show when={getSelectedCar()}>
             <span class="flex items-center gap-1.5">
               <span class="w-2 h-2 bg-green-500 rounded-full" />
-              <span class="text-neutral-400">Chassis:</span>
+              <span class="text-foreground-secondary">Chassis:</span>
               <span class="text-green-400 font-medium">
                 {getSelectedCar()?.car}
               </span>
@@ -87,7 +87,7 @@ export const BasicVehicleSection: Component = () => {
           <Show when={getSelectedEngine()}>
             <span class="flex items-center gap-1.5">
               <span class="w-2 h-2 bg-amber-500 rounded-full" />
-              <span class="text-neutral-400">Engine:</span>
+              <span class="text-foreground-secondary">Engine:</span>
               <span class="text-amber-400 font-medium">
                 {getSelectedEngine()?.car}
               </span>
@@ -99,12 +99,12 @@ export const BasicVehicleSection: Component = () => {
       <table class="w-full border-collapse text-sm">
         <tbody>
           <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50 w-1/3">
+            <td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50 w-1/3">
               <div class="flex items-center justify-between">
                 <span>Car selection</span>
               </div>
             </td>
-            <td class="border-b border-neutral-800/50 p-0">
+            <td class="border-b border-border/50 p-0">
               <Dropdown
                 value={vehicleInputs.carSelection}
                 options={carOptions()}
@@ -116,12 +116,12 @@ export const BasicVehicleSection: Component = () => {
           </tr>
 
           <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+            <td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
               <div class="flex items-center justify-between">
                 <span>Engine selection</span>
               </div>
             </td>
-            <td class="border-b border-neutral-800/50 p-0">
+            <td class="border-b border-border/50 p-0">
               <Dropdown
                 value={vehicleInputs.engineSelection}
                 options={engineOptions()}
@@ -141,9 +141,9 @@ export const BasicVehicleSection: Component = () => {
               <NumberInput
                 value={vehicleInputs.weight}
                 onChange={(val) => setVehicleInputs('weight', val)}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
+              <span class="px-3 py-2 text-muted text-xs">kg</span>
             </div>
           </InputRow>
 
@@ -157,19 +157,19 @@ export const BasicVehicleSection: Component = () => {
                 value={vehicleInputs.frontWeightDistribution}
                 onChange={(val) => setVehicleInputs('frontWeightDistribution', val)}
                 step={0.1}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+              <span class="px-3 py-2 text-muted text-xs">%</span>
             </div>
           </InputRow>
 
           <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+            <td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
               <div class="flex items-center justify-between">
                 <span>Ride frequency</span>
               </div>
             </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
+            <td class="border-b border-border/50 p-0 bg-surface-elevated/40">
               <RangeSliderInput
                 min={3}
                 max={5}
@@ -185,12 +185,12 @@ export const BasicVehicleSection: Component = () => {
           </tr>
 
           <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+            <td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
               <div class="flex items-center justify-between">
                 <span>Roll gradient</span>
               </div>
             </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
+            <td class="border-b border-border/50 p-0 bg-surface-elevated/40">
               <RangeSliderInput
                 min={0.02}
                 max={0.7}
@@ -215,9 +215,9 @@ export const BasicVehicleSection: Component = () => {
                 value={vehicleInputs.cogHeight}
                 onChange={(val) => setVehicleInputs('cogHeight', val)}
                 step={0.1}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
+              <span class="px-3 py-2 text-muted text-xs">in</span>
             </div>
           </InputRow>
 
@@ -231,9 +231,9 @@ export const BasicVehicleSection: Component = () => {
                 value={vehicleInputs.acceleration0to100}
                 onChange={(val) => setVehicleInputs('acceleration0to100', val)}
                 step={0.1}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
+              <span class="px-3 py-2 text-muted text-xs">s</span>
             </div>
           </InputRow>
 
@@ -250,9 +250,9 @@ export const BasicVehicleSection: Component = () => {
                 step={100}
                 min={3000}
                 max={15000}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
+              <span class="px-3 py-2 text-muted text-xs">rpm</span>
             </div>
           </InputRow>
 
@@ -266,9 +266,9 @@ export const BasicVehicleSection: Component = () => {
                 value={vehicleInputs.maxSpeed118mRadius}
                 onChange={(val) => setVehicleInputs('maxSpeed118mRadius', val)}
                 step={1}
-                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                class="flex-1 px-3 py-2 bg-transparent text-foreground-secondary focus:outline-none focus:text-emerald-400"
               />
-              <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
+              <span class="px-3 py-2 text-muted text-xs">km/h</span>
             </div>
           </InputRow>
         </tbody>
@@ -276,7 +276,7 @@ export const BasicVehicleSection: Component = () => {
 
       <div class="block sm:hidden space-y-3 p-3">
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Car selection</div>
+          <div class="text-xs uppercase tracking-wide text-foreground-secondary">Car selection</div>
           <Dropdown
             value={vehicleInputs.carSelection}
             options={carOptions()}
@@ -287,7 +287,7 @@ export const BasicVehicleSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Engine selection</div>
+          <div class="text-xs uppercase tracking-wide text-foreground-secondary">Engine selection</div>
           <Dropdown
             value={vehicleInputs.engineSelection}
             options={engineOptions()}
@@ -298,36 +298,36 @@ export const BasicVehicleSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-weight" class="block text-xs uppercase tracking-wide text-neutral-400">Weight</label>
+          <label for="mobile-weight" class="block text-xs uppercase tracking-wide text-foreground-secondary">Weight</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-weight"
               value={vehicleInputs.weight}
               onChange={(val) => setVehicleInputs('weight', val)}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
+            <span class="px-3 py-2 text-muted text-xs">kg</span>
           </div>
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-front-weight-dist" class="block text-xs uppercase tracking-wide text-neutral-400">Front weight distribution</label>
+          <label for="mobile-front-weight-dist" class="block text-xs uppercase tracking-wide text-foreground-secondary">Front weight distribution</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-front-weight-dist"
               value={vehicleInputs.frontWeightDistribution}
               onChange={(val) => setVehicleInputs('frontWeightDistribution', val)}
               step={0.1}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+            <span class="px-3 py-2 text-muted text-xs">%</span>
           </div>
         </div>
 
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label for="mobile-ride-freq" class="block text-xs uppercase tracking-wide text-neutral-400">Ride frequency</label>
-            <span class="text-sm text-neutral-400">{vehicleInputs.desiredRideFrequency.toFixed(decimals(0.1))} Hz</span>
+            <label for="mobile-ride-freq" class="block text-xs uppercase tracking-wide text-foreground-secondary">Ride frequency</label>
+            <span class="text-sm text-foreground-secondary">{vehicleInputs.desiredRideFrequency.toFixed(decimals(0.1))} Hz</span>
           </div>
           <RangeSliderInput
             min={3}
@@ -343,8 +343,8 @@ export const BasicVehicleSection: Component = () => {
 
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label for="mobile-roll-grad" class="block text-xs uppercase tracking-wide text-neutral-400">Roll gradient</label>
-            <span class="text-sm text-neutral-400">{vehicleInputs.desiredRollGradient.toFixed(decimals(0.01))}</span>
+            <label for="mobile-roll-grad" class="block text-xs uppercase tracking-wide text-foreground-secondary">Roll gradient</label>
+            <span class="text-sm text-foreground-secondary">{vehicleInputs.desiredRollGradient.toFixed(decimals(0.01))}</span>
           </div>
           <RangeSliderInput
             min={0.02}
@@ -359,35 +359,35 @@ export const BasicVehicleSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-cog-height" class="block text-xs uppercase tracking-wide text-neutral-400">CoG height</label>
+          <label for="mobile-cog-height" class="block text-xs uppercase tracking-wide text-foreground-secondary">CoG height</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-cog-height"
               value={vehicleInputs.cogHeight}
               onChange={(val) => setVehicleInputs('cogHeight', val)}
               step={0.1}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
+            <span class="px-3 py-2 text-muted text-xs">in</span>
           </div>
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-acceleration" class="block text-xs uppercase tracking-wide text-neutral-400">0-100 km/h</label>
+          <label for="mobile-acceleration" class="block text-xs uppercase tracking-wide text-foreground-secondary">0-100 km/h</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-acceleration"
               value={vehicleInputs.acceleration0to100}
               onChange={(val) => setVehicleInputs('acceleration0to100', val)}
               step={0.1}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
+            <span class="px-3 py-2 text-muted text-xs">s</span>
           </div>
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-redline" class="block text-xs uppercase tracking-wide text-neutral-400">Redline RPM</label>
+          <label for="mobile-redline" class="block text-xs uppercase tracking-wide text-foreground-secondary">Redline RPM</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-redline"
@@ -396,23 +396,23 @@ export const BasicVehicleSection: Component = () => {
               step={100}
               min={3000}
               max={15000}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
+            <span class="px-3 py-2 text-muted text-xs">rpm</span>
           </div>
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-max-speed" class="block text-xs uppercase tracking-wide text-neutral-400">Max speed @ 118m</label>
+          <label for="mobile-max-speed" class="block text-xs uppercase tracking-wide text-foreground-secondary">Max speed @ 118m</label>
           <div class="flex items-center">
             <NumberInput
               id="mobile-max-speed"
               value={vehicleInputs.maxSpeed118mRadius}
               onChange={(val) => setVehicleInputs('maxSpeed118mRadius', val)}
               step={1}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+              class="flex-1 px-3 py-2 bg-surface/50 border border-border/50 rounded text-foreground-secondary focus:outline-none focus:border-emerald-500/50"
             />
-            <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
+            <span class="px-3 py-2 text-muted text-xs">km/h</span>
           </div>
         </div>
       </div>

@@ -32,9 +32,9 @@ export const OutputCell: Component<OutputCellProps> = (props) => {
 
   return (
     <td
-      class="border-r border-b border-neutral-800/50 hover:bg-neutral-900/60 transition-colors"
+      class="border-r border-b border-border/50 hover:bg-surface/60 transition-colors"
       classList={{
-        'bg-neutral-900/50': !isHighlight(),
+        'bg-surface/50': !isHighlight(),
         'bg-amber-500/10 hover:bg-amber-500/15': isHighlight(),
       }}
     >

@@ -9,6 +9,28 @@
     <meta property="og:description" content="A dashboard for CarX Street — suspension calculator, gearbox tuning, and more" />
     <meta property="og:type" content="website" />
     <title>GearX</title>
+    <!-- Inline script to prevent FOUC (Flash of Unstyled Content) -->
+    <script>
+      (function() {
+        var STORAGE_KEY = 'gearx-theme';
+        var saved = localStorage.getItem(STORAGE_KEY);
+        var theme;
+        
+        if (saved === 'dark' || saved === 'light') {
+          // Explicit theme preference
+          theme = saved;
+        } else {
+          // 'system' or no preference: follow OS
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            theme = 'light';
+          } else {
+            theme = 'dark';
+          }
+        }
+        
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

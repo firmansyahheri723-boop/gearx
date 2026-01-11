@@ -3,7 +3,7 @@ import { FormulaCard } from '../../ui/metric-card';
 
 export function FormulaReferenceSection() {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader title="Formula Reference" variant="input" />
       <div class="p-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

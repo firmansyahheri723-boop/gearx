@@ -31,7 +31,7 @@ export function TabMenu(props: TabMenuProps) {
       value={props.activeTab}
       onValueChange={handleValueChange}
     >
-      <div class="border border-neutral-800/50 bg-neutral-950/50 mb-4">
+      <div class="border border-border/50 bg-background/50 mb-4">
         <TabList class="flex overflow-x-auto scrollbar-hide">
           <For each={TABS}>
             {(tab) => {
@@ -41,8 +41,8 @@ export function TabMenu(props: TabMenuProps) {
                   value={tab.id}
                   class="relative flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] sm:text-xs uppercase tracking-wider transition-colors focus:outline-none shrink-0 whitespace-nowrap border-b-2"
                   classList={{
-                    'bg-neutral-900/80 text-neutral-200 border-neutral-500': isActive(),
-                    'bg-transparent text-neutral-500 hover:text-neutral-400 hover:bg-neutral-900/30 border-transparent': !isActive(),
+                    'bg-surface/80 text-foreground border-border': isActive(),
+                    'bg-transparent text-muted hover:text-foreground-secondary hover:bg-surface/30 border-transparent': !isActive(),
                   }}
                 >
                   <span class="font-semibold">{tab.label}</span>
@@ -51,7 +51,7 @@ export function TabMenu(props: TabMenuProps) {
             }}
           </For>
           {/* Spacer to fill remaining width */}
-          <div class="flex-1 border-b border-neutral-800/30 shrink-0" />
+          <div class="flex-1 border-b border-border/30 shrink-0" />
         </TabList>
       </div>
     </TabsRoot>

@@ -21,21 +21,21 @@ export function SectionHeader(props: SectionHeaderProps) {
     <div
       class="flex items-center justify-between px-3 py-2 border-b"
       classList={{
-        'bg-neutral-900/80 border-neutral-700/50': true,
+        'bg-surface/80 border-border/50': true,
       }}
     >
       <div class="flex items-center gap-3">
         <div
           class="w-1.5 h-4"
           classList={{
-            'bg-neutral-500': !isOutput(),
+            'bg-muted': !isOutput(),
             'bg-amber-500': isOutput(),
           }}
         />
         <span
           class="font-semibold tracking-wider text-xs uppercase"
           classList={{
-            'text-neutral-300': true,
+            'text-foreground': true,
           }}
         >
           {props.title}

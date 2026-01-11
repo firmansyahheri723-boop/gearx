@@ -35,9 +35,9 @@ export function GearSlider(props: GearSliderProps) {
   };
 
   return (
-    <tr class="group border-b border-neutral-800/30 last:border-b-0">
+    <tr class="group border-b border-border/30 last:border-b-0">
       <td
-        class="px-3 py-2.5 bg-neutral-900/50 text-xs uppercase tracking-wide text-center w-20 border-r border-neutral-800/50"
+        class="px-3 py-2.5 bg-surface/50 text-xs uppercase tracking-wide text-center w-20 border-r border-border/50"
         style={{ color: gearColor() }}
       >
         <div class="flex items-center justify-center gap-1.5">
@@ -48,7 +48,7 @@ export function GearSlider(props: GearSliderProps) {
           {props.label}
         </div>
       </td>
-      <td class="px-4 py-2.5 bg-neutral-900/30 border-r border-neutral-800/50">
+      <td class="px-4 py-2.5 bg-surface/30 border-r border-border/50">
         <div class="flex items-center gap-3">
           {/* Min value */}
           <div class="w-12 shrink-0">
@@ -57,7 +57,7 @@ export function GearSlider(props: GearSliderProps) {
               fallback={
                 <button
                   type="button"
-                  class="text-neutral-600 text-xs hover:text-neutral-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-left"
+                  class="text-muted text-xs hover:text-foreground-secondary transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-left"
                   onClick={() => setIsEditing(true)}
                 >
                   {props.gear.min.toFixed(1)}
@@ -69,7 +69,7 @@ export function GearSlider(props: GearSliderProps) {
                 onChange={(val) => props.onMinChange(val)}
                 onBlur={() => setIsEditing(false)}
                 step={0.1}
-                class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
+                class="w-full px-1.5 py-0.5 bg-surface-elevated text-xs border border-border focus:outline-none"
                 style={{
                   color: gearColor(),
                   "border-color": `${gearColor()}80`,
@@ -89,7 +89,7 @@ export function GearSlider(props: GearSliderProps) {
               class="absolute inset-0 w-full h-6"
             >
               <SliderControl>
-                <SliderTrack class="absolute inset-x-0 h-1 bg-neutral-800 rounded-full">
+                <SliderTrack class="absolute inset-x-0 h-1 bg-surface-elevated rounded-full">
                   <SliderRange
                     class="absolute left-0 top-0 h-full rounded-full"
                     style={{
@@ -117,7 +117,7 @@ export function GearSlider(props: GearSliderProps) {
               fallback={
                 <button
                   type="button"
-                  class="text-neutral-600 text-xs hover:text-neutral-400 transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-right"
+                  class="text-muted text-xs hover:text-foreground-secondary transition-colors bg-transparent border-none p-0 cursor-pointer w-full text-right"
                   onClick={() => setIsEditing(true)}
                 >
                   {props.gear.max.toFixed(1)}
@@ -129,7 +129,7 @@ export function GearSlider(props: GearSliderProps) {
                 onChange={(val) => props.onMaxChange(val)}
                 onBlur={() => setIsEditing(false)}
                 step={0.1}
-                class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
+                class="w-full px-1.5 py-0.5 bg-surface-elevated text-xs border border-border focus:outline-none"
                 style={{
                   color: gearColor(),
                   "border-color": `${gearColor()}80`,
@@ -139,7 +139,7 @@ export function GearSlider(props: GearSliderProps) {
           </div>
         </div>
       </td>
-      <td class="px-3 py-2.5 bg-neutral-900/30 w-24 border-r border-neutral-800/50">
+      <td class="px-3 py-2.5 bg-surface/30 w-24 border-r border-border/50">
         <NumberInput
           value={props.gear.ratio}
           onChange={(val) => props.onRatioChange(val)}
@@ -148,9 +148,9 @@ export function GearSlider(props: GearSliderProps) {
           style={{ color: gearColor() }}
         />
       </td>
-      <td class="px-2 py-2.5 bg-neutral-900/30 w-16 text-center">
-        <Show when={props.gap !== null} fallback={<span class="text-neutral-700">—</span>}>
-          <span class="text-neutral-400">{props.gap!.toFixed(2)}</span>
+      <td class="px-2 py-2.5 bg-surface/30 w-16 text-center">
+        <Show when={props.gap !== null} fallback={<span class="text-muted">—</span>}>
+          <span class="text-foreground-secondary">{props.gap!.toFixed(2)}</span>
         </Show>
       </td>
     </tr>

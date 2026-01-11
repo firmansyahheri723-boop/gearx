@@ -229,7 +229,7 @@ export const TransmissionSection: Component = () => {
   });
 
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Transmission"
         variant="input"
@@ -242,14 +242,14 @@ export const TransmissionSection: Component = () => {
       />
 
       {/* Compact Charts Row */}
-      <div class="border-t border-neutral-800/30">
-        <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30">
-          <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+      <div class="border-t border-border/30">
+        <div class="px-3 py-2 border-b border-border/30 bg-surface/30">
+          <span class="text-[10px] uppercase tracking-wider text-muted">
             Speed & Torque Preview
           </span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 mb-10">
-          <div class="p-2 sm:p-3 border-r border-neutral-800/30">
+          <div class="p-2 sm:p-3 border-r border-border/30">
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
@@ -271,10 +271,10 @@ export const TransmissionSection: Component = () => {
 
       <div class="flex flex-col lg:flex-row">
         {/* Torque/RPM Table */}
-        <div class="flex-1 border-r border-neutral-800/30">
-          <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center justify-between">
+        <div class="flex-1 border-r border-border/30">
+          <div class="px-3 py-2 border-b border-border/30 bg-surface/30 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+              <span class="text-[10px] uppercase tracking-wider text-muted">
                 Torque Curve Data
               </span>
               <HelpTooltip
@@ -287,18 +287,18 @@ export const TransmissionSection: Component = () => {
           </div>
 
           {/* Image Import Placeholder */}
-          <div class="p-3 border-b border-neutral-800/30">
+          <div class="p-3 border-b border-border/30">
             <Show
               when={importedImageUrl()}
               fallback={
                 <button
                   type="button"
                   onClick={() => setShowExtractor(true)}
-                  class="w-full aspect-[4/3] max-h-48 border border-neutral-800 hover:border-neutral-600 bg-neutral-900/50 hover:bg-neutral-900 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
+                  class="w-full aspect-[4/3] max-h-48 border border-border hover:border-border bg-surface/50 hover:bg-surface flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
                 >
-                  <div class="w-10 h-10 border border-neutral-700 group-hover:border-neutral-500 bg-neutral-800/50 flex items-center justify-center transition-colors">
+                  <div class="w-10 h-10 border border-border group-hover:border-border bg-surface-elevated/50 flex items-center justify-center transition-colors">
                     <svg
-                      class="w-5 h-5 text-neutral-600 group-hover:text-neutral-400 transition-colors"
+                      class="w-5 h-5 text-muted group-hover:text-foreground-secondary transition-colors"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -312,14 +312,14 @@ export const TransmissionSection: Component = () => {
                       />
                     </svg>
                   </div>
-                  <span class="text-[10px] uppercase tracking-wider text-neutral-600 group-hover:text-neutral-400 transition-colors">
+                  <span class="text-[10px] uppercase tracking-wider text-muted group-hover:text-foreground-secondary transition-colors">
                     Import from Image
                   </span>
                 </button>
               }
             >
               <div class="flex flex-col gap-2">
-                <div class="w-full aspect-[4/3] max-h-48 border border-neutral-800 bg-neutral-900/50 overflow-hidden">
+                <div class="w-full aspect-[4/3] max-h-48 border border-border bg-surface/50 overflow-hidden">
                   <img
                     src={importedImageUrl()!}
                     alt="Imported torque curve"
@@ -329,7 +329,7 @@ export const TransmissionSection: Component = () => {
                 <button
                   type="button"
                   onClick={() => setShowExtractor(true)}
-                  class="w-full border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+                  class="w-full border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
                 >
                   Replace Torque Curve Image
                 </button>
@@ -342,9 +342,9 @@ export const TransmissionSection: Component = () => {
 
         {/* Gear Ratios with Sliders */}
         <div class="flex-1">
-          <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center justify-between">
+          <div class="px-3 py-2 border-b border-border/30 bg-surface/30 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+              <span class="text-[10px] uppercase tracking-wider text-muted">
                 Gear Ratios
               </span>
               <HelpTooltip
@@ -354,23 +354,23 @@ export const TransmissionSection: Component = () => {
                 position="bottom"
               />
             </div>
-            <span class="text-[9px] text-neutral-600">
+            <span class="text-[9px] text-muted">
               click min/max to edit
             </span>
           </div>
           <table class="w-full border-collapse text-sm">
             <thead>
               <tr>
-                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-20">
+                <th class="border-r border-b border-border/50 bg-surface/50 px-3 py-2 text-muted text-[10px] uppercase tracking-wider text-center w-20">
                   Gear
                 </th>
-                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center">
+                <th class="border-r border-b border-border/50 bg-surface/50 px-3 py-2 text-muted text-[10px] uppercase tracking-wider text-center">
                   Range
                 </th>
-                <th class="border-r border-b border-neutral-800/50 bg-neutral-900/50 px-3 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-24">
+                <th class="border-r border-b border-border/50 bg-surface/50 px-3 py-2 text-muted text-[10px] uppercase tracking-wider text-center w-24">
                   Ratio
                 </th>
-                <th class="border-b border-neutral-800/50 bg-neutral-900/50 px-2 py-2 text-neutral-500 text-[10px] uppercase tracking-wider text-center w-16">
+                <th class="border-b border-border/50 bg-surface/50 px-2 py-2 text-muted text-[10px] uppercase tracking-wider text-center w-16">
                   <div class="flex items-center justify-center gap-1">
                     Gap
                     <HelpTooltip

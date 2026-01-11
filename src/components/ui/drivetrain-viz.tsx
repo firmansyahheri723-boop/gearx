@@ -30,8 +30,8 @@ export const DrivetrainViz: Component<DrivetrainVizProps> = (props) => {
   const wheelStyle = (filled: boolean, width: number, height: number) => ({
     width: `${width}px`,
     height: `${height}px`,
-    border: "2px solid #a3a3a3",
-    background: filled ? "#d4d4d4" : "black",
+    border: "2px solid var(--text-secondary)",
+    background: filled ? "var(--text-secondary)" : "var(--bg-primary)",
   });
 
   // Fixed axle positions (center of axle line)
@@ -58,13 +58,13 @@ export const DrivetrainViz: Component<DrivetrainVizProps> = (props) => {
       />
       {/* Front axle line */}
       <div
-        class="absolute left-1/2 -translate-x-1/2 h-2 bg-neutral-500"
+        class="absolute left-1/2 -translate-x-1/2 h-2 bg-muted"
         style={{ top: `${FRONT_AXLE_Y}px`, width: "calc(100% - 20px)" }}
       />
 
       {/* Driveshaft */}
       <div
-        class="absolute left-1/2 -translate-x-1/2 w-2 bg-neutral-500"
+        class="absolute left-1/2 -translate-x-1/2 w-2 bg-muted"
         style={{
           top: `${FRONT_AXLE_Y}px`,
           height: `${REAR_AXLE_Y - FRONT_AXLE_Y}px`,
@@ -89,7 +89,7 @@ export const DrivetrainViz: Component<DrivetrainVizProps> = (props) => {
       />
       {/* Rear axle line */}
       <div
-        class="absolute left-1/2 -translate-x-1/2 h-2 bg-neutral-500"
+        class="absolute left-1/2 -translate-x-1/2 h-2 bg-muted"
         style={{ top: `${REAR_AXLE_Y}px`, width: "calc(100% - 20px)" }}
       />
     </div>

@@ -167,7 +167,7 @@ export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
                   class="w-3 h-3 rounded-full"
                   style={{ background: GEAR_COLORS[idx() % GEAR_COLORS.length] }}
                 />
-                <span class="text-xs text-neutral-400">{name}</span>
+                <span class="text-xs text-foreground-secondary">{name}</span>
               </div>
             )}
           </For>
@@ -178,7 +178,7 @@ export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
                 class="w-3 h-0.5"
                 style={{ background: "#ef4444" }}
               />
-              <span class="text-xs text-neutral-400">Redline ({props.redlineRpm} RPM)</span>
+              <span class="text-xs text-foreground-secondary">Redline ({props.redlineRpm} RPM)</span>
             </div>
           </Show>
         </div>

@@ -14,7 +14,7 @@ export const LabelCell: Component<LabelCellProps> = (props) => {
     <span
       class="block px-3 py-2 text-xs uppercase tracking-wide"
       classList={{
-        'text-neutral-400': !props.highlight,
+        'text-foreground-secondary': !props.highlight,
         'text-green-400': props.highlight,
         'text-left': props.align === 'left' || !props.align,
         'text-center': props.align === 'center',
@@ -31,9 +31,9 @@ export const LabelCell: Component<LabelCellProps> = (props) => {
 
   return (
     <td
-      class="border-r border-b border-neutral-800/50"
+      class="border-r border-b border-border/50"
       classList={{
-        'bg-neutral-900/50': !props.highlight,
+        'bg-surface/50': !props.highlight,
         'bg-green-900/20': props.highlight,
       }}
       colspan={props.colspan}

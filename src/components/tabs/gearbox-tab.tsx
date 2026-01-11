@@ -152,7 +152,7 @@ export function GearboxTab() {
   return (
     <div class="space-y-4">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div class="lg:col-span-2 border border-neutral-800/50 bg-neutral-950/50">
+        <div class="lg:col-span-2 border border-border/50 bg-background/50">
           <SectionHeader
             title="Calculated Metrics"
             variant="output"
@@ -207,7 +207,7 @@ export function GearboxTab() {
           </div>
         </div>
 
-          <div class="border border-neutral-800/50 bg-neutral-950/50">
+          <div class="border border-border/50 bg-background/50">
             <SectionHeader
               title="Tire & Traction"
               variant="input"
@@ -228,9 +228,9 @@ export function GearboxTab() {
                       value={option.value}
                       class="w-full flex items-center justify-between px-3 py-2 border transition-colors cursor-pointer"
                       classList={{
-                        'border-neutral-500/50 bg-neutral-500/10 text-neutral-400':
+                        'border-border/50 bg-foreground/10 text-foreground-secondary':
                           tireCompound.value === option.value,
-                        'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50 hover:bg-neutral-800/30':
+                        'border-border/50 bg-surface/30 text-foreground-secondary hover:border-border/50 hover:bg-surface-elevated/30':
                           tireCompound.value !== option.value,
                       }}
                     >
@@ -243,8 +243,8 @@ export function GearboxTab() {
                 </For>
               </RadioGroupRoot>
 
-              <div class="border-t border-neutral-800/50 pt-4">
-                <div class="text-xs uppercase tracking-wide text-neutral-400 mb-2">Traction Mode</div>
+              <div class="border-t border-border/50 pt-4">
+                <div class="text-xs uppercase tracking-wide text-foreground-secondary mb-2">Traction Mode</div>
                 <div class="flex gap-2">
                   <For each={TRACTION_MODE_OPTIONS}>
                     {(option) => (
@@ -253,9 +253,9 @@ export function GearboxTab() {
                         onClick={() => setTractionMode('value', option.value)}
                         class="flex-1 px-3 py-2 border text-sm font-medium transition-colors"
                         classList={{
-                          'border-neutral-500/50 bg-neutral-500/10 text-neutral-300':
+                          'border-border/50 bg-foreground/10 text-foreground':
                             tractionMode.value === option.value,
-                          'border-neutral-700/50 bg-neutral-900/30 text-neutral-500 hover:border-neutral-600/50 hover:bg-neutral-800/30':
+                          'border-border/50 bg-surface/30 text-muted hover:border-border/50 hover:bg-surface-elevated/30':
                             tractionMode.value !== option.value,
                         }}
                       >
@@ -269,7 +269,7 @@ export function GearboxTab() {
           </div>
       </div>
 
-      <div class="border border-neutral-800/50 bg-neutral-950/50">
+      <div class="border border-border/50 bg-background/50">
         <SectionHeader
           title="Effective Drive Ratios"
           variant="output"
@@ -283,7 +283,7 @@ export function GearboxTab() {
             <For each={activeGears()}>
               {(gear, idx) => (
                 <div
-                  class="flex-1 min-w-40 flex flex-col items-center px-4 py-2 border bg-neutral-900/30"
+                  class="flex-1 min-w-40 flex flex-col items-center px-4 py-2 border bg-surface/30"
                   style={{ "border-color": `${GEAR_COLORS[idx() % GEAR_COLORS.length]}50` }}
                 >
                   <span
@@ -298,7 +298,7 @@ export function GearboxTab() {
                   >
                     {outputs().effectiveRatios[gear.index].toFixed(2)}
                   </span>
-                  <span class="text-[10px] text-neutral-600">
+                  <span class="text-[10px] text-muted">
                     max {outputs().maxSpeedPerGear[gear.index].toFixed(0)} kph
                   </span>
                 </div>
@@ -309,7 +309,7 @@ export function GearboxTab() {
       </div>
 
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div class="border border-neutral-800/50 bg-neutral-950/50">
+        <div class="border border-border/50 bg-background/50">
           <SectionHeader
             title="Speed vs RPM Chart"
             variant="output"
@@ -328,7 +328,7 @@ export function GearboxTab() {
           </div>
         </div>
 
-        <div class="border border-neutral-800/50 bg-neutral-950/50">
+        <div class="border border-border/50 bg-background/50">
           <SectionHeader
             title="Wheel Torque vs RPM Chart"
             variant="output"
@@ -367,7 +367,7 @@ type TractionProps = {
 
 function TractionAnalysisSection(props: TractionProps) {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Traction Analysis"
         variant="output"
@@ -391,9 +391,9 @@ function TractionAnalysisSection(props: TractionProps) {
                   : 0;
 
               return (
-                <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
+                <div class="border border-border/50 bg-surface/30 p-3">
                   <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm font-medium text-neutral-300">{gear.name}</span>
+                    <span class="text-sm font-medium text-foreground">{gear.name}</span>
                     <span
                       class="text-xs px-2 py-0.5"
                       classList={{
@@ -411,14 +411,14 @@ function TractionAnalysisSection(props: TractionProps) {
                     </span>
                   </div>
 
-                  <div class="h-2 bg-neutral-800 rounded">
+                  <div class="h-2 bg-surface-elevated rounded">
                     <div
                       class="h-full bg-red-500/70 transition-all"
                       style={{ width: `${percentExceeded()}%` }}
                     />
                   </div>
 
-                  <div class="flex justify-between text-[10px] text-neutral-500">
+                  <div class="flex justify-between text-[10px] text-muted">
                     <span>
                       Grip zone:{' '}
                       {tractionOkPoints().length > 0

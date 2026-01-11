@@ -66,7 +66,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'label',
     header: 'Dampers',
     cell: (info) => (
-      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
         {info.getValue() as string}
       </span>
     ),
@@ -76,7 +76,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'front',
     header: 'Front',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-surface/30">
         {info.getValue() as number}
       </span>
     ),
@@ -85,7 +85,7 @@ const damperColumns: ColumnDef<DamperRow>[] = [
     accessorKey: 'rear',
     header: 'Rear',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-surface/30">
         {info.getValue() as number}
       </span>
     ),
@@ -97,7 +97,7 @@ const metricColumns: ColumnDef<MetricRow>[] = [
     accessorKey: 'label',
     header: 'Metric',
     cell: (info) => (
-      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+      <span class="block px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
         {info.getValue() as string}
       </span>
     ),
@@ -107,7 +107,7 @@ const metricColumns: ColumnDef<MetricRow>[] = [
     accessorKey: 'value',
     header: 'Value',
     cell: (info) => (
-      <span class="block px-3 py-2 text-amber-400 bg-neutral-900/30">
+      <span class="block px-3 py-2 text-amber-400 bg-surface/30">
         {info.getValue() as string}
       </span>
     ),
@@ -136,13 +136,13 @@ export function SuspensionOutput(props: SuspensionOutputProps) {
   ];
 
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader title="Suspension Output" variant="output" />
 
       {/* Springs Stiffness */}
-      <div class="p-3 border-b border-neutral-800/30">
+      <div class="p-3 border-b border-border/30">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
+          <div class="text-[10px] uppercase tracking-wider text-muted">
             Springs Stiffness
           </div>
           <HelpTooltip
@@ -153,31 +153,31 @@ export function SuspensionOutput(props: SuspensionOutputProps) {
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+          <div class="bg-surface/50 border border-border/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-muted mb-1">
               Front
             </div>
             <div class="text-2xl font-semibold text-amber-400">
               {(props.outputs.springs.frontStiffness / 1000).toFixed(2)}
-              <span class="text-xs text-neutral-500 ml-1">kN/m</span>
+              <span class="text-xs text-muted ml-1">kN/m</span>
             </div>
           </div>
-          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+          <div class="bg-surface/50 border border-border/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-muted mb-1">
               Rear
             </div>
             <div class="text-2xl font-semibold text-amber-400">
               {(props.outputs.springs.rearStiffness / 1000).toFixed(2)}
-              <span class="text-xs text-neutral-500 ml-1">kN/m</span>
+              <span class="text-xs text-muted ml-1">kN/m</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Dampers Table */}
-      <div class="border-b border-neutral-800/30">
-        <div class="flex items-center justify-between px-3 py-2 bg-neutral-900/30">
-          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
+      <div class="border-b border-border/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-surface/30">
+          <div class="text-[10px] uppercase tracking-wider text-muted">
             Dampers
           </div>
           <HelpTooltip
@@ -194,9 +194,9 @@ export function SuspensionOutput(props: SuspensionOutputProps) {
       </div>
 
       {/* Anti-roll bars */}
-      <div class="p-3 border-t border-neutral-800/30">
+      <div class="p-3 border-t border-border/30">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
+          <div class="text-[10px] uppercase tracking-wider text-muted">
             Anti-roll Bars
           </div>
           <HelpTooltip
@@ -207,31 +207,31 @@ export function SuspensionOutput(props: SuspensionOutputProps) {
           />
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+          <div class="bg-surface/50 border border-border/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-muted mb-1">
               FARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
               {props.outputs.antiRollBars.farb.toFixed(2)}
-              <span class="text-xs text-neutral-500 ml-1">kNm</span>
+              <span class="text-xs text-muted ml-1">kNm</span>
             </div>
           </div>
-          <div class="bg-neutral-900/50 border border-neutral-800/50 p-3">
-            <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+          <div class="bg-surface/50 border border-border/50 p-3">
+            <div class="text-[10px] uppercase tracking-wider text-muted mb-1">
               RARB
             </div>
             <div class="text-xl font-semibold text-amber-400">
               {props.outputs.antiRollBars.rarb.toFixed(2)}
-              <span class="text-xs text-neutral-500 ml-1">kNm</span>
+              <span class="text-xs text-muted ml-1">kNm</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Acceleration Metrics Table */}
-      <div class="border-t border-neutral-800/30">
-        <div class="flex items-center justify-between px-3 py-2 bg-neutral-900/30">
-          <div class="text-[10px] uppercase tracking-wider text-neutral-500">
+      <div class="border-t border-border/30">
+        <div class="flex items-center justify-between px-3 py-2 bg-surface/30">
+          <div class="text-[10px] uppercase tracking-wider text-muted">
             Acceleration Metrics
           </div>
           <HelpTooltip

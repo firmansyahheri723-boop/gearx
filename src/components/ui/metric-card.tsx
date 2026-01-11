@@ -21,10 +21,10 @@ export function MetricCard(props: MetricCardProps) {
       class="flex flex-col items-center p-3 border"
       classList={{
         'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
+        'border-border/50 bg-surface/30': !props.highlight,
       }}
     >
-      <span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+      <span class="text-[10px] uppercase tracking-wider text-muted mb-1">
         {props.label}
       </span>
       <div class="flex items-baseline gap-1">
@@ -32,13 +32,13 @@ export function MetricCard(props: MetricCardProps) {
           class="text-xl font-bold"
           classList={{
             'text-amber-400': props.highlight,
-            'text-neutral-300': !props.highlight,
+            'text-foreground': !props.highlight,
           }}
         >
           {props.value}
         </span>
         <Show when={props.unit}>
-          <span class="text-xs text-neutral-500">{props.unit}</span>
+          <span class="text-xs text-muted">{props.unit}</span>
         </Show>
       </div>
     </div>
@@ -59,11 +59,11 @@ export function MetricCardWithHelp(props: MetricCardWithHelpProps) {
       class="flex flex-col items-center p-3 border relative"
       classList={{
         'border-amber-500/30 bg-amber-500/5': props.highlight,
-        'border-neutral-700/50 bg-neutral-900/30': !props.highlight,
+        'border-border/50 bg-surface/30': !props.highlight,
       }}
     >
       <div class="flex items-center gap-1 mb-1">
-        <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+        <span class="text-[10px] uppercase tracking-wider text-muted">
           {props.label}
         </span>
         <HelpTooltip
@@ -78,13 +78,13 @@ export function MetricCardWithHelp(props: MetricCardWithHelpProps) {
           class="text-xl font-bold"
           classList={{
             'text-amber-400': props.highlight,
-            'text-neutral-300': !props.highlight,
+            'text-foreground': !props.highlight,
           }}
         >
           {props.value}
         </span>
         <Show when={props.unit}>
-          <span class="text-xs text-neutral-500">{props.unit}</span>
+          <span class="text-xs text-muted">{props.unit}</span>
         </Show>
       </div>
     </div>
@@ -99,16 +99,16 @@ type FormulaCardProps = {
 
 export function FormulaCard(props: FormulaCardProps) {
   return (
-    <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
-      <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
+    <div class="border border-border/50 bg-surface/30 p-3">
+      <div class="text-[10px] uppercase tracking-wider text-muted mb-2">
         {props.title}
       </div>
-      <div class="bg-neutral-950/50 px-2 py-1.5 rounded mb-2 overflow-x-auto">
-        <Formula math={props.formula} class="text-neutral-300" />
+      <div class="bg-background/50 px-2 py-1.5 rounded mb-2 overflow-x-auto">
+        <Formula math={props.formula} class="text-foreground" />
       </div>
       <div class="space-y-0.5">
         <For each={props.variables}>
-          {(variable) => <div class="text-neutral-500 text-[10px] font-mono">{variable}</div>}
+          {(variable) => <div class="text-muted text-[10px] font-mono">{variable}</div>}
         </For>
       </div>
     </div>

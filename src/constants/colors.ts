@@ -1,5 +1,5 @@
 // Gear colors for charts and sliders - consistent across the app
-// These colors are chosen to be visually distinct and work well on dark backgrounds
+// These colors are chosen to be visually distinct and work well on both light and dark backgrounds
 
 export const GEAR_COLORS = [
   '#f59e0b', // amber-500 - 1st gear
@@ -26,13 +26,23 @@ export const GEAR_COLOR_CLASSES = [
 
 // Final drive gets a distinct gray color
 export const FINAL_DRIVE_COLOR = '#737373'; // neutral-500
-export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-neutral-500', text: 'text-neutral-500', border: 'border-neutral-500', gradient: 'from-neutral-600 to-neutral-400' };
+export const FINAL_DRIVE_COLOR_CLASS = { bg: 'bg-muted', text: 'text-muted', border: 'border-muted', gradient: 'from-border to-foreground-secondary' };
 
 // Traction limit line color (for charts)
 export const TRACTION_LIMIT_COLOR = '#ef4444'; // red-500
 
-// Peak torque curve color (black line connecting peak HP points)
-export const PEAK_TORQUE_CURVE_COLOR = '#ffffff'; // white for visibility on dark bg
+// Peak torque curve color - uses CSS variable for theme awareness
+// Falls back to a contrasting color that works on both themes
+export const PEAK_TORQUE_CURVE_COLOR = '#171717'; // Dark color that works on light mode, will be overridden
+
+// Helper to get theme-aware peak torque color
+export function getPeakTorqueCurveColor(): string {
+  if (typeof document !== 'undefined') {
+    const theme = document.documentElement.getAttribute('data-theme');
+    return theme === 'dark' ? '#fafafa' : '#171717';
+  }
+  return '#171717';
+}
 
 
 export function getGearColor(index: number): string {

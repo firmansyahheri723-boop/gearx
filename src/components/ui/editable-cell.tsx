@@ -41,7 +41,7 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
   };
 
   const inputClasses = () => ({
-    'text-neutral-400': !props.highlight,
+    'text-foreground-secondary': !props.highlight,
     'text-green-400': props.highlight,
     'text-left': props.align === 'left',
     'text-center': props.align === 'center' || !props.align,
@@ -49,9 +49,9 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
   });
 
   const containerClasses = () => ({
-    'bg-neutral-800/40 hover:bg-neutral-900/30': !isSelected() && !props.highlight,
+    'bg-surface-elevated/40 hover:bg-surface/30': !isSelected() && !props.highlight,
     'bg-green-900/20 hover:bg-green-900/40': !isSelected() && props.highlight,
-    'bg-neutral-500/10 ring-1 ring-inset ring-neutral-500/50': isSelected(),
+    'bg-foreground/10 ring-1 ring-inset ring-foreground/50': isSelected(),
   });
 
   if (props.asContent) {
@@ -62,7 +62,7 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
         onInput={(e) => props.onChange(e.currentTarget.value)}
         onMouseDown={handleMouseDown}
         onMouseEnter={handleMouseEnter}
-        class="w-full h-full px-3 py-2 bg-transparent focus:bg-neutral-800/50 focus:text-emerald-400 focus:outline-none transition-colors duration-75"
+        class="w-full h-full px-3 py-2 bg-transparent focus:bg-surface-elevated/50 focus:text-emerald-400 focus:outline-none transition-colors duration-75"
         classList={{ ...inputClasses(), ...containerClasses() }}
       />
     );
@@ -70,7 +70,7 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
 
   return (
     <td
-      class="border-r border-b border-neutral-800/50 p-0 transition-colors duration-75"
+      class="border-r border-b border-border/50 p-0 transition-colors duration-75"
       classList={containerClasses()}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
@@ -79,7 +79,7 @@ export const EditableCell: Component<EditableCellProps> = (props) => {
         type={props.type || 'text'}
         value={props.value}
         onInput={(e) => props.onChange(e.currentTarget.value)}
-        class="w-full h-full px-3 py-2 bg-transparent focus:bg-neutral-800/50 focus:text-emerald-400 focus:outline-none"
+        class="w-full h-full px-3 py-2 bg-transparent focus:bg-surface-elevated/50 focus:text-emerald-400 focus:outline-none"
         classList={inputClasses()}
       />
     </td>

@@ -12,6 +12,7 @@ import {
   clearSelection,
 } from './stores/selection';
 import { torqueRpmData, setTorqueRpmData, gearRatios, setGearRatios } from './stores/vehicle';
+import { initThemeListener } from './stores/theme';
 
 const VALID_TABS: TabId[] = ['main', 'suspension', 'gearbox', 'data', 'map'];
 
@@ -35,6 +36,9 @@ function App() {
   };
 
   onMount(() => {
+    // Initialize theme listener for system preference changes
+    const cleanupThemeListener = initThemeListener();
+    
     const handleMouseUp = () => {
       setIsSelecting(false);
     };
@@ -89,6 +93,7 @@ function App() {
     document.addEventListener('keydown', handleKeyDown);
 
     onCleanup(() => {
+      cleanupThemeListener();
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('paste', handlePaste);
       document.removeEventListener('keydown', handleKeyDown);
@@ -121,10 +126,10 @@ function App() {
         </Switch>
 
         {/* Footer */}
-        <footer class="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-neutral-700 text-[10px] sm:text-xs">
-          <span class="text-neutral-600">{'///'}</span>
+        <footer class="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-muted text-[10px] sm:text-xs">
+          <span class="text-foreground-secondary">{'///'}</span>
           <span>GEARX SUSPENSION CALCULATOR v1.0.0</span>
-          <span class="text-neutral-600">{'///'}</span>
+          <span class="text-foreground-secondary">{'///'}</span>
         </footer>
       </div>
 

@@ -2,9 +2,128 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'leaflet/dist/leaflet.css';
 
+/* Theme CSS Variables */
+:root {
+  /* Background colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e5e5e5;
+  --bg-elevated: #fafafa;
+  
+  /* Text colors */
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --text-muted: #737373;
+  --text-inverted: #fafafa;
+  
+  /* Border colors */
+  --border-color: #d4d4d4;
+  --border-subtle: #e5e5e5;
+  
+  /* Interactive elements */
+  --scrollbar-track: #f5f5f5;
+  --scrollbar-thumb: #a3a3a3;
+  --scrollbar-thumb-hover: #737373;
+  
+  /* Selection */
+  --selection-bg: rgba(0, 0, 0, 0.1);
+  --selection-text: #171717;
+  
+  /* Slider */
+  --slider-track: #e5e5e5;
+  --slider-thumb: #525252;
+  --slider-thumb-glow: rgba(82, 82, 82, 0.4);
+  
+  /* Grid pattern */
+  --grid-color: rgba(212, 212, 212, 0.3);
+  
+  /* Chart colors */
+  --chart-grid: #e5e5e5;
+  --chart-tick: #a3a3a3;
+  --chart-label: #737373;
+  --chart-crosshair: #a3a3a3;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #d4d4d4;
+  --chart-tooltip-text: #171717;
+  --chart-peak-curve: #171717;
+  
+  /* Popup/Popover */
+  --popover-bg: rgb(255 255 255 / 0.95);
+  --popover-arrow-border: rgb(212 212 212 / 0.3);
+  
+  /* Shadow */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  /* Background colors */
+  --bg-primary: #0c0c0c;
+  --bg-secondary: #171717;
+  --bg-tertiary: #262626;
+  --bg-elevated: #1a1a1a;
+  
+  /* Text colors */
+  --text-primary: #e5e5e5;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  --text-inverted: #171717;
+  
+  /* Border colors */
+  --border-color: #404040;
+  --border-subtle: #262626;
+  
+  /* Interactive elements */
+  --scrollbar-track: #171717;
+  --scrollbar-thumb: #404040;
+  --scrollbar-thumb-hover: #525252;
+  
+  /* Selection */
+  --selection-bg: rgba(163, 163, 163, 0.2);
+  --selection-text: #a3a3a3;
+  
+  /* Slider */
+  --slider-track: #262626;
+  --slider-thumb: #a3a3a3;
+  --slider-thumb-glow: rgba(163, 163, 163, 0.4);
+  
+  /* Grid pattern */
+  --grid-color: rgba(38, 38, 38, 0.3);
+  
+  /* Chart colors */
+  --chart-grid: #262626;
+  --chart-tick: #404040;
+  --chart-label: #737373;
+  --chart-crosshair: #525252;
+  --chart-tooltip-bg: #171717;
+  --chart-tooltip-border: #404040;
+  --chart-tooltip-text: #fafafa;
+  --chart-peak-curve: #fafafa;
+  
+  /* Popup/Popover */
+  --popover-bg: rgb(23 23 23 / 0.95);
+  --popover-arrow-border: rgb(115 115 115 / 0.3);
+  
+  /* Shadow */
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 @theme {
   --font-sans: 'JetBrains Mono Variable', ui-monospace, monospace;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  
+  /* Map CSS variables to Tailwind colors */
+  --color-background: var(--bg-primary);
+  --color-surface: var(--bg-secondary);
+  --color-surface-elevated: var(--bg-tertiary);
+  --color-elevated: var(--bg-elevated);
+  
+  --color-foreground: var(--text-primary);
+  --color-foreground-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  --color-inverted: var(--text-inverted);
+  
+  --color-border: var(--border-color);
+  --color-border-subtle: var(--border-subtle);
 }
 
 /* Hide scrollbar utility */
@@ -23,8 +142,8 @@
 
 html {
   font-family: var(--font-mono);
-  background-color: #0c0c0c;
-  color: #e5e5e5;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -36,9 +155,9 @@ body {
   padding: 0;
   min-height: 100vh;
   background:
-    linear-gradient(90deg, rgba(38, 38, 38, 0.3) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(rgba(38, 38, 38, 0.3) 1px, transparent 1px) 0 0 / 24px 24px,
-    #0c0c0c;
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(var(--grid-color) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--bg-primary);
 }
 
 #root {
@@ -52,20 +171,20 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #171717;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #525252;
+  background: var(--scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-corner {
-  background: #171717;
+  background: var(--scrollbar-track);
 }
 
 /* Form elements */
@@ -96,8 +215,8 @@ input[type='number'] {
 
 /* Selection */
 ::selection {
-  background: rgba(163, 163, 163, 0.2);
-  color: #a3a3a3;
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }
 
 /* Custom range slider */
@@ -109,7 +228,7 @@ input[type='range'] {
 }
 
 input[type='range']::-webkit-slider-runnable-track {
-  background: #262626;
+  background: var(--slider-track);
   height: 4px;
   border-radius: 2px;
 }
@@ -117,56 +236,56 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background: #a3a3a3;
+  background: var(--slider-thumb);
   height: 12px;
   width: 12px;
   border-radius: 50%;
   margin-top: -4px;
-  box-shadow: 0 0 8px rgba(163, 163, 163, 0.4);
+  box-shadow: 0 0 8px var(--slider-thumb-glow);
 }
 
 input[type='range']::-moz-range-track {
-  background: #262626;
+  background: var(--slider-track);
   height: 4px;
   border-radius: 2px;
 }
 
 input[type='range']::-moz-range-thumb {
-  background: #a3a3a3;
+  background: var(--slider-thumb);
   height: 12px;
   width: 12px;
   border-radius: 50%;
   border: none;
-  box-shadow: 0 0 8px rgba(163, 163, 163, 0.4);
+  box-shadow: 0 0 8px var(--slider-thumb-glow);
 }
 
 input[type='range']:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 12px rgba(163, 163, 163, 0.6);
+  box-shadow: 0 0 12px var(--slider-thumb-glow);
 }
 
 input[type='range']:focus::-moz-range-thumb {
-  box-shadow: 0 0 12px rgba(163, 163, 163, 0.6);
+  box-shadow: 0 0 12px var(--slider-thumb-glow);
 }
 
 /* Unovis chart styling */
 .gear-chart {
-  --vis-axis-grid-color: #262626;
-  --vis-axis-tick-color: #404040;
-  --vis-axis-tick-label-color: #737373;
-  --vis-axis-label-color: #737373;
+  --vis-axis-grid-color: var(--chart-grid);
+  --vis-axis-tick-color: var(--chart-tick);
+  --vis-axis-tick-label-color: var(--chart-label);
+  --vis-axis-label-color: var(--chart-label);
   --vis-axis-font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
   --vis-axis-tick-label-font-size: 10px;
   --vis-axis-label-font-size: 11px;
-  --vis-crosshair-line-stroke-color: #525252;
-  --vis-crosshair-circle-stroke-color: #a3a3a3;
-  --vis-tooltip-background-color: #171717;
-  --vis-tooltip-border-color: #404040;
-  --vis-tooltip-text-color: #fafafa;
+  --vis-crosshair-line-stroke-color: var(--chart-crosshair);
+  --vis-crosshair-circle-stroke-color: var(--slider-thumb);
+  --vis-tooltip-background-color: var(--chart-tooltip-bg);
+  --vis-tooltip-border-color: var(--chart-tooltip-border);
+  --vis-tooltip-text-color: var(--chart-tooltip-text);
 }
 
 /* Leaflet map styling */
 .leaflet-container {
-  background: #171717;
+  background: var(--bg-secondary);
   font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
 }
 
@@ -178,11 +297,11 @@ input[type='range']:focus::-moz-range-thumb {
 
 /* Custom popup styling */
 .custom-popup .leaflet-popup-content-wrapper {
-  background: #171717;
-  border: 1px solid #404040;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  color: #e5e5e5;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .custom-popup .leaflet-popup-content {
@@ -192,19 +311,19 @@ input[type='range']:focus::-moz-range-thumb {
 }
 
 .custom-popup .leaflet-popup-tip {
-  background: #171717;
-  border: 1px solid #404040;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   box-shadow: none;
 }
 
 .custom-popup .leaflet-popup-close-button {
-  color: #737373;
+  color: var(--text-muted);
   font-size: 16px;
   padding: 8px;
 }
 
 .custom-popup .leaflet-popup-close-button:hover {
-  color: #e5e5e5;
+  color: var(--text-primary);
 }
 
 /* Placeholder text for empty map */
@@ -216,12 +335,12 @@ input[type='range']:focus::-moz-range-thumb {
 /* Ark UI Popover Arrow */
 [data-scope='popover'][data-part='arrow'] {
   --arrow-size: 12px;
-  --arrow-background: rgb(23 23 23 / 0.95);
+  --arrow-background: var(--popover-bg);
 }
 
 [data-scope='popover'][data-part='arrow-tip'] {
-  border-top-color: rgb(115 115 115 / 0.3);
-  border-left-color: rgb(115 115 115 / 0.3);
+  border-top-color: var(--popover-arrow-border);
+  border-left-color: var(--popover-arrow-border);
 }
 
 /* Ark UI Slider styling */
@@ -237,7 +356,7 @@ input[type='range']:focus::-moz-range-thumb {
   position: relative;
   width: 100%;
   height: 4px;
-  background: #262626;
+  background: var(--slider-track);
   border-radius: 2px;
 }
 

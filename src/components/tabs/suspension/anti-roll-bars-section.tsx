@@ -10,7 +10,7 @@ type Props = {
 
 export function AntiRollBarsSection(props: Props) {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Anti-Roll Bars"
         variant="output"
@@ -49,16 +49,16 @@ export function AntiRollBarsSection(props: Props) {
             help={ARB_STIFFNESS_HELP}
           />
         </div>
-        <div class="border-t border-neutral-800/50 pt-4 space-y-2">
+        <div class="border-t border-border/50 pt-4 space-y-2">
           <div class="flex justify-between items-center text-xs">
-            <span class="text-neutral-500">Roll Center to CoG</span>
-            <span class="text-neutral-300">
+            <span class="text-muted">Roll Center to CoG</span>
+            <span class="text-foreground">
               {(props.outputs.antiRollBars.rollCenterToCoG * 100).toFixed(1)} cm
             </span>
           </div>
           <div class="flex justify-between items-center text-xs">
             <div class="flex items-center gap-1">
-              <span class="text-neutral-500">Total Roll Rate</span>
+              <span class="text-muted">Total Roll Rate</span>
               <HelpTooltip
                 description="Total roll rate combines spring, tire, and ARB contributions. This complex formula accounts for tire compliance and wheel rates."
                 formula="K_{\phi A} = \frac{\frac{\pi}{180} \cdot K_{\phi DES} \cdot K_t \cdot \frac{t^2}{2}}{K_t \cdot \frac{t^2}{2} \cdot \frac{\pi}{180} - K_{\phi DES}} - \frac{\pi \cdot K_w \cdot \frac{t^2}{2}}{180}"
@@ -71,7 +71,7 @@ export function AntiRollBarsSection(props: Props) {
                 position="left"
               />
             </div>
-            <span class="text-neutral-300">
+            <span class="text-foreground">
               {props.outputs.antiRollBars.totalRollRate.toFixed(0)} Nm/deg
             </span>
           </div>

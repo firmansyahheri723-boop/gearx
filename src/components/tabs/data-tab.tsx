@@ -134,8 +134,8 @@ export function DatabaseTab() {
               <div
                 class="px-3 py-1.5 font-medium whitespace-nowrap flex items-center gap-2"
                 classList={{
-                  'text-neutral-400 bg-yellow-500/5': !isSelectedCar && !isSelectedEngine,
-                  'text-neutral-300 bg-neutral-500/10': isSelectedCar || isSelectedEngine,
+                  'text-foreground-secondary bg-yellow-500/5': !isSelectedCar && !isSelectedEngine,
+                  'text-foreground bg-foreground/10': isSelectedCar || isSelectedEngine,
                 }}
               >
                 <span>{value || '-'}</span>
@@ -155,7 +155,7 @@ export function DatabaseTab() {
 
           const bgClass = group ? group.color.split(' ')[0].replace('/20', '/5').replace('/10', '/5') : '';
           return (
-            <span class={`block px-3 py-1.5 text-center text-neutral-300 tabular-nums ${bgClass}`}>
+            <span class={`block px-3 py-1.5 text-center text-foreground tabular-nums ${bgClass}`}>
               {formatCellValue(value)}
             </span>
           );
@@ -169,12 +169,12 @@ export function DatabaseTab() {
   });
 
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       {/* Header */}
-      <div class="flex items-center justify-between px-3 py-2 border-b bg-neutral-900/80 border-neutral-700/50">
+      <div class="flex items-center justify-between px-3 py-2 border-b bg-surface/80 border-border/50">
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-4 bg-emerald-500" />
-          <span class="font-semibold tracking-wider text-xs uppercase text-neutral-300">
+          <span class="font-semibold tracking-wider text-xs uppercase text-foreground">
             Car Data
           </span>
           <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -196,11 +196,11 @@ export function DatabaseTab() {
         getRowClass={(row, index) => {
           const isSelectedCar = selectedCarIndex() === row._originalIndex;
           const isSelectedEngine = selectedEngineIndex() === row._originalIndex;
-          return (isSelectedCar || isSelectedEngine) ? 'bg-neutral-500/10' : '';
+          return (isSelectedCar || isSelectedEngine) ? 'bg-foreground/10' : '';
         }}
       />
 
-      <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-neutral-950 to-transparent pointer-events-none" />
+      <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
     </div>
   );
 }

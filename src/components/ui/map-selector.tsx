@@ -14,10 +14,10 @@ export function MapSelector(props: MapSelectorProps) {
           <button
             type="button"
             onClick={() => props.onSelect(map)}
-            class="cursor-pointer group flex flex-col items-center gap-2 p-2 border border-neutral-800/50 bg-neutral-950/50 hover:border-neutral-700 hover:bg-neutral-900/50 transition-colors"
+            class="cursor-pointer group flex flex-col items-center gap-2 p-2 border border-border/50 bg-background/50 hover:border-border hover:bg-surface/50 transition-colors"
           >
             {/* Thumbnail */}
-            <div class="w-full aspect-square bg-neutral-900 border border-neutral-800 overflow-hidden">
+            <div class="w-full aspect-square bg-surface border border-border overflow-hidden">
               {map.thumbnailUrl ? (
                 <img
                   src={map.thumbnailUrl}
@@ -25,7 +25,7 @@ export function MapSelector(props: MapSelectorProps) {
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
               ) : (
-                <div class="w-full h-full flex items-center justify-center text-neutral-700">
+                <div class="w-full h-full flex items-center justify-center text-muted">
                   <svg
                     class="w-8 h-8"
                     fill="none"
@@ -45,7 +45,7 @@ export function MapSelector(props: MapSelectorProps) {
             </div>
 
             {/* Name */}
-            <span class="text-xs text-neutral-500 group-hover:text-neutral-300 transition-colors uppercase tracking-wider">
+            <span class="text-xs text-muted group-hover:text-foreground transition-colors uppercase tracking-wider">
               {map.name}
             </span>
           </button>

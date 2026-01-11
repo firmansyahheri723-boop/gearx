@@ -169,7 +169,7 @@ export function MapTab() {
           <>
             {/* Map Selection View */}
             <SectionHeader title="Select Map" />
-            <div class="border border-neutral-800/50 bg-neutral-950/50 p-4">
+            <div class="border border-border/50 bg-background/50 p-4">
               <MapSelector maps={GAME_MAPS} onSelect={handleMapSelect} />
             </div>
           </>
@@ -185,7 +185,7 @@ export function MapTab() {
                 <button
                   type="button"
                   onClick={handleBack}
-                  class="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+                  class="flex items-center gap-1 text-xs text-muted hover:text-foreground transition-colors"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -197,7 +197,7 @@ export function MapTab() {
 
               <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
                 {/* Map Container */}
-                <div class="border border-neutral-800/50 bg-neutral-950/50 p-4">
+                <div class="border border-border/50 bg-background/50 p-4">
                   <div class="max-w-[600px] mx-auto">
                     <GameMap
                       config={map()}
@@ -205,14 +205,14 @@ export function MapTab() {
                       selectedLandmark={selectedLandmark()}
                     />
                   </div>
-                  <p class="text-xs text-neutral-600 text-center mt-2">
+                  <p class="text-xs text-muted text-center mt-2">
                     Click and drag to pan. Click markers to view details.
                   </p>
                 </div>
 
                 {/* Legend Sidebar */}
-                <div class="border border-neutral-800/50 bg-neutral-950/50 p-4 space-y-4">
-                  <h3 class="text-xs uppercase tracking-wider text-neutral-500 font-semibold">
+                <div class="border border-border/50 bg-background/50 p-4 space-y-4">
+                  <h3 class="text-xs uppercase tracking-wider text-muted font-semibold">
                     Legend
                   </h3>
 
@@ -223,12 +223,12 @@ export function MapTab() {
                     <For each={categories()}>
                       {(category) => (
                         <AccordionItem value={category}>
-                          <AccordionItemTrigger class="w-full flex items-center justify-between px-3 py-2 border border-neutral-700/50 bg-neutral-900/30 hover:bg-neutral-800/30 transition-colors">
-                            <h4 class="text-xs uppercase tracking-wider text-neutral-400 flex items-center gap-2">
-                              <span class="w-2 h-2 rounded-full bg-neutral-500" />
+                          <AccordionItemTrigger class="w-full flex items-center justify-between px-3 py-2 border border-border/50 bg-surface/30 hover:bg-surface-elevated/30 transition-colors">
+                            <h4 class="text-xs uppercase tracking-wider text-foreground-secondary flex items-center gap-2">
+                              <span class="w-2 h-2 rounded-full bg-muted" />
                               {category}
                             </h4>
-                            <AccordionItemIndicator class="text-neutral-500">
+                            <AccordionItemIndicator class="text-muted">
                               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                               </svg>
@@ -242,9 +242,9 @@ export function MapTab() {
                                     <button
                                       type="button"
                                       onClick={() => setSelectedLandmark(landmark)}
-                                      class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors text-left w-full"
+                                      class="text-xs text-muted hover:text-foreground transition-colors text-left w-full"
                                       classList={{
-                                        'text-neutral-200': selectedLandmark()?.id === landmark.id,
+                                        'text-foreground': selectedLandmark()?.id === landmark.id,
                                       }}
                                     >
                                       {landmark.name}
@@ -262,16 +262,16 @@ export function MapTab() {
                   {/* Selected Landmark Info */}
                   <Show when={selectedLandmark()}>
                     {(landmark) => (
-                      <div class="mt-4 pt-4 border-t border-neutral-800">
-                        <h4 class="text-sm font-semibold text-neutral-200 mb-1">
+                      <div class="mt-4 pt-4 border-t border-border">
+                        <h4 class="text-sm font-semibold text-foreground mb-1">
                           {landmark().name}
                         </h4>
                         <Show when={landmark().category}>
-                          <span class="text-[10px] uppercase tracking-wider text-neutral-500 block mb-2">
+                          <span class="text-[10px] uppercase tracking-wider text-muted block mb-2">
                             {landmark().category}
                           </span>
                         </Show>
-                        <p class="text-xs text-neutral-400 leading-relaxed">
+                        <p class="text-xs text-foreground-secondary leading-relaxed">
                           {landmark().description}
                         </p>
                       </div>

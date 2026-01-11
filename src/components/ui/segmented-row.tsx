@@ -23,7 +23,7 @@ export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
 
   return (
     <tr>
-      <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+      <td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">
         <div class="flex items-center justify-between">
           <span>{local.label}</span>
           {local.description && (
@@ -35,7 +35,7 @@ export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
           )}
         </div>
       </td>
-      <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
+      <td class="border-b border-border/50 p-0 bg-surface-elevated/40">
         <div class="flex items-center px-2 py-1.5">
           <RadioGroupRoot
             value={String(local.value)}
@@ -51,9 +51,9 @@ export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
                   value={String(option.value)}
                   class="px-3 py-1 text-xs transition-all duration-100"
                   classList={{
-                    'bg-neutral-500/20 text-neutral-400 border border-neutral-500/50':
+                    'bg-foreground/20 text-foreground-secondary border border-border/50':
                       String(local.value) === String(option.value),
-                    'bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300':
+                    'bg-surface/50 text-muted border border-border/50 hover:text-foreground':
                       String(local.value) !== String(option.value),
                   }}
                 >
@@ -65,7 +65,7 @@ export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
             </For>
           </RadioGroupRoot>
           {local.unit && (
-            <span class="px-2 text-neutral-500 text-xs">{local.unit}</span>
+            <span class="px-2 text-muted text-xs">{local.unit}</span>
           )}
         </div>
       </td>

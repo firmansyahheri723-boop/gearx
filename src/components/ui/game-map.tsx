@@ -21,9 +21,9 @@ export function GameMap(props: GameMapProps) {
     return `
       <div class="min-w-[200px] max-w-[280px]">
         ${imageHtml}
-        <h3 class="font-semibold text-sm text-neutral-100 mb-1">${landmark.name}</h3>
-        ${landmark.category ? `<span class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2 block">${landmark.category}</span>` : ''}
-        <p class="text-xs text-neutral-400 leading-relaxed">${landmark.description}</p>
+        <h3 class="font-semibold text-sm text-foreground mb-1">${landmark.name}</h3>
+        ${landmark.category ? `<span class="text-[10px] uppercase tracking-wider text-muted mb-2 block">${landmark.category}</span>` : ''}
+        <p class="text-xs text-foreground-secondary leading-relaxed">${landmark.description}</p>
       </div>
     `;
   };
@@ -66,7 +66,7 @@ export function GameMap(props: GameMapProps) {
       L.marker(center, {
         icon: L.divIcon({
           className: 'placeholder-text',
-          html: '<div class="text-neutral-600 text-sm font-mono whitespace-nowrap">Map image placeholder</div>',
+          html: '<div class="text-muted text-sm font-mono whitespace-nowrap">Map image placeholder</div>',
           iconSize: [150, 20],
           iconAnchor: [75, 10],
         }),
@@ -93,8 +93,8 @@ export function GameMap(props: GameMapProps) {
         icon: L.divIcon({
           className: 'custom-marker',
           html: `
-            <div class="w-6 h-6 bg-neutral-800 border-2 border-neutral-500 rounded-full flex items-center justify-center cursor-pointer hover:border-neutral-300 hover:bg-neutral-700 transition-colors">
-              <div class="w-2 h-2 bg-neutral-400 rounded-full"></div>
+            <div class="w-6 h-6 bg-surface-elevated border-2 border-border rounded-full flex items-center justify-center cursor-pointer hover:border-foreground hover:bg-surface-elevated transition-colors">
+              <div class="w-2 h-2 bg-foreground-secondary rounded-full"></div>
             </div>
           `,
           iconSize: [24, 24],
@@ -153,7 +153,7 @@ export function GameMap(props: GameMapProps) {
   return (
     <div
       ref={containerRef}
-      class="w-full aspect-square bg-neutral-900 border border-neutral-800"
+      class="w-full aspect-square bg-surface border border-border"
     />
   );
 }

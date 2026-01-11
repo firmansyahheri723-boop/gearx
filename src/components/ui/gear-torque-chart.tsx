@@ -7,7 +7,8 @@ import {
 } from "@unovis/solid";
 import { CurveType } from "@unovis/ts";
 import type { SpeedRpmPoint } from "../../types";
-import { GEAR_COLORS, TRACTION_LIMIT_COLOR, PEAK_TORQUE_CURVE_COLOR } from "../../constants/colors";
+import { GEAR_COLORS, TRACTION_LIMIT_COLOR } from "../../constants/colors";
+import { theme } from "../../stores/theme";
 
 interface GearTorqueChartProps {
   /** Speed/RPM data for each gear: speedRpmData[gearIndex][rpmIndex] */
@@ -30,6 +31,13 @@ interface GearDataPoint {
 }
 
 export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
+  // Theme-reactive peak torque curve color
+  const peakCurveColor = createMemo(() => {
+    // Access theme() to make this reactive
+    const currentTheme = theme();
+    return currentTheme === 'dark' ? '#fafafa' : '#171717';
+  });
+
   // Create separate data arrays for each gear line
   const gearDataArrays = createMemo((): GearDataPoint[][] => {
     if (!props.speedRpmData.length) return [];
@@ -129,7 +137,7 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
               data={peakTorqueData()}
               x={xAccessor}
               y={yAccessor}
-              color={PEAK_TORQUE_CURVE_COLOR}
+              color={peakCurveColor()}
               lineWidth={2}
               curveType={CurveType.Linear}
               duration={0}
@@ -138,7 +146,7 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
               data={peakTorqueData()}
               x={xAccessor}
               y={yAccessor}
-              color={PEAK_TORQUE_CURVE_COLOR}
+              color={peakCurveColor()}
               size={6}
               duration={0}
             />
@@ -170,7 +178,7 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
                     background: GEAR_COLORS[idx() % GEAR_COLORS.length],
                   }}
                 />
-                <span class="text-xs text-neutral-400">{name}</span>
+                <span class="text-xs text-foreground-secondary">{name}</span>
               </div>
             )}
           </For>
@@ -179,14 +187,14 @@ export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
               class="w-3 h-0.5"
               style={{ background: TRACTION_LIMIT_COLOR }}
             />
-            <span class="text-xs text-neutral-400">Traction Limit</span>
+            <span class="text-xs text-foreground-secondary">Traction Limit</span>
           </div>
           <div class="flex items-center gap-1.5">
             <span
               class="w-3 h-0.5"
-              style={{ background: PEAK_TORQUE_CURVE_COLOR }}
+              style={{ background: peakCurveColor() }}
             />
-            <span class="text-xs text-neutral-400">Peak Power</span>
+            <span class="text-xs text-foreground-secondary">Peak Power</span>
           </div>
         </div>
       </Show>

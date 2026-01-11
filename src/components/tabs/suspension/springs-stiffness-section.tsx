@@ -9,7 +9,7 @@ type Props = {
 
 export function SpringsStiffnessSection(props: Props) {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Springs Stiffness"
         variant="output"
@@ -45,9 +45,9 @@ export function SpringsStiffnessSection(props: Props) {
             highlight
           />
         </div>
-        <div class="border-t border-neutral-800/50 pt-4">
+        <div class="border-t border-border/50 pt-4">
           <div class="flex items-center gap-1.5 mb-2">
-            <span class="text-[10px] uppercase tracking-wider text-neutral-500">
+            <span class="text-[10px] uppercase tracking-wider text-muted">
               Sprung Masses (per corner)
             </span>
             <HelpTooltip
@@ -63,16 +63,16 @@ export function SpringsStiffnessSection(props: Props) {
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="text-center">
-              <div class="text-lg font-bold text-neutral-300">
+              <div class="text-lg font-bold text-foreground">
                 {props.outputs.springs.frontSprungMass.toFixed(1)}
               </div>
-              <div class="text-[10px] text-neutral-500">Front kg</div>
+              <div class="text-[10px] text-muted">Front kg</div>
             </div>
             <div class="text-center">
-              <div class="text-lg font-bold text-neutral-300">
+              <div class="text-lg font-bold text-foreground">
                 {props.outputs.springs.rearSprungMass.toFixed(1)}
               </div>
-              <div class="text-[10px] text-neutral-500">Rear kg</div>
+              <div class="text-[10px] text-muted">Rear kg</div>
             </div>
           </div>
         </div>

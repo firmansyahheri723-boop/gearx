@@ -14,7 +14,7 @@ export function DataPreview(props: DataPreviewProps) {
         <button
           type="button"
           onClick={props.onBack}
-          class="border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+          class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
         >
           Back
         </button>
@@ -27,28 +27,28 @@ export function DataPreview(props: DataPreviewProps) {
         </button>
       </div>
 
-      <div class="bg-neutral-900/50 border border-neutral-800 overflow-hidden">
-        <div class="px-3 py-2 border-b border-neutral-800 bg-neutral-900/50">
-          <span class="text-[10px] text-neutral-500 uppercase tracking-wider">
+      <div class="bg-surface/50 border border-border overflow-hidden">
+        <div class="px-3 py-2 border-b border-border bg-surface/50">
+          <span class="text-[10px] text-muted uppercase tracking-wider">
             Preview: {props.extractedPoints.length} data points
           </span>
         </div>
         <div class="max-h-80 overflow-y-auto">
           <table class="w-full text-xs font-mono">
-            <thead class="sticky top-0 bg-neutral-900">
+            <thead class="sticky top-0 bg-surface">
               <tr>
-                <th class="px-3 py-2 text-left text-[10px] text-neutral-500 font-normal uppercase tracking-wider border-b border-neutral-800">#</th>
-                <th class="px-3 py-2 text-right text-[10px] text-neutral-500 font-normal uppercase tracking-wider border-b border-neutral-800">Torque (Nm)</th>
-                <th class="px-3 py-2 text-right text-[10px] text-neutral-500 font-normal uppercase tracking-wider border-b border-neutral-800">RPM</th>
+                <th class="px-3 py-2 text-left text-[10px] text-muted font-normal uppercase tracking-wider border-b border-border">#</th>
+                <th class="px-3 py-2 text-right text-[10px] text-muted font-normal uppercase tracking-wider border-b border-border">Torque (Nm)</th>
+                <th class="px-3 py-2 text-right text-[10px] text-muted font-normal uppercase tracking-wider border-b border-border">RPM</th>
               </tr>
             </thead>
             <tbody>
               <For each={props.extractedPoints}>
                 {(point, index) => (
-                  <tr class="border-b border-neutral-800/50 hover:bg-neutral-800/30">
-                    <td class="px-3 py-2 text-neutral-500">{index() + 1}</td>
-                    <td class="px-3 py-2 text-right text-neutral-300">{point.torque.toFixed(1)}</td>
-                    <td class="px-3 py-2 text-right text-neutral-300">{Math.round(point.rpm)}</td>
+                  <tr class="border-b border-border/50 hover:bg-surface-elevated/30">
+                    <td class="px-3 py-2 text-muted">{index() + 1}</td>
+                    <td class="px-3 py-2 text-right text-foreground">{point.torque.toFixed(1)}</td>
+                    <td class="px-3 py-2 text-right text-foreground">{Math.round(point.rpm)}</td>
                   </tr>
                 )}
               </For>
@@ -57,7 +57,7 @@ export function DataPreview(props: DataPreviewProps) {
         </div>
       </div>
 
-      <div class="text-[10px] text-neutral-600 uppercase tracking-wider">
+      <div class="text-[10px] text-muted uppercase tracking-wider">
         This data will replace your current torque curve values. Click "Apply" to confirm.
       </div>
     </div>

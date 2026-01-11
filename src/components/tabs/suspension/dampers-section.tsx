@@ -34,11 +34,11 @@ export function DampersSection(props: Props) {
             class="px-4 py-2"
             classList={{
               'bg-amber-500/5': row.highlight,
-              'bg-neutral-900/30': !row.highlight,
+              'bg-surface/30': !row.highlight,
             }}
           >
-            <div class="text-neutral-300">{row.label}</div>
-            <div class="text-[10px] text-neutral-600">{row.description}</div>
+            <div class="text-foreground">{row.label}</div>
+            <div class="text-[10px] text-muted">{row.description}</div>
           </div>
         );
       },
@@ -54,7 +54,7 @@ export function DampersSection(props: Props) {
             class="block px-4 py-2 text-center"
             classList={{
               'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-neutral-900/30 text-neutral-300': !row.highlight,
+              'bg-surface/30 text-foreground': !row.highlight,
             }}
           >
             {info.getValue().toFixed(0)}
@@ -72,7 +72,7 @@ export function DampersSection(props: Props) {
             class="block px-4 py-2 text-center"
             classList={{
               'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-neutral-900/30 text-neutral-300': !row.highlight,
+              'bg-surface/30 text-foreground': !row.highlight,
             }}
           >
             {info.getValue().toFixed(0)}
@@ -83,7 +83,7 @@ export function DampersSection(props: Props) {
   ];
 
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Damper Settings"
         variant="output"
@@ -108,19 +108,19 @@ export function DampersSection(props: Props) {
         data={damperData}
         columns={damperColumns}
       />
-      <div class="px-4 py-2 border-t border-neutral-800/30 bg-neutral-900/30 flex items-center gap-6">
+      <div class="px-4 py-2 border-t border-border/30 bg-surface/30 flex items-center gap-6">
         <div class="flex items-center gap-1.5">
-          <span class="text-[10px] text-neutral-500">
+          <span class="text-[10px] text-muted">
             Critical Damping Front:{' '}
-            <span class="text-neutral-400">
+            <span class="text-foreground-secondary">
               {props.outputs.dampers.critDampingFront.toFixed(0)} N·s/m
             </span>
           </span>
         </div>
         <div class="flex items-center gap-1.5">
-          <span class="text-[10px] text-neutral-500">
+          <span class="text-[10px] text-muted">
             Critical Damping Rear:{' '}
-            <span class="text-neutral-400">
+            <span class="text-foreground-secondary">
               {props.outputs.dampers.critDampingRear.toFixed(0)} N·s/m
             </span>
           </span>

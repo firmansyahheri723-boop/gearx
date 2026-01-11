@@ -79,10 +79,10 @@ export function Dropdown(props: DropdownProps) {
         selectionBehavior="replace"
         positioning={{ sameWidth: true }}
       >
-        <ComboboxControl class="flex items-center w-full h-full px-3 py-2 bg-neutral-800/40 text-neutral-200 cursor-pointer transition-colors hover:bg-neutral-900/30 focus-within:bg-neutral-500/10 focus-within:ring-1 focus-within:ring-inset focus-within:ring-neutral-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+        <ComboboxControl class="flex items-center w-full h-full px-3 py-2 bg-surface-elevated/40 text-foreground cursor-pointer transition-colors hover:bg-surface/30 focus-within:bg-foreground/10 focus-within:ring-1 focus-within:ring-inset focus-within:ring-foreground/50 disabled:opacity-50 disabled:cursor-not-allowed">
           <ComboboxInput
             placeholder={displayValue() || props.placeholder || 'Select...'}
-            class="flex-1 text-left bg-transparent focus:outline-none text-neutral-200 placeholder:text-neutral-400"
+            class="flex-1 text-left bg-transparent focus:outline-none text-foreground placeholder:text-foreground-secondary"
           />
           <ComboboxTrigger class="px-2 py-1">
             <svg
@@ -93,17 +93,17 @@ export function Dropdown(props: DropdownProps) {
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <path d="M2 4L6 8L10 4" stroke="#a3a3a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </ComboboxTrigger>
         </ComboboxControl>
         <ComboboxPositioner>
-          <ComboboxContent class="z-50 max-h-48 overflow-auto border border-neutral-700/50 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/30">
+          <ComboboxContent class="z-50 max-h-48 overflow-auto border border-border/50 bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/30">
             <For each={filteredOptions()}>
               {(option) => (
                 <ComboboxItem
                   item={option}
-                  class="w-full px-3 py-2 cursor-pointer text-sm transition-colors text-left bg-transparent border-none block focus:outline-none data-[highlighted]:bg-neutral-800/50 data-[highlighted]:text-neutral-300 data-[state=checked]:text-emerald-400 hover:bg-neutral-800/50"
+                  class="w-full px-3 py-2 cursor-pointer text-sm transition-colors text-left bg-transparent border-none block focus:outline-none data-[highlighted]:bg-surface-elevated/50 data-[highlighted]:text-foreground data-[state=checked]:text-emerald-400 hover:bg-surface-elevated/50"
                 >
                   <ComboboxItemText>{option.label}</ComboboxItemText>
                 </ComboboxItem>

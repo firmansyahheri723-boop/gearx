@@ -26,7 +26,7 @@ export const RangeSliderInput: Component<RangeSliderInputProps> = (props) => {
 
   return (
     <div class="flex items-center gap-2 px-3 py-1.5">
-      <span class="text-neutral-600 text-xs w-6">{local.minLabel ?? local.min}</span>
+      <span class="text-muted text-xs w-6">{local.minLabel ?? local.min}</span>
       <div class="flex-1 relative h-5 flex items-center">
         <SliderRoot
           value={[local.value]}
@@ -37,19 +37,19 @@ export const RangeSliderInput: Component<RangeSliderInputProps> = (props) => {
           class="absolute inset-0 w-full h-5 flex items-center"
         >
           <SliderControl>
-            <SliderTrack class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
+            <SliderTrack class="absolute inset-x-0 h-1 bg-border rounded-full">
               <SliderRange
-                class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
+                class="absolute left-0 top-0 h-full bg-gradient-to-r from-border to-foreground-secondary rounded-full"
               />
             </SliderTrack>
             <SliderThumb
               index={0}
-              class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 border border-neutral-300"
+              class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-foreground-secondary rounded-full shadow-lg shadow-foreground/30 border border-foreground"
             />
           </SliderControl>
         </SliderRoot>
       </div>
-      <span class="text-neutral-600 text-xs w-6">{local.maxLabel ?? local.max}</span>
+      <span class="text-muted text-xs w-6">{local.maxLabel ?? local.max}</span>
       {local.showNumberInput !== false && (
         <input
           type="number"
@@ -58,7 +58,7 @@ export const RangeSliderInput: Component<RangeSliderInputProps> = (props) => {
           step={local.step}
           min={local.min}
           max={local.max}
-          class={`px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400 ${local.numberInputWidth ?? 'w-14'}`}
+          class={`px-2 py-0.5 bg-surface/50 border border-border/50 rounded text-foreground-secondary text-sm text-center focus:outline-none focus:text-emerald-400 ${local.numberInputWidth ?? 'w-14'}`}
         />
       )}
     </div>

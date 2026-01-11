@@ -6,7 +6,7 @@ import { SUSPENSION_SLIDERS } from './suspension-tab-constants';
 
 export function SuspensionParametersSection() {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Suspension Parameters"
         variant="input"

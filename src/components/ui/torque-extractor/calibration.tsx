@@ -215,7 +215,7 @@ export function CalibrationOverlay(props: CalibrationOverlayProps) {
         <button
           type="button"
           onClick={props.onBack}
-          class="border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+          class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
         >
           Back
         </button>
@@ -225,7 +225,7 @@ export function CalibrationOverlay(props: CalibrationOverlayProps) {
           disabled={!props.isValid}
           classList={{
             'border-emerald-700 bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50': props.isValid,
-            'border-neutral-800 bg-neutral-900 text-neutral-600 cursor-not-allowed': !props.isValid,
+            'border-border bg-surface text-muted cursor-not-allowed': !props.isValid,
           }}
           class="border px-4 py-2 text-xs uppercase tracking-wider transition-colors"
         >
@@ -233,53 +233,53 @@ export function CalibrationOverlay(props: CalibrationOverlayProps) {
         </button>
       </div>
 
-      <div class="relative border border-neutral-800 bg-neutral-900">
+      <div class="relative border border-border bg-surface">
         <canvas ref={canvasRef} class="block" style={{ cursor: 'crosshair' }} />
       </div>
 
-      <div class="grid grid-cols-2 gap-4 p-3 border border-neutral-800 bg-neutral-900/50">
+      <div class="grid grid-cols-2 gap-4 p-3 border border-border bg-surface/50">
         <div class="space-y-2">
-          <span class="text-[10px] text-neutral-500 uppercase tracking-wider block">RPM Scale</span>
+          <span class="text-[10px] text-muted uppercase tracking-wider block">RPM Scale</span>
           <div class="flex gap-2 items-center">
-            <span class="text-[10px] text-neutral-600 w-8 uppercase">Min:</span>
+            <span class="text-[10px] text-muted w-8 uppercase">Min:</span>
             <NumberInput
               value={props.calibration.minRpm}
               onChange={(val) => props.onChange({ ...props.calibration, minRpm: val })}
-              class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
+              class="flex-1 bg-surface-elevated border border-border text-foreground px-2 py-1.5 text-xs focus:border-border focus:outline-none"
             />
           </div>
           <div class="flex gap-2 items-center">
-            <span class="text-[10px] text-neutral-600 w-8 uppercase">Max:</span>
+            <span class="text-[10px] text-muted w-8 uppercase">Max:</span>
             <NumberInput
               value={props.calibration.maxRpm}
               onChange={(val) => props.onChange({ ...props.calibration, maxRpm: val })}
-              class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
+              class="flex-1 bg-surface-elevated border border-border text-foreground px-2 py-1.5 text-xs focus:border-border focus:outline-none"
             />
           </div>
         </div>
 
         <div class="space-y-2">
-          <span class="text-[10px] text-neutral-500 uppercase tracking-wider block">Torque (Nm)</span>
+          <span class="text-[10px] text-muted uppercase tracking-wider block">Torque (Nm)</span>
           <div class="flex gap-2 items-center">
-            <span class="text-[10px] text-neutral-600 w-8 uppercase">Min:</span>
+            <span class="text-[10px] text-muted w-8 uppercase">Min:</span>
             <NumberInput
               value={props.calibration.minTorque}
               onChange={(val) => props.onChange({ ...props.calibration, minTorque: val })}
-              class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
+              class="flex-1 bg-surface-elevated border border-border text-foreground px-2 py-1.5 text-xs focus:border-border focus:outline-none"
             />
           </div>
           <div class="flex gap-2 items-center">
-            <span class="text-[10px] text-neutral-600 w-8 uppercase">Max:</span>
+            <span class="text-[10px] text-muted w-8 uppercase">Max:</span>
             <NumberInput
               value={props.calibration.maxTorque}
               onChange={(val) => props.onChange({ ...props.calibration, maxTorque: val })}
-              class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
+              class="flex-1 bg-surface-elevated border border-border text-foreground px-2 py-1.5 text-xs focus:border-border focus:outline-none"
             />
           </div>
         </div>
       </div>
 
-      <div class="text-[10px] text-neutral-600 uppercase tracking-wider">
+      <div class="text-[10px] text-muted uppercase tracking-wider">
         Drag lines to set bounds, enter scale values
       </div>
     </div>

@@ -169,16 +169,16 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
       <Portal>
         <DialogBackdrop class="fixed inset-0 z-50 bg-black/90" />
         <DialogPositioner class="fixed inset-0 z-50 flex items-center justify-center">
-          <DialogContent class="bg-neutral-950 border border-neutral-800 w-[800px] max-h-[90vh] flex flex-col">
+          <DialogContent class="bg-background border border-border w-[800px] max-h-[90vh] flex flex-col">
             {/* Header */}
-            <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/80">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-surface/80">
               <div class="flex items-center gap-3">
-                <div class="w-1.5 h-4 bg-neutral-500" />
-                <DialogTitle class="text-xs font-semibold tracking-wider uppercase text-neutral-300">
+                <div class="w-1.5 h-4 bg-muted" />
+                <DialogTitle class="text-xs font-semibold tracking-wider uppercase text-foreground">
                   Import Torque Curve
                 </DialogTitle>
               </div>
-              <DialogCloseTrigger class="text-neutral-600 hover:text-neutral-400 transition-colors">
+              <DialogCloseTrigger class="text-muted hover:text-foreground-secondary transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -187,22 +187,22 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
             </div>
 
             {/* Step Indicator */}
-            <div class="flex items-center px-4 py-2 border-b border-neutral-800/50 bg-neutral-900/30">
+            <div class="flex items-center px-4 py-2 border-b border-border/50 bg-surface/30">
               {STEPS.map((s, idx) => (
                 <>
                   <div
                     class="flex items-center gap-2"
                     classList={{
-                      'text-neutral-300': currentStepIndex() === idx,
-                      'text-neutral-600': currentStepIndex() !== idx,
+                      'text-foreground': currentStepIndex() === idx,
+                      'text-muted': currentStepIndex() !== idx,
                       'text-emerald-500': currentStepIndex() > idx,
                     }}
                   >
                     <div
                       class="w-5 h-5 flex items-center justify-center text-[10px] font-medium border"
                       classList={{
-                        'border-neutral-500 bg-neutral-800': currentStepIndex() === idx,
-                        'border-neutral-700 bg-neutral-900': currentStepIndex() < idx,
+                        'border-border bg-surface-elevated': currentStepIndex() === idx,
+                        'border-border bg-surface': currentStepIndex() < idx,
                         'border-emerald-600 bg-emerald-900/30': currentStepIndex() > idx,
                       }}
                     >
@@ -215,7 +215,7 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
                       class="flex-1 h-px mx-3"
                       classList={{
                         'bg-emerald-600': currentStepIndex() > idx,
-                        'bg-neutral-800': currentStepIndex() <= idx,
+                        'bg-surface-elevated': currentStepIndex() <= idx,
                       }}
                     />
                   )}
@@ -229,18 +229,18 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
               <Show when={step() === 'upload'}>
                 <div class="flex flex-col items-center justify-center gap-4 py-8">
                   <div class="text-center mb-2">
-                    <span class="text-[10px] uppercase tracking-wider text-neutral-500 block mb-1">
+                    <span class="text-[10px] uppercase tracking-wider text-muted block mb-1">
                       Step 1
                     </span>
-                    <span class="text-sm text-neutral-400">
+                    <span class="text-sm text-foreground-secondary">
                       Select torque curve screenshot
                     </span>
                   </div>
-                  <label class="cursor-pointer border border-neutral-700 hover:border-neutral-500 bg-neutral-900 hover:bg-neutral-800 px-6 py-3 flex items-center gap-3 transition-colors">
-                    <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <label class="cursor-pointer border border-border hover:border-border bg-surface hover:bg-surface-elevated px-6 py-3 flex items-center gap-3 transition-colors">
+                    <svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span class="text-xs uppercase tracking-wider text-neutral-400">Select Image</span>
+                    <span class="text-xs uppercase tracking-wider text-foreground-secondary">Select Image</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -248,7 +248,7 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
                       class="hidden"
                     />
                   </label>
-                  <span class="text-[10px] text-neutral-600 uppercase tracking-wider">
+                  <span class="text-[10px] text-muted uppercase tracking-wider">
                     PNG, JPG, WebP
                   </span>
                 </div>
@@ -293,11 +293,11 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
             </div>
 
             {/* Footer */}
-            <div class="px-4 py-3 border-t border-neutral-800 bg-neutral-900/30 flex justify-end">
+            <div class="px-4 py-3 border-t border-border bg-surface/30 flex justify-end">
               <button
                 type="button"
                 onClick={props.onClose}
-                class="border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+                class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
               >
                 Cancel
               </button>

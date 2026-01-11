@@ -9,7 +9,7 @@ type Props = {
 
 export function AccelerationMetricsSection(props: Props) {
   return (
-    <div class="border border-neutral-800/50 bg-neutral-950/50">
+    <div class="border border-border/50 bg-background/50">
       <SectionHeader
         title="Acceleration & Weight Transfer"
         variant="output"
@@ -93,17 +93,17 @@ export function AccelerationMetricsSection(props: Props) {
           />
         </div>
 
-        <div class="mt-4 pt-4 border-t border-neutral-800/50">
-          <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
+        <div class="mt-4 pt-4 border-t border-border/50">
+          <div class="text-[10px] uppercase tracking-wider text-muted mb-2">
             Weight Distribution Under Acceleration
           </div>
-          <div class="relative h-6 bg-neutral-800 rounded">
+          <div class="relative h-6 bg-surface-elevated rounded">
             <div
-              class="absolute left-0 top-0 h-full bg-neutral-500/30 border-r border-neutral-400 transition-all"
+              class="absolute left-0 top-0 h-full bg-foreground/30 border-r border-foreground-secondary transition-all"
               style={{ width: `${props.outputs.acceleration.frontBiasOnAccel}%` }}
             />
             <div class="absolute inset-0 flex items-center justify-between px-2 text-[10px]">
-              <span class="text-neutral-400 font-medium">
+              <span class="text-foreground-secondary font-medium">
                 Front: {props.outputs.acceleration.frontBiasOnAccel.toFixed(1)}%
               </span>
               <span class="text-amber-400 font-medium">
@@ -111,7 +111,7 @@ export function AccelerationMetricsSection(props: Props) {
               </span>
             </div>
           </div>
-          <div class="mt-1 flex justify-between text-[10px] text-neutral-600">
+          <div class="mt-1 flex justify-between text-[10px] text-muted">
             <span>Static: {props.frontWeightDistribution}% front</span>
             <span>
               Change: {(props.frontWeightDistribution - props.outputs.acceleration.frontBiasOnAccel).toFixed(1)}%

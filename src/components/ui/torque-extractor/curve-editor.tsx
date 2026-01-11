@@ -182,27 +182,27 @@ export function CurveEditor(props: CurveEditorProps) {
         <button
           type="button"
           onClick={props.onBack}
-          class="border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-neutral-500 hover:text-neutral-400 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+          class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
         >
           Back
         </button>
-        <span class="text-[10px] text-neutral-500 uppercase tracking-wider">
+        <span class="text-[10px] text-muted uppercase tracking-wider">
           {props.extractedPoints.length} points
         </span>
         <button
           type="button"
           onClick={props.onNext}
-          class="border border-neutral-600 hover:border-neutral-500 bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-neutral-300 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+          class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-foreground-secondary hover:text-foreground px-4 py-2 text-xs uppercase tracking-wider transition-colors"
         >
           Preview
         </button>
       </div>
 
-      <div class="relative border border-neutral-800 bg-neutral-900">
+      <div class="relative border border-border bg-surface">
         <canvas ref={canvasRef} class="block" style={{ cursor: 'crosshair' }} />
       </div>
 
-      <div class="text-[10px] text-neutral-600 uppercase tracking-wider">
+      <div class="text-[10px] text-muted uppercase tracking-wider">
         Drag points to adjust values
       </div>
     </div>
