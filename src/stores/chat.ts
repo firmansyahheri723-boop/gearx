@@ -49,6 +49,14 @@ export const updateMessage = (id: string, content: string) => {
   );
 };
 
+export const updateMessageReasoning = (id: string, reasoning: string) => {
+  setMessages(
+    (msg) => msg.id === id,
+    'reasoning',
+    reasoning
+  );
+};
+
 export const clearMessages = () => {
   setMessages([]);
   setError(null);

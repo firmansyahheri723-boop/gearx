@@ -1,4 +1,4 @@
-import { For, Show, createEffect } from 'solid-js';
+import { For, Show, createEffect, createSignal } from 'solid-js';
 import { SolidMarkdown } from 'solid-markdown';
 import remarkGfm from 'remark-gfm';
 import type { ChatMessage } from '../../../types';
@@ -8,6 +8,30 @@ type MessageListProps = {
   isLoading?: boolean;
   class?: string;
 };
+
+function ReasoningSection(props: { reasoning: string }) {
+  const [isExpanded, setIsExpanded] = createSignal(false);
+
+  return (
+    <div class="mt-2 mb-2">
+      <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded())}
+        class="text-xs text-muted hover:text-foreground-secondary flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+      >
+        <span class="inline-block transition-transform" classList={{ 'rotate-90': isExpanded() }}>
+          ▶
+        </span>
+        [thinking... {isExpanded() ? 'hide' : 'show'}]
+      </button>
+      <Show when={isExpanded()}>
+        <div class="mt-1 ml-4 text-xs text-muted/70 font-mono whitespace-pre-wrap border-l-2 border-muted/30 pl-2">
+          {props.reasoning}
+        </div>
+      </Show>
+    </div>
+  );
+}
 
 export function MessageList(props: MessageListProps) {
   let containerRef: HTMLDivElement | undefined;
@@ -59,6 +83,9 @@ export function MessageList(props: MessageListProps) {
                   'bg-surface-elevated/50 text-foreground-secondary prose prose-sm prose-invert': message.role === 'assistant',
                 }}
               >
+                <Show when={message.role === 'assistant' && message.reasoning}>
+                  <ReasoningSection reasoning={message.reasoning!} />
+                </Show>
                 <Show
                   when={message.role === 'assistant'}
                   fallback={message.content}

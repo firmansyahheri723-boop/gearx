@@ -15,6 +15,7 @@ import {
   messages,
   addMessage,
   updateMessage,
+  updateMessageReasoning,
   clearMessages,
   isLoading,
   setIsLoading,
@@ -101,9 +102,15 @@ function Chat() {
       });
 
       let fullContent = "";
-      for await (const chunk of result.textStream) {
-        fullContent += chunk;
-        updateMessage(assistantMsg.id, fullContent);
+      let fullReasoning = "";
+      for await (const part of result.fullStream) {
+        if (part.type === 'text') {
+          fullContent += part.text;
+          updateMessage(assistantMsg.id, fullContent);
+        } else if (part.type === 'reasoning') {
+          fullReasoning += part.text;
+          updateMessageReasoning(assistantMsg.id, fullReasoning);
+        }
       }
     } catch (err) {
       const errorMessage =
