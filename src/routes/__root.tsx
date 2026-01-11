@@ -5,18 +5,8 @@ import {
   Link,
 } from "@tanstack/solid-router";
 import { DashboardHeader } from "../components/dashboard-header";
-import {
-  setIsSelecting,
-  selectionStart,
-  clearSelection,
-} from "../stores/selection";
-import {
-  torqueRpmData,
-  setTorqueRpmData,
-  gearRatios,
-  setGearRatios,
-} from "../stores/vehicle";
 import { initThemeListener } from "../stores/theme";
+import { clearSelection } from "../stores/selection";
 import { onMount, onCleanup, For } from "solid-js";
 
 const TABS = [
@@ -36,64 +26,16 @@ function RootComponent() {
   onMount(() => {
     const cleanupThemeListener = initThemeListener();
 
-    const handleMouseUp = () => {
-      setIsSelecting(false);
-    };
-
-    const handlePaste = (e: ClipboardEvent) => {
-      const start = selectionStart();
-      if (!start) return;
-
-      const text = e.clipboardData?.getData("text");
-      if (!text) return;
-
-      const rows = text
-        .trim()
-        .split("\n")
-        .map((r) => r.split("\t"));
-
-      if (start.tableId === "torque") {
-        rows.forEach((row, rowOffset) => {
-          row.forEach((value, colOffset) => {
-            const targetRow = start.row + rowOffset;
-            const targetCol = start.col + colOffset;
-
-            if (targetRow < torqueRpmData.length && targetCol < 2) {
-              const numValue = parseFloat(value) || 0;
-              if (targetCol === 0) {
-                setTorqueRpmData(targetRow, "torque", numValue);
-              } else {
-                setTorqueRpmData(targetRow, "rpm", numValue);
-              }
-            }
-          });
-        });
-        e.preventDefault();
-      } else if (start.tableId === "gears") {
-        rows.forEach((row, rowOffset) => {
-          const targetRow = start.row + rowOffset;
-          if (targetRow < gearRatios.length && row[0]) {
-            setGearRatios(targetRow, "ratio", parseFloat(row[0]) || 0);
-          }
-        });
-        e.preventDefault();
-      }
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         clearSelection();
       }
     };
 
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("paste", handlePaste);
     document.addEventListener("keydown", handleKeyDown);
 
     onCleanup(() => {
       cleanupThemeListener();
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("paste", handlePaste);
       document.removeEventListener("keydown", handleKeyDown);
     });
   });
