@@ -2,6 +2,8 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'leaflet/dist/leaflet.css';
 
+@plugin '@tailwindcss/typography';
+
 /* Theme CSS Variables */
 :root {
   /* Background colors */
@@ -9,34 +11,34 @@
   --bg-secondary: #f5f5f5;
   --bg-tertiary: #e5e5e5;
   --bg-elevated: #fafafa;
-  
+
   /* Text colors */
   --text-primary: #171717;
   --text-secondary: #525252;
   --text-muted: #737373;
   --text-inverted: #fafafa;
-  
+
   /* Border colors */
   --border-color: #d4d4d4;
   --border-subtle: #e5e5e5;
-  
+
   /* Interactive elements */
   --scrollbar-track: #f5f5f5;
   --scrollbar-thumb: #a3a3a3;
   --scrollbar-thumb-hover: #737373;
-  
+
   /* Selection */
   --selection-bg: rgba(0, 0, 0, 0.1);
   --selection-text: #171717;
-  
+
   /* Slider */
   --slider-track: #e5e5e5;
   --slider-thumb: #525252;
   --slider-thumb-glow: rgba(82, 82, 82, 0.4);
-  
+
   /* Grid pattern */
   --grid-color: rgba(212, 212, 212, 0.3);
-  
+
   /* Chart colors */
   --chart-grid: #e5e5e5;
   --chart-tick: #a3a3a3;
@@ -46,11 +48,11 @@
   --chart-tooltip-border: #d4d4d4;
   --chart-tooltip-text: #171717;
   --chart-peak-curve: #171717;
-  
+
   /* Popup/Popover */
   --popover-bg: rgb(255 255 255 / 0.95);
   --popover-arrow-border: rgb(212 212 212 / 0.3);
-  
+
   /* Shadow */
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
@@ -61,34 +63,34 @@
   --bg-secondary: #171717;
   --bg-tertiary: #262626;
   --bg-elevated: #1a1a1a;
-  
+
   /* Text colors */
   --text-primary: #e5e5e5;
   --text-secondary: #a3a3a3;
   --text-muted: #737373;
   --text-inverted: #171717;
-  
+
   /* Border colors */
   --border-color: #404040;
   --border-subtle: #262626;
-  
+
   /* Interactive elements */
   --scrollbar-track: #171717;
   --scrollbar-thumb: #404040;
   --scrollbar-thumb-hover: #525252;
-  
+
   /* Selection */
   --selection-bg: rgba(163, 163, 163, 0.2);
   --selection-text: #a3a3a3;
-  
+
   /* Slider */
   --slider-track: #262626;
   --slider-thumb: #a3a3a3;
   --slider-thumb-glow: rgba(163, 163, 163, 0.4);
-  
+
   /* Grid pattern */
   --grid-color: rgba(38, 38, 38, 0.3);
-  
+
   /* Chart colors */
   --chart-grid: #262626;
   --chart-tick: #404040;
@@ -98,11 +100,11 @@
   --chart-tooltip-border: #404040;
   --chart-tooltip-text: #fafafa;
   --chart-peak-curve: #fafafa;
-  
+
   /* Popup/Popover */
   --popover-bg: rgb(23 23 23 / 0.95);
   --popover-arrow-border: rgb(115 115 115 / 0.3);
-  
+
   /* Shadow */
   --shadow-color: rgba(0, 0, 0, 0.5);
 }
@@ -110,18 +112,18 @@
 @theme {
   --font-sans: 'JetBrains Mono Variable', ui-monospace, monospace;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
-  
+
   /* Map CSS variables to Tailwind colors */
   --color-background: var(--bg-primary);
   --color-surface: var(--bg-secondary);
   --color-surface-elevated: var(--bg-tertiary);
   --color-elevated: var(--bg-elevated);
-  
+
   --color-foreground: var(--text-primary);
   --color-foreground-secondary: var(--text-secondary);
   --color-muted: var(--text-muted);
   --color-inverted: var(--text-inverted);
-  
+
   --color-border: var(--border-color);
   --color-border-subtle: var(--border-subtle);
 }

@@ -79,10 +79,12 @@ export function Dropdown(props: DropdownProps) {
         selectionBehavior="replace"
         positioning={{ sameWidth: true }}
       >
-        <ComboboxControl class="flex items-center w-full h-full px-3 py-2 bg-surface-elevated/40 text-foreground cursor-pointer transition-colors hover:bg-surface/30 focus-within:bg-foreground/10 focus-within:ring-1 focus-within:ring-inset focus-within:ring-foreground/50 disabled:opacity-50 disabled:cursor-not-allowed">
+        <ComboboxControl
+          class="flex items-center w-full h-full px-3 py-2 bg-surface-elevated/40 text-foreground cursor-pointer transition-colors hover:bg-surface/30 focus-within:bg-foreground/10 focus-within:ring-1 focus-within:ring-inset focus-within:ring-foreground/50 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <ComboboxInput
             placeholder={displayValue() || props.placeholder || 'Select...'}
-            class="flex-1 text-left bg-transparent focus:outline-none text-foreground placeholder:text-foreground-secondary"
+            class="flex-1 text-sm text-left bg-transparent focus:outline-none text-foreground placeholder:text-foreground-secondary"
           />
           <ComboboxTrigger class="px-2 py-1">
             <svg
@@ -103,7 +105,7 @@ export function Dropdown(props: DropdownProps) {
               {(option) => (
                 <ComboboxItem
                   item={option}
-                  class="w-full px-3 py-2 cursor-pointer text-sm transition-colors text-left bg-transparent border-none block focus:outline-none data-[highlighted]:bg-surface-elevated/50 data-[highlighted]:text-foreground data-[state=checked]:text-emerald-400 hover:bg-surface-elevated/50"
+                  class="w-full px-3 py-2 cursor-pointer text-sm transition-colors text-left bg-transparent border-none block focus:outline-none data-highlighted:bg-surface-elevated/50 data-highlighted:text-foreground data-[state=checked]:text-emerald-400 hover:bg-surface-elevated/50"
                 >
                   <ComboboxItemText>{option.label}</ComboboxItemText>
                 </ComboboxItem>

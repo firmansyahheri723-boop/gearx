@@ -17,6 +17,7 @@ const TABS = [
   { id: "gearbox", label: "Gearbox", to: "/gearbox" },
   { id: "aero", label: "Aero", to: "/aero" },
   { id: "data", label: "Database", to: "/database" },
+  { id: "chat", label: "Chat", to: "/chat" },
 ] as const;
 
 export const Route = createRootRoute({

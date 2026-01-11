@@ -21,4 +21,7 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
+  optimizeDeps: {
+    include: ["debug", "extend"],
+  },
 });
