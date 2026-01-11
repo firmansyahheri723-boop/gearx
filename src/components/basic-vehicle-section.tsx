@@ -31,6 +31,16 @@ export const BasicVehicleSection: Component = () => {
     if (carData.length === 0) {
       return [{ value: '', label: 'No engines imported' }];
     }
+
+    const carNames = new Set(
+      carData
+        .filter((car) => {
+          const name = car.car || '';
+          return !name.toLowerCase().includes('swapped engine');
+        })
+        .map((car) => car.car)
+    );
+
     return carData
       .filter((car) => {
         const name = car.car || '';
@@ -43,7 +53,7 @@ export const BasicVehicleSection: Component = () => {
         if (name.toLowerCase().endsWith('engine')) {
         } else if (name.toLowerCase().includes('swapped engine')) {
           label = name.replace(/swapped engine/i, '[Swapped Engine]');
-        } else {
+        } else if (carNames.has(name)) {
           label = `${name} [Default Engine]`;
         }
 

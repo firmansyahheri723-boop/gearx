@@ -100,12 +100,19 @@ export const selectCar = (index: number): void => {
     console.warn('Selection Error: Invalid car index');
     return;
   }
-  
+
   const car = carData[index];
   setSelectedCarIndex(index);
   localStorage.setItem(SELECTED_CAR_KEY, index.toString());
   applyCarData(car);
-  
+
+  // Reset and auto-select the matching engine for this car
+  clearEngineSelection();
+  const engineIndex = carData.findIndex((e) => e.car === car.car);
+  if (engineIndex >= 0) {
+    selectEngine(engineIndex);
+  }
+
   // Log warning for missing critical values
   const missingFields: string[] = [];
   if (car.wheelbase === null && (car.fAxleOffset === null || car.rAxleOffset === null)) {
@@ -113,7 +120,7 @@ export const selectCar = (index: number): void => {
   }
   if (car.fTrackWidth === null) missingFields.push('front track width');
   if (car.rTrackWidth === null) missingFields.push('rear track width');
-  
+
   if (missingFields.length > 0) {
     console.warn(`Missing Data: ${car.car} is missing: ${missingFields.join(', ')}. Values set to 0.`);
   }
