@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/jetbrains-mono';
+@import 'leaflet/dist/leaflet.css';
 
 @theme {
   --font-sans: 'JetBrains Mono Variable', ui-monospace, monospace;
@@ -151,4 +152,53 @@ input[type='range']:focus::-moz-range-thumb {
   --vis-tooltip-background-color: #171717;
   --vis-tooltip-border-color: #404040;
   --vis-tooltip-text-color: #fafafa;
+}
+
+/* Leaflet map styling */
+.leaflet-container {
+  background: #171717;
+  font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+/* Custom marker styling */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Custom popup styling */
+.custom-popup .leaflet-popup-content-wrapper {
+  background: #171717;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  color: #e5e5e5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: #171717;
+  border: 1px solid #404040;
+  box-shadow: none;
+}
+
+.custom-popup .leaflet-popup-close-button {
+  color: #737373;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.custom-popup .leaflet-popup-close-button:hover {
+  color: #e5e5e5;
+}
+
+/* Placeholder text for empty map */
+.placeholder-text {
+  background: transparent;
+  border: none;
 }

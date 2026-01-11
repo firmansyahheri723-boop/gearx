@@ -1,6 +1,6 @@
 import { Component, For } from 'solid-js';
 
-export type TabId = 'main' | 'suspension' | 'gearbox' | 'data';
+export type TabId = 'main' | 'suspension' | 'gearbox' | 'data' | 'map';
 
 interface Tab {
   id: TabId;
@@ -12,6 +12,7 @@ const TABS: Tab[] = [
   { id: 'suspension', label: 'Suspension' },
   { id: 'gearbox', label: 'Gearbox' },
   { id: 'data', label: 'Database' },
+  { id: 'map', label: 'Map' },
 ];
 
 interface TabMenuProps {

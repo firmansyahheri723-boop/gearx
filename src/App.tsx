@@ -5,6 +5,7 @@ import { InputTab } from './components/tabs/main-tab';
 import { SuspensionTab } from './components/tabs/suspension-tab';
 import { GearboxTab } from './components/tabs/gearbox-tab';
 import { DatabaseTab } from './components/tabs/data-tab';
+import { MapTab } from './components/tabs/map-tab';
 import { ToasterWithStyles } from './components/ui/toast';
 import {
   setIsSelecting,
@@ -13,7 +14,7 @@ import {
 } from './stores/selection';
 import { torqueRpmData, setTorqueRpmData, gearRatios, setGearRatios } from './stores/vehicle';
 
-const VALID_TABS: TabId[] = ['main', 'suspension', 'gearbox', 'data'];
+const VALID_TABS: TabId[] = ['main', 'suspension', 'gearbox', 'data', 'map'];
 
 const getInitialTab = (): TabId => {
   const params = new URLSearchParams(window.location.search);
@@ -114,6 +115,9 @@ const App: Component = () => {
           </Match>
           <Match when={activeTab() === 'data'}>
             <DatabaseTab />
+          </Match>
+          <Match when={activeTab() === 'map'}>
+            <MapTab />
           </Match>
         </Switch>
 

@@ -17,18 +17,6 @@ interface SectionHeaderProps {
 export const SectionHeader: Component<SectionHeaderProps> = (props) => {
   const isOutput = () => props.variant === 'output';
 
-  const statusBadge = () => {
-    return isOutput() ? (
-      <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30">
-        OUTPUT
-      </span>
-    ) : (
-      <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
-        INPUT
-      </span>
-    );
-  };
-
   return (
     <div
       class="flex items-center justify-between px-3 py-2 border-b"
@@ -63,7 +51,17 @@ export const SectionHeader: Component<SectionHeaderProps> = (props) => {
           />
         </Show>
       </div>
-      {statusBadge()}
+      <Show when={props.variant}>
+        <span
+          class="px-2 py-0.5 text-[10px] font-bold tracking-wider border"
+          classList={{
+            'bg-orange-500/20 text-orange-400 border-orange-500/30': isOutput(),
+            'bg-blue-500/20 text-blue-400 border-blue-500/30': !isOutput(),
+          }}
+        >
+          {isOutput() ? 'OUTPUT' : 'INPUT'}
+        </span>
+      </Show>
     </div>
   );
 };
