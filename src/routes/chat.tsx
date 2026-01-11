@@ -120,10 +120,10 @@ function Chat() {
       let fullContent = "";
       let fullReasoning = "";
       for await (const part of result.fullStream) {
-        if (part.type === 'text') {
+        if (part.type === 'text' || part.type === 'text-delta') {
           fullContent += part.text;
           updateMessage(assistantMsg.id, fullContent);
-        } else if (part.type === 'reasoning') {
+        } else if (part.type === 'reasoning-delta') {
           fullReasoning += part.text;
           updateMessageReasoning(assistantMsg.id, fullReasoning);
         }

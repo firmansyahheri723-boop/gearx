@@ -9,8 +9,14 @@ type MessageListProps = {
   class?: string;
 };
 
-function ReasoningSection(props: { reasoning: string }) {
-  const [isExpanded, setIsExpanded] = createSignal(false);
+function ReasoningSection(props: { reasoning: string; isComplete: boolean }) {
+  const [isExpanded, setIsExpanded] = createSignal(true);
+
+  createEffect(() => {
+    if (props.isComplete) {
+      setIsExpanded(false);
+    }
+  });
 
   return (
     <div class="mt-2 mb-2">
@@ -26,7 +32,7 @@ function ReasoningSection(props: { reasoning: string }) {
       </button>
       <Show when={isExpanded()}>
         <div class="mt-1 ml-4 text-xs text-muted/70 font-mono whitespace-pre-wrap border-l-2 border-muted/30 pl-2">
-          {props.reasoning}
+          <SolidMarkdown remarkPlugins={[remarkGfm]}>{props.reasoning}</SolidMarkdown>
         </div>
       </Show>
     </div>
@@ -84,7 +90,7 @@ export function MessageList(props: MessageListProps) {
                 }}
               >
                 <Show when={message.role === 'assistant' && message.reasoning}>
-                  <ReasoningSection reasoning={message.reasoning!} />
+                  <ReasoningSection reasoning={message.reasoning!} isComplete={!props.isLoading || message !== props.messages[props.messages.length - 1]} />
                 </Show>
                 <Show
                   when={message.role === 'assistant'}
