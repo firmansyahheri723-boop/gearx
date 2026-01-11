@@ -1,7 +1,15 @@
-import { createSignal, Show } from 'solid-js';
-import type { GearRatio } from '../../types';
-import { GEAR_COLORS, FINAL_DRIVE_COLOR } from '../../constants/colors';
-import { NumberInput } from './number-input';
+import { createSignal, Show } from "solid-js";
+import type { GearRatio } from "../../types";
+import { GEAR_COLORS, FINAL_DRIVE_COLOR } from "../../constants/colors";
+import { NumberInput } from "./number-input";
+import {
+  SliderRoot,
+  SliderControl,
+  SliderTrack,
+  SliderRange,
+  SliderThumb,
+  type SliderValueChangeDetails,
+} from "@ark-ui/solid/slider";
 
 type GearSliderProps = {
   gear: GearRatio;
@@ -12,22 +20,18 @@ type GearSliderProps = {
   onRatioChange: (value: number) => void;
   onMinChange: (value: number) => void;
   onMaxChange: (value: number) => void;
-}
+};
 
 export function GearSlider(props: GearSliderProps) {
   const [isEditing, setIsEditing] = createSignal(false);
 
-  
   const gearColor = () => {
     if (props.isFinalDrive) return FINAL_DRIVE_COLOR;
     return GEAR_COLORS[props.index % GEAR_COLORS.length];
   };
 
-  
-  const fillPercent = () => {
-    const range = props.gear.max - props.gear.min;
-    if (range === 0) return 0;
-    return ((props.gear.ratio - props.gear.min) / range) * 100;
+  const handleSliderChange = (details: SliderValueChangeDetails) => {
+    props.onRatioChange(details.value[0]);
   };
 
   return (
@@ -47,7 +51,7 @@ export function GearSlider(props: GearSliderProps) {
       <td class="px-4 py-2.5 bg-neutral-900/30 border-r border-neutral-800/50">
         <div class="flex items-center gap-3">
           {/* Min value */}
-          <div class="w-12 flex-shrink-0">
+          <div class="w-12 shrink-0">
             <Show
               when={isEditing()}
               fallback={
@@ -66,45 +70,48 @@ export function GearSlider(props: GearSliderProps) {
                 onBlur={() => setIsEditing(false)}
                 step={0.1}
                 class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
-                style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
+                style={{
+                  color: gearColor(),
+                  "border-color": `${gearColor()}80`,
+                }}
               />
             </Show>
           </div>
 
           {/* Slider track */}
           <div class="flex-1 relative h-6 flex items-center">
-            <div class="absolute inset-x-0 h-1 bg-neutral-800 rounded-full">
-              <div
-                class="absolute left-0 top-0 h-full rounded-full"
-                style={{
-                  width: `${fillPercent()}%`,
-                  background: `linear-gradient(to right, ${gearColor()}99, ${gearColor()})`,
-                }}
-              />
-            </div>
-            <input
-              type="range"
+            <SliderRoot
+              value={[props.gear.ratio]}
+              onValueChange={handleSliderChange}
               min={props.gear.min}
               max={props.gear.max}
-              step="0.01"
-              value={props.gear.ratio}
-              onInput={(e) => props.onRatioChange(parseFloat(e.currentTarget.value))}
-              class="absolute inset-0 w-full opacity-0 cursor-pointer"
-            />
-            {/* Custom thumb */}
-            <div
-              class="absolute w-3 h-3 rounded-full pointer-events-none border-2"
-              style={{
-                left: `calc(${fillPercent()}% - 6px)`,
-                background: gearColor(),
-                "border-color": `${gearColor()}cc`,
-                "box-shadow": `0 0 8px ${gearColor()}50`,
-              }}
-            />
+              step={0.01}
+              class="absolute inset-0 w-full h-6"
+            >
+              <SliderControl>
+                <SliderTrack class="absolute inset-x-0 h-1 bg-neutral-800 rounded-full">
+                  <SliderRange
+                    class="absolute left-0 top-0 h-full rounded-full"
+                    style={{
+                      background: `linear-gradient(to right, ${gearColor()}99, ${gearColor()})`,
+                    }}
+                  />
+                </SliderTrack>
+                <SliderThumb
+                  index={0}
+                  class="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2"
+                  style={{
+                    background: gearColor(),
+                    "border-color": `${gearColor()}cc`,
+                    "box-shadow": `0 0 8px ${gearColor()}50`,
+                  }}
+                />
+              </SliderControl>
+            </SliderRoot>
           </div>
 
           {/* Max value */}
-          <div class="w-12 flex-shrink-0 text-right">
+          <div class="w-12 shrink-0 text-right">
             <Show
               when={isEditing()}
               fallback={
@@ -123,7 +130,10 @@ export function GearSlider(props: GearSliderProps) {
                 onBlur={() => setIsEditing(false)}
                 step={0.1}
                 class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
-                style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
+                style={{
+                  color: gearColor(),
+                  "border-color": `${gearColor()}80`,
+                }}
               />
             </Show>
           </div>

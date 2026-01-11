@@ -4,6 +4,7 @@ import { Dropdown, type DropdownOption } from "./ui/dropdown";
 import { NumberInput } from "./ui/number-input";
 import { InputRow } from "./ui/input-row";
 import { SegmentedRow, type SegmentedRowOption } from "./ui/segmented-row";
+import { RangeSliderInput } from "./ui/range-slider-input";
 import { vehicleInputs, setVehicleInputs } from "../stores/vehicle";
 import {
   carData,
@@ -67,12 +68,6 @@ export const InputSection: Component = () => {
     if (index >= 0) {
       selectEngine(index);
     }
-  };
-
-  const getSliderFill = (value: number, min: number, max: number) => {
-    const range = max - min;
-    if (range === 0) return 0;
-    return ((value - min) / range) * 100;
   };
 
   const decimals = (step: number) => step < 1 ? (step < 0.1 ? 2 : 1) : 0;
@@ -212,48 +207,17 @@ export const InputSection: Component = () => {
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center gap-2 px-3 py-1.5">
-                <span class="text-neutral-600 text-xs w-6">3</span>
-                <div class="flex-1 relative h-5 flex items-center">
-                  <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
-                    <div
-                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
-                      style={{
-                        width: `${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}%`,
-                      }}
-                    />
-                  </div>
-                  <input
-                    type="range"
-                    min={3}
-                    max={5}
-                    step={0.1}
-                    value={vehicleInputs.desiredRideFrequency}
-                    onInput={(e) =>
-                      setVehicleInputs(
-                        "desiredRideFrequency",
-                        parseFloat(e.currentTarget.value),
-                      )
-                    }
-                    class="absolute inset-0 w-full opacity-0 cursor-pointer"
-                  />
-                  <div
-                    class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
-                    style={{
-                      left: `calc(${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}% - 5px)`,
-                    }}
-                  />
-                </div>
-                <span class="text-neutral-600 text-xs w-6">5</span>
-                <NumberInput
-                  value={vehicleInputs.desiredRideFrequency}
-                  onChange={(val) => setVehicleInputs("desiredRideFrequency", val)}
-                  step={0.1}
-                  min={3}
-                  max={5}
-                  class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
-                />
-              </div>
+              <RangeSliderInput
+                min={3}
+                max={5}
+                step={0.1}
+                value={vehicleInputs.desiredRideFrequency}
+                onChange={(val) => setVehicleInputs("desiredRideFrequency", val)}
+                minLabel="3"
+                maxLabel="5"
+                showNumberInput={true}
+                numberInputWidth="w-14"
+              />
             </td>
           </tr>
 
@@ -264,48 +228,17 @@ export const InputSection: Component = () => {
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center gap-2 px-3 py-1.5">
-                <span class="text-neutral-600 text-xs w-6">.02</span>
-                <div class="flex-1 relative h-5 flex items-center">
-                  <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
-                    <div
-                      class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
-                      style={{
-                        width: `${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}%`,
-                      }}
-                    />
-                  </div>
-                  <input
-                    type="range"
-                    min={0.02}
-                    max={0.7}
-                    step={0.01}
-                    value={vehicleInputs.desiredRollGradient}
-                    onInput={(e) =>
-                      setVehicleInputs(
-                        "desiredRollGradient",
-                        parseFloat(e.currentTarget.value),
-                      )
-                    }
-                    class="absolute inset-0 w-full opacity-0 cursor-pointer"
-                  />
-                  <div
-                    class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
-                    style={{
-                      left: `calc(${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}% - 5px)`,
-                    }}
-                  />
-                </div>
-                <span class="text-neutral-600 text-xs w-6">.7</span>
-                <NumberInput
-                  value={vehicleInputs.desiredRollGradient}
-                  onChange={(val) => setVehicleInputs("desiredRollGradient", val)}
-                  step={0.01}
-                  min={0.02}
-                  max={0.7}
-                  class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
-                />
-              </div>
+              <RangeSliderInput
+                min={0.02}
+                max={0.7}
+                step={0.01}
+                value={vehicleInputs.desiredRollGradient}
+                onChange={(val) => setVehicleInputs("desiredRollGradient", val)}
+                minLabel=".02"
+                maxLabel=".7"
+                showNumberInput={true}
+                numberInputWidth="w-14"
+              />
             </td>
           </tr>
 
@@ -512,41 +445,16 @@ export const InputSection: Component = () => {
             <label for="mobile-ride-freq" class="block text-xs uppercase tracking-wide text-neutral-400">Ride frequency</label>
             <span class="text-sm text-neutral-400">{vehicleInputs.desiredRideFrequency.toFixed(decimals(0.1))} Hz</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-neutral-600 text-xs w-6">3</span>
-            <div class="flex-1 relative h-5 flex items-center">
-              <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
-                <div
-                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
-                  style={{
-                    width: `${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}%`,
-                  }}
-                />
-              </div>
-              <input
-                id="mobile-ride-freq"
-                type="range"
-                min={3}
-                max={5}
-                step={0.1}
-                value={vehicleInputs.desiredRideFrequency}
-                onInput={(e) =>
-                  setVehicleInputs(
-                    "desiredRideFrequency",
-                    parseFloat(e.currentTarget.value),
-                  )
-                }
-                class="absolute inset-0 w-full opacity-0 cursor-pointer"
-              />
-              <div
-                class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
-                style={{
-                  left: `calc(${getSliderFill(vehicleInputs.desiredRideFrequency, 3, 5)}% - 5px)`,
-                }}
-              />
-            </div>
-            <span class="text-neutral-600 text-xs w-6">5</span>
-          </div>
+          <RangeSliderInput
+            min={3}
+            max={5}
+            step={0.1}
+            value={vehicleInputs.desiredRideFrequency}
+            onChange={(val) => setVehicleInputs("desiredRideFrequency", val)}
+            minLabel="3"
+            maxLabel="5"
+            showNumberInput={false}
+          />
         </div>
 
         <div class="space-y-1">
@@ -554,41 +462,16 @@ export const InputSection: Component = () => {
             <label for="mobile-roll-grad" class="block text-xs uppercase tracking-wide text-neutral-400">Roll gradient</label>
             <span class="text-sm text-neutral-400">{vehicleInputs.desiredRollGradient.toFixed(decimals(0.01))}</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-neutral-600 text-xs w-6">.02</span>
-            <div class="flex-1 relative h-5 flex items-center">
-              <div class="absolute inset-x-0 h-1 bg-neutral-700 rounded-full">
-                <div
-                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full"
-                  style={{
-                    width: `${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}%`,
-                  }}
-                />
-              </div>
-              <input
-                id="mobile-roll-grad"
-                type="range"
-                min={0.02}
-                max={0.7}
-                step={0.01}
-                value={vehicleInputs.desiredRollGradient}
-                onInput={(e) =>
-                  setVehicleInputs(
-                    "desiredRollGradient",
-                    parseFloat(e.currentTarget.value),
-                  )
-                }
-                class="absolute inset-0 w-full opacity-0 cursor-pointer"
-              />
-              <div
-                class="absolute w-2.5 h-2.5 bg-neutral-400 rounded-full shadow-lg shadow-neutral-500/30 pointer-events-none border border-neutral-300"
-                style={{
-                  left: `calc(${getSliderFill(vehicleInputs.desiredRollGradient, 0.02, 0.7)}% - 5px)`,
-                }}
-              />
-            </div>
-            <span class="text-neutral-600 text-xs w-6">.7</span>
-          </div>
+          <RangeSliderInput
+            min={0.02}
+            max={0.7}
+            step={0.01}
+            value={vehicleInputs.desiredRollGradient}
+            onChange={(val) => setVehicleInputs("desiredRollGradient", val)}
+            minLabel=".02"
+            maxLabel=".7"
+            showNumberInput={false}
+          />
         </div>
 
         <div class="space-y-1">

@@ -2,7 +2,6 @@ import { createSignal } from 'solid-js';
 import type { CarData } from '../types';
 import { parseCSV } from '../utils/csv';
 import { setVehicleInputs } from './vehicle';
-import { toast } from './notifications';
 import carDataCsv from '../assets/car-data.csv?raw';
 
 const SELECTED_CAR_KEY = 'gearx-selected-car';
@@ -98,7 +97,7 @@ export const applyEngineData = (engine: CarData): void => {
  */
 export const selectCar = (index: number): void => {
   if (index < 0 || index >= carData.length) {
-    toast.error('Selection Error', 'Invalid car index');
+    console.warn('Selection Error: Invalid car index');
     return;
   }
   
@@ -107,7 +106,7 @@ export const selectCar = (index: number): void => {
   localStorage.setItem(SELECTED_CAR_KEY, index.toString());
   applyCarData(car);
   
-  // Show warning for missing critical values
+  // Log warning for missing critical values
   const missingFields: string[] = [];
   if (car.wheelbase === null && (car.fAxleOffset === null || car.rAxleOffset === null)) {
     missingFields.push('wheelbase');
@@ -116,12 +115,7 @@ export const selectCar = (index: number): void => {
   if (car.rTrackWidth === null) missingFields.push('rear track width');
   
   if (missingFields.length > 0) {
-    toast.warning(
-      'Missing Data',
-      `${car.car} is missing: ${missingFields.join(', ')}. Values set to 0.`
-    );
-  } else {
-    toast.success('Car Applied', `Using ${car.car} chassis data`);
+    console.warn(`Missing Data: ${car.car} is missing: ${missingFields.join(', ')}. Values set to 0.`);
   }
 };
 
@@ -130,7 +124,7 @@ export const selectCar = (index: number): void => {
  */
 export const selectEngine = (index: number): void => {
   if (index < 0 || index >= carData.length) {
-    toast.error('Selection Error', 'Invalid engine index');
+    console.warn('Selection Error: Invalid engine index');
     return;
   }
   
@@ -138,8 +132,6 @@ export const selectEngine = (index: number): void => {
   setSelectedEngineIndex(index);
   localStorage.setItem(SELECTED_ENGINE_KEY, index.toString());
   applyEngineData(engine);
-  
-  toast.success('Engine Applied', `Using ${engine.car} engine data`);
 };
 
 /**

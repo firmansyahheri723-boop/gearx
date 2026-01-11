@@ -6,7 +6,6 @@ import { SuspensionTab } from './components/tabs/suspension-tab';
 import { GearboxTab } from './components/tabs/gearbox-tab';
 import { DatabaseTab } from './components/tabs/data-tab';
 import { MapTab } from './components/tabs/map-tab';
-import { ToasterWithStyles } from './components/ui/toast';
 import {
   setIsSelecting,
   selectionStart,
@@ -129,7 +128,6 @@ function App() {
         </footer>
       </div>
 
-      <ToasterWithStyles />
     </div>
   );
 }

@@ -3,6 +3,13 @@ import { GameMap } from '../ui/game-map';
 import { MapSelector } from '../ui/map-selector';
 import { SectionHeader } from '../ui/section-header';
 import type { Landmark, GameMapConfig } from '../../types/map';
+import {
+  AccordionRoot,
+  AccordionItem,
+  AccordionItemTrigger,
+  AccordionItemContent,
+  AccordionItemIndicator,
+} from '@ark-ui/solid/accordion';
 
 // ============================================================
 // MAP DATA CONFIGURATION - Edit this to customize your maps
@@ -209,34 +216,48 @@ export function MapTab() {
                     Legend
                   </h3>
 
-                  <For each={categories()}>
-                    {(category) => (
-                      <div class="space-y-2">
-                        <h4 class="text-xs uppercase tracking-wider text-neutral-400 flex items-center gap-2">
-                          <span class="w-2 h-2 rounded-full bg-neutral-500" />
-                          {category}
-                        </h4>
-                        <ul class="space-y-1 pl-4">
-                          <For each={getLandmarksByCategory(category)}>
-                            {(landmark) => (
-                              <li>
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedLandmark(landmark)}
-                                  class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors text-left w-full"
-                                  classList={{
-                                    'text-neutral-200': selectedLandmark()?.id === landmark.id,
-                                  }}
-                                >
-                                  {landmark.name}
-                                </button>
-                              </li>
-                            )}
-                          </For>
-                        </ul>
-                      </div>
-                    )}
-                  </For>
+                  <AccordionRoot
+                    collapsible={true}
+                    class="space-y-2"
+                  >
+                    <For each={categories()}>
+                      {(category) => (
+                        <AccordionItem value={category}>
+                          <AccordionItemTrigger class="w-full flex items-center justify-between px-3 py-2 border border-neutral-700/50 bg-neutral-900/30 hover:bg-neutral-800/30 transition-colors">
+                            <h4 class="text-xs uppercase tracking-wider text-neutral-400 flex items-center gap-2">
+                              <span class="w-2 h-2 rounded-full bg-neutral-500" />
+                              {category}
+                            </h4>
+                            <AccordionItemIndicator class="text-neutral-500">
+                              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </AccordionItemIndicator>
+                          </AccordionItemTrigger>
+                          <AccordionItemContent class="pl-4 py-2">
+                            <ul class="space-y-1">
+                              <For each={getLandmarksByCategory(category)}>
+                                {(landmark) => (
+                                  <li>
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedLandmark(landmark)}
+                                      class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors text-left w-full"
+                                      classList={{
+                                        'text-neutral-200': selectedLandmark()?.id === landmark.id,
+                                      }}
+                                    >
+                                      {landmark.name}
+                                    </button>
+                                  </li>
+                                )}
+                              </For>
+                            </ul>
+                          </AccordionItemContent>
+                        </AccordionItem>
+                      )}
+                    </For>
+                  </AccordionRoot>
 
                   {/* Selected Landmark Info */}
                   <Show when={selectedLandmark()}>

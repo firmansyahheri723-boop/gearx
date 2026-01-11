@@ -1,5 +1,12 @@
 # GearX Agent Guidelines
 
+## Project-Specific Notes
+
+- **CarX Street Domain**: This is a suspension calculator and gearbox tuner for CarX Street
+- **Formula Reference**: Calculations based on formula.xlsx (referenced in comments for complex formulas)
+- **SolidJS Conventions**: Use `onMount`/`onCleanup` for lifecycle, not `useEffect`
+- **No Build Steps**: Use direct Bun commands; no intermediate build steps
+
 ## Build Commands
 
 ```bash
@@ -14,60 +21,7 @@ bun run serve
 
 ## Code Style Guidelines
 
-### General
-
-- 2-space indentation
-- Single quotes for strings
-- No comments in code unless absolutely necessary
-- Line length is not strictly enforced, but prefer reasonable lengths (~100-120 chars)
-- End files with a newline
-- Use semicolons
-
-### Imports
-
-```typescript
-// Group imports by library order
-import { createSignal, createEffect } from 'solid-js';                      // SolidJS primitives
-import { DashboardHeader } from './components/dashboard-header';           // Local components
-import { vehicleInputs, setVehicleInputs } from './stores/vehicle';        // Stores
-import { calculateSuspensionOutputs } from '../../utils/suspension';      // Utilities
-```
-
-- Import SolidJS primitives and utilities first
-- Then local component imports
-- Then store imports
-- Finally utility imports
-
 ### Components
-
-```typescript
-import { splitProps, type JSX } from 'solid-js';
-
-type MyComponentProps = {
-  value: number;
-  onChange: (value: number) => void;
-  class?: string;
-}
-
-export function MyComponent(props: MyComponentProps) {
-  const [local, otherProps] = splitProps(props, ['value', 'onChange', 'class']);
-
-  // Reactive signals
-  const [state, setState] = createSignal('');
-
-  // Side effects
-  createEffect(() => {
-    // Effect logic
-  });
-
-  // Event handlers with proper typing
-  const handleInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-    // Handler logic
-  };
-
-  return <div class={local.class}>...</div>;
-}
-```
 
 - Use function declarations for components (not arrow functions)
 - Define props using `type` keyword
@@ -76,19 +30,6 @@ export function MyComponent(props: MyComponentProps) {
 - Use `class` for className attributes (SolidJS standard)
 
 ### State Management
-
-```typescript
-// Local signals
-const [value, setValue] = createSignal(0);
-
-// Complex state with stores
-import { createStore } from 'solid-js/store';
-const [data, setData] = createStore({ items: [], count: 0 });
-
-// Reuse existing stores from src/stores/
-import { vehicleInputs, setVehicleInputs } from '../stores/vehicle';
-setVehicleInputs('weight', 1788);
-```
 
 - Use `createSignal` for simple reactive values
 - Use `createStore` for complex nested objects
@@ -123,44 +64,7 @@ export type TireCompound = 'street' | 'street+' | 'racing';
 - **Types**: PascalCase (`VehicleInputs`, `SuspensionOutputs`)
 - **File names**: kebab-case (`suspension-tab.tsx`, `number-input.tsx`)
 
-### Error Handling
-
-```typescript
-const parsed = parseFloat(value);
-if (isNaN(parsed)) {
-  // Handle invalid input with fallback
-  return defaultValue;
-}
-
-// Use conditional rendering for error states
-<Show when={error()} fallback={<div>No error</div>}>
-  <div class="error">{error()}</div>
-</Show>
-```
-
-- Validate user inputs with `isNaN` and type guards
-- Provide fallback values for invalid inputs
-- Use `Show` component for conditional rendering
-- Don't throw errors for expected invalid states (return defaults instead)
-
-### Styling
-
-- Use Tailwind CSS v4 utility classes
-- Configure theme variables in `src/index.css`
-- All styling uses utility classes; no custom CSS files
-- Design tokens are in Tailwind theme
-
 ### File Structure
-
-```
-src/
-├── components/
-│   ├── ui/           # Reusable UI components
-│   └── tabs/         # Tab-specific components
-├── stores/           # Global state with solid-js/store
-├── types/            # Shared TypeScript types
-└── utils/            # Pure functions and calculations
-```
 
 - Place reusable UI components in `components/ui/`
 - Place feature components in appropriate subdirectories
@@ -168,9 +72,58 @@ src/
 - Put pure functions and calculations in `utils/`
 - Export shared types from `types/index.ts`
 
-### Project-Specific Notes
+## Landing the Plane (Session Completion)
 
-- **CarX Street Domain**: This is a suspension calculator and gearbox tuner for CarX Street
-- **Formula Reference**: Calculations based on formula.xlsx (referenced in comments for complex formulas)
-- **SolidJS Conventions**: Use `onMount`/`onCleanup` for lifecycle, not `useEffect`
-- **No Build Steps**: Use direct Bun commands; no intermediate build steps
+**When ending a work session**, you MUST complete ALL steps below.
+
+**MANDATORY WORKFLOW:**
+
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **Hand off** - Provide context for next session
+
+## Issue Tracking
+
+```bash
+# Find ready work (no blockers)
+bd ready --json
+
+# Find ready work including future deferred issues
+bd ready --include-deferred --json
+
+# Create new issue
+bd create "Issue title" -t bug|feature|task -p 0-4 -d "Description" --json
+
+# Create issue with due date and defer (GH#820)
+bd create "Task" --due=+6h              # Due in 6 hours
+bd create "Task" --defer=tomorrow       # Hidden from bd ready until tomorrow
+bd create "Task" --due="next monday" --defer=+1h  # Both
+
+# Update issue status
+bd update <id> --status in_progress --json
+
+# Update issue with due/defer dates
+bd update <id> --due=+2d                # Set due date
+bd update <id> --defer=""               # Clear defer (show immediately)
+
+# Link discovered work
+bd dep add <discovered-id> <parent-id> --type discovered-from
+
+# Complete work
+bd close <id> --reason "Done" --json
+
+# Show dependency tree
+bd dep tree <id>
+
+# Get issue details
+bd show <id> --json
+
+# Query issues by time-based scheduling (GH#820)
+bd list --deferred              # Show issues with defer_until set
+bd list --defer-before=tomorrow # Deferred before tomorrow
+bd list --defer-after=+1w       # Deferred after one week from now
+bd list --due-before=+2d        # Due within 2 days
+bd list --due-after="next monday" # Due after next Monday
+bd list --overdue               # Due date in past (not closed)
+```

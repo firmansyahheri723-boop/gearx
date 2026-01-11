@@ -1,4 +1,5 @@
 import { Component, splitProps, For } from 'solid-js';
+import { RadioGroupRoot, RadioGroupItem, RadioGroupItemControl, RadioGroupItemText, RadioGroupItemHiddenInput, type RadioGroupValueChangeDetails } from '@ark-ui/solid/radio-group';
 import { HelpTooltip, type HelpLink } from './help-tooltip';
 
 export type SegmentedRowOption = {
@@ -36,25 +37,33 @@ export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
       </td>
       <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
         <div class="flex items-center px-2 py-1.5">
-          <div class="flex gap-0.5">
+          <RadioGroupRoot
+            value={String(local.value)}
+            onValueChange={(details: RadioGroupValueChangeDetails) => {
+              const found = local.options.find(opt => String(opt.value) === details.value);
+              local.onChange(found?.value ?? details.value as string | number);
+            }}
+            class="flex gap-0.5"
+          >
             <For each={local.options}>
               {(option) => (
-                <button
-                  type="button"
-                  onClick={() => local.onChange(option.value)}
+                <RadioGroupItem
+                  value={String(option.value)}
                   class="px-3 py-1 text-xs transition-all duration-100"
                   classList={{
                     'bg-neutral-500/20 text-neutral-400 border border-neutral-500/50':
-                      local.value === option.value,
+                      String(local.value) === String(option.value),
                     'bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300':
-                      local.value !== option.value,
+                      String(local.value) !== String(option.value),
                   }}
                 >
-                  {option.label}
-                </button>
+                  <RadioGroupItemControl />
+                  <RadioGroupItemText>{option.label}</RadioGroupItemText>
+                  <RadioGroupItemHiddenInput />
+                </RadioGroupItem>
               )}
             </For>
-          </div>
+          </RadioGroupRoot>
           {local.unit && (
             <span class="px-2 text-neutral-500 text-xs">{local.unit}</span>
           )}

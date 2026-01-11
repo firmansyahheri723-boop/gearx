@@ -6,6 +6,7 @@ import { GearSpeedChart } from '../ui/gear-speed-chart';
 import { GearTorqueChart } from '../ui/gear-torque-chart';
 import { MetricCard } from '../ui/metric-card';
 import type { HelpLink } from '../ui/help-tooltip';
+import { RadioGroupRoot, RadioGroupItem, RadioGroupItemControl, RadioGroupItemText, RadioGroupItemHiddenInput, type RadioGroupValueChangeDetails } from '@ark-ui/solid/radio-group';
 import { GEAR_COLORS } from '../../constants/colors';
 import {
   vehicleInputs,
@@ -204,38 +205,43 @@ export function GearboxTab() {
           </div>
         </div>
 
-        <div class="border border-neutral-800/50 bg-neutral-950/50">
-          <SectionHeader
-            title="Tire Compound"
-            variant="input"
-            help={{
-              ...HELP_CONTENT.tireCompound,
-              position: "bottom",
-            }}
-          />
-          <div class="p-4">
-            <div class="space-y-2">
-              <For each={TIRE_OPTIONS}>
-                {(option) => (
-                  <button
-                    type="button"
-                    class="w-full flex items-center justify-between px-3 py-2 border transition-colors"
-                    classList={{
-                      'border-neutral-500/50 bg-neutral-500/10 text-neutral-400':
-                        tireCompound.value === option.value,
-                      'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50 hover:bg-neutral-800/30':
-                        tireCompound.value !== option.value,
-                    }}
-                    onClick={() => setTireCompound('value', option.value)}
-                  >
-                    <span class="text-sm font-medium">{option.label}</span>
-                    <span class="text-xs opacity-70">u = {option.friction.toFixed(2)}</span>
-                  </button>
-                )}
-              </For>
+          <div class="border border-neutral-800/50 bg-neutral-950/50">
+            <SectionHeader
+              title="Tire Compound"
+              variant="input"
+              help={{
+                ...HELP_CONTENT.tireCompound,
+                position: "bottom",
+              }}
+            />
+            <div class="p-4">
+              <RadioGroupRoot
+                value={tireCompound.value}
+                onValueChange={(details: RadioGroupValueChangeDetails) => setTireCompound('value', details.value as any)}
+                class="space-y-2"
+              >
+                <For each={TIRE_OPTIONS}>
+                  {(option) => (
+                    <RadioGroupItem
+                      value={option.value}
+                      class="w-full flex items-center justify-between px-3 py-2 border transition-colors cursor-pointer"
+                      classList={{
+                        'border-neutral-500/50 bg-neutral-500/10 text-neutral-400':
+                          tireCompound.value === option.value,
+                        'border-neutral-700/50 bg-neutral-900/30 text-neutral-400 hover:border-neutral-600/50 hover:bg-neutral-800/30':
+                          tireCompound.value !== option.value,
+                      }}
+                    >
+                      <RadioGroupItemControl />
+                      <RadioGroupItemText class="text-sm font-medium">{option.label}</RadioGroupItemText>
+                      <span class="text-xs opacity-70">u = {option.friction.toFixed(2)}</span>
+                      <RadioGroupItemHiddenInput />
+                    </RadioGroupItem>
+                  )}
+                </For>
+              </RadioGroupRoot>
             </div>
           </div>
-        </div>
       </div>
 
       <div class="border border-neutral-800/50 bg-neutral-950/50">
@@ -252,7 +258,7 @@ export function GearboxTab() {
             <For each={activeGears()}>
               {(gear, idx) => (
                 <div
-                  class="flex flex-col items-center px-4 py-2 border bg-neutral-900/30"
+                  class="flex-1 min-w-40 flex flex-col items-center px-4 py-2 border bg-neutral-900/30"
                   style={{ "border-color": `${GEAR_COLORS[idx() % GEAR_COLORS.length]}50` }}
                 >
                   <span

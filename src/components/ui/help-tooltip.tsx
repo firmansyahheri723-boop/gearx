@@ -1,5 +1,13 @@
-import { Component, Show, For, createSignal, onCleanup, onMount } from "solid-js";
+import { Component, Show, For } from "solid-js";
 import { Formula } from "./formula";
+import {
+  PopoverRoot,
+  PopoverTrigger,
+  PopoverPositioner,
+  PopoverContent,
+  PopoverArrow,
+  PopoverArrowTip,
+} from "@ark-ui/solid/popover";
 
 export interface HelpLink {
   label: string;
@@ -19,90 +27,37 @@ export interface HelpTooltipProps {
   position?: TooltipPosition;
 }
 
-// Position styles for the tooltip popup
-const getPositionStyles = (position: TooltipPosition) => {
-  switch (position) {
-    case "right":
-      // Arrow points left (toward the button)
-      return {
-        popup: "left-6 top-1/2 -translate-y-1/2",
-        arrow: "left-0 top-1/2 -translate-x-1 -translate-y-1/2 rotate-45 border-l border-b",
-      };
-    case "bottom":
-      // Arrow points up (toward the button)
-      return {
-        popup: "top-6 left-1/2 -translate-x-1/2",
-        arrow: "top-0 left-1/2 -translate-y-1 -translate-x-1/2 rotate-45 border-l border-t",
-      };
-    case "left":
-      // Arrow points right (toward the button)
-      return {
-        popup: "right-6 top-1/2 -translate-y-1/2",
-        arrow: "right-0 top-1/2 translate-x-1 -translate-y-1/2 rotate-45 border-r border-t",
-      };
-    case "top":
-      // Arrow points down (toward the button)
-      return {
-        popup: "bottom-6 left-1/2 -translate-x-1/2",
-        arrow: "bottom-0 left-1/2 translate-y-1 -translate-x-1/2 rotate-45 border-r border-b",
-      };
-  }
-};
-
 export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
-  const [isOpen, setIsOpen] = createSignal(false);
-  let containerRef: HTMLDivElement | undefined;
-
   const position = () => props.position ?? "right";
-  const positionStyles = () => getPositionStyles(position());
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (containerRef && !containerRef.contains(e.target as Node)) {
-      setIsOpen(false);
-    }
-  };
-
-  onMount(() => {
-    document.addEventListener("click", handleClickOutside);
-  });
-
-  onCleanup(() => {
-    document.removeEventListener("click", handleClickOutside);
-  });
-
-  const toggle = (e: MouseEvent) => {
-    e.stopPropagation();
-    setIsOpen(!isOpen());
-  };
 
   const hasLinks = () =>
     (props.articles && props.articles.length > 0) ||
     (props.videos && props.videos.length > 0);
 
   return (
-    <div ref={containerRef} class="relative inline-flex items-center">
-      {/* Help Icon Button */}
-      <button
+    <PopoverRoot
+      positioning={{
+        placement: position(),
+        gutter: 8,
+      }}
+      closeOnInteractOutside={true}
+    >
+      <PopoverTrigger
         type="button"
-        onClick={toggle}
-        class="w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full border transition-all duration-100"
-        classList={{
-          "bg-neutral-500/20 text-neutral-400 border-neutral-500/50": isOpen(),
-          "bg-neutral-800/50 text-neutral-500 border-neutral-600/50 hover:text-neutral-400 hover:border-neutral-500/50":
-            !isOpen(),
-        }}
+        class="w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full border transition-all duration-100 data-[state=open]:bg-neutral-500/20 data-[state=open]:text-neutral-400 data-[state=open]:border-neutral-500/50 bg-neutral-800/50 text-neutral-500 border-neutral-600/50 hover:text-neutral-400 hover:border-neutral-500/50"
         aria-label="Show help information"
-        aria-expanded={isOpen()}
       >
         ?
-      </button>
-
-      {/* Tooltip Popup */}
-      <Show when={isOpen()}>
-        <div
-          class={`absolute z-50 w-80 border border-neutral-500/30 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/50 ${positionStyles().popup}`}
+      </PopoverTrigger>
+      <PopoverPositioner>
+        <PopoverContent
+          class="z-50 w-80 border border-neutral-500/30 bg-neutral-900/95 backdrop-blur-sm shadow-lg shadow-black/50"
           role="tooltip"
         >
+          <PopoverArrow>
+            <PopoverArrowTip />
+          </PopoverArrow>
+
           {/* Header */}
           <div class="flex items-center gap-2 px-3 py-1.5 border-b border-neutral-700/50 bg-neutral-800/50">
             <div class="w-1 h-3 bg-neutral-500" />
@@ -282,13 +237,8 @@ export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
               </Show>
             </div>
           </Show>
-
-          {/* Arrow pointer */}
-          <div
-            class={`absolute w-2 h-2 bg-neutral-900/95 border-neutral-500/30 ${positionStyles().arrow}`}
-          />
-        </div>
-      </Show>
-    </div>
+        </PopoverContent>
+      </PopoverPositioner>
+    </PopoverRoot>
   );
 };
