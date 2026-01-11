@@ -123,6 +123,14 @@ const HELP_CONTENT: Record<
       { label: "Gear Ratios Guide", url: "https://youtu.be/8_SaobHPhWs?si=_5gsrOEVdybXMOXN" },
     ],
   },
+  redlineRpm: {
+    description:
+      "Engine rev limiter (redline) in RPM. This is the maximum engine speed before the limiter kicks in. Used to display the redline on speed/RPM charts and calculate maximum speeds per gear. Typical values: economy cars 6000-7000, sports cars 7000-8500, race engines 8000-10000+.",
+    articles: [{ label: "Wikipedia: Redline", url: "https://en.wikipedia.org/wiki/Redline" }],
+    videos: [
+      { label: "Engine Talk", url: "https://youtu.be/A6SZfn6Kgfg?si=J3IxTU4NBJ42-M10" },
+    ],
+  },
   maxSpeed118m: {
     description:
       "Maximum sustained cornering speed in km/h at 118m radius - the standard skidpad test. This indicates lateral grip capability. Higher speeds require better tires, lower CoG, and stiffer suspension. Used to calculate lateral G capability and appropriate spring/damper rates.",
@@ -678,6 +686,39 @@ export const InputSection: Component = () => {
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
+              </div>
+            </td>
+          </tr>
+
+          {/* Redline RPM */}
+          <tr>
+            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
+              <div class="flex items-center justify-between">
+                <span>Redline RPM</span>
+                <HelpTooltip
+                  description={HELP_CONTENT.redlineRpm.description}
+                  articles={HELP_CONTENT.redlineRpm.articles}
+                  videos={HELP_CONTENT.redlineRpm.videos}
+                />
+              </div>
+            </td>
+            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
+              <div class="flex items-center">
+                <input
+                  type="number"
+                  value={vehicleInputs.redlineRpm}
+                  step={100}
+                  min={3000}
+                  max={15000}
+                  onInput={(e) =>
+                    setVehicleInputs(
+                      "redlineRpm",
+                      parseFloat(e.currentTarget.value) || 0,
+                    )
+                  }
+                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+                />
+                <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
               </div>
             </td>
           </tr>

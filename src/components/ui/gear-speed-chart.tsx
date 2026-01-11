@@ -1,5 +1,5 @@
 import { Component, createMemo, For, Show } from 'solid-js';
-import { VisXYContainer, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/solid';
+import { VisXYContainer, VisLine, VisAxis } from '@unovis/solid';
 import { CurveType } from '@unovis/ts';
 import type { SpeedRpmPoint } from '../../types';
 import { GEAR_COLORS } from '../../constants/colors';
@@ -9,111 +9,151 @@ interface GearSpeedChartProps {
   speedRpmData: SpeedRpmPoint[][];
   /** Active gear names */
   gearNames: string[];
+  /** Redline RPM for horizontal limit line and shift point calculation */
+  redlineRpm?: number;
   /** Chart height in pixels */
   height?: number;
   /** Show compact version (no legend, smaller margins) */
   compact?: boolean;
 }
 
-interface ChartDataPoint {
+interface GearDataPoint {
+  speed: number;
   rpm: number;
-  [key: string]: number;
 }
 
 export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
   
-  const chartData = createMemo((): ChartDataPoint[] => {
-    if (!props.speedRpmData.length || !props.speedRpmData[0]?.length) return [];
+  // Calculate max speed from all gears for the redline
+  const maxSpeed = createMemo(() => {
+    let max = 0;
+    for (const gearData of props.speedRpmData) {
+      for (const point of gearData) {
+        if (point.speed > max) max = point.speed;
+      }
+    }
+    return Math.ceil(max / 10) * 10; // Round up to nearest 10
+  });
 
-    const data: ChartDataPoint[] = [];
-    const rpmPoints = props.speedRpmData[0];
+  // Calculate shift speeds for each gear
+  // Shift speed for gear N = speed at which gear N-1 hits redline
+  const shiftSpeeds = createMemo((): number[] => {
+    if (!props.redlineRpm || !props.speedRpmData.length) return [];
 
-    for (let rpmIdx = 0; rpmIdx < rpmPoints.length; rpmIdx++) {
-      const point: ChartDataPoint = { rpm: rpmPoints[rpmIdx].rpm };
+    const speeds: number[] = [0]; // 1st gear starts from 0
 
-      for (let gearIdx = 0; gearIdx < props.speedRpmData.length; gearIdx++) {
-        const gearData = props.speedRpmData[gearIdx];
-        if (gearData && gearData[rpmIdx]) {
-          point[`gear${gearIdx}`] = gearData[rpmIdx].speed;
+    for (let gearIdx = 0; gearIdx < props.speedRpmData.length - 1; gearIdx++) {
+      const gearData = props.speedRpmData[gearIdx];
+      if (!gearData || gearData.length === 0) {
+        speeds.push(0);
+        continue;
+      }
+
+      // Find the speed at redline RPM for this gear
+      // Look for the point closest to redline RPM
+      let closestPoint: SpeedRpmPoint | null = null;
+      let minDiff = Infinity;
+
+      for (const point of gearData) {
+        const diff = Math.abs(point.rpm - props.redlineRpm!);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestPoint = point;
         }
       }
 
-      data.push(point);
+      // If we found a point at/near redline, use its speed as the shift point for next gear
+      if (closestPoint) {
+        speeds.push(closestPoint.speed);
+      } else {
+        // Fallback: use max speed of this gear
+        const maxSpeedInGear = Math.max(...gearData.map(p => p.speed));
+        speeds.push(maxSpeedInGear);
+      }
     }
 
-    return data;
+    return speeds;
   });
 
-  
-  const xAccessor = (d: ChartDataPoint) => d.rpm;
+  // Create separate data arrays for each gear line, filtered by shift points
+  // X = speed, Y = rpm
+  const gearDataArrays = createMemo((): GearDataPoint[][] => {
+    if (!props.speedRpmData.length) return [];
 
-  
-  const yAccessors = createMemo(() => {
-    return props.speedRpmData.map((_, gearIdx) => 
-      (d: ChartDataPoint) => d[`gear${gearIdx}`] as number
-    );
+    const shifts = shiftSpeeds();
+
+    return props.speedRpmData.map((gearData, gearIdx) => {
+      const shiftSpeed = shifts[gearIdx] ?? 0;
+
+      // Filter to only include points at or after the shift speed
+      return gearData
+        .filter((point) => point.speed >= shiftSpeed)
+        .map((point) => ({
+          speed: point.speed,
+          rpm: point.rpm,
+        }));
+    });
   });
 
-  
-  const lineColors = createMemo(() => {
-    return props.speedRpmData.map((_, idx) => GEAR_COLORS[idx % GEAR_COLORS.length]);
+  // Redline data - horizontal line across the full speed range
+  const redlineData = createMemo((): GearDataPoint[] => {
+    if (!props.redlineRpm) return [];
+    return [
+      { speed: 0, rpm: props.redlineRpm },
+      { speed: maxSpeed(), rpm: props.redlineRpm },
+    ];
   });
 
-  
-  const tooltipTemplate = (d: ChartDataPoint) => {
-    // Build entries with values and sort by value descending (to match visual order top to bottom)
-    const entries = props.gearNames
-      .map((name, idx) => {
-        const speed = d[`gear${idx}`];
-        if (speed === undefined || speed === null) return null;
-        const color = GEAR_COLORS[idx % GEAR_COLORS.length];
-        return { name, speed, color };
-      })
-      .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
-      .sort((a, b) => b.speed - a.speed);
-
-    const lines = entries
-      .map(({ name, speed, color }) => `
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span style="width: 8px; height: 8px; background: ${color}; border-radius: 50%;"></span>
-          <span style="color: #94a3b8;">${name}:</span>
-          <span style="color: ${color}; font-weight: 500;">${speed.toFixed(1)} kph</span>
-        </div>
-      `)
-      .join('');
-
-    return `
-      <div style="color: #f8fafc; font-weight: 600; margin-bottom: 6px;">${d.rpm} RPM</div>
-      ${lines}
-    `;
-  };
+  const xAccessor = (d: GearDataPoint) => d.speed;
+  const yAccessor = (d: GearDataPoint) => d.rpm;
 
   return (
     <div
       class="w-full gear-chart"
       style={{ height: `${props.height ?? 300}px` }}
     >
-      <Show when={chartData().length > 0 && yAccessors().length > 0}>
-        <VisXYContainer data={chartData()} height={props.height ?? 300}>
-          <VisLine
-            x={xAccessor}
-            y={yAccessors()}
-            color={lineColors()}
-            lineWidth={2}
-            curveType={CurveType.Linear}
-          />
+      <Show when={gearDataArrays().length > 0}>
+        <VisXYContainer height={props.height ?? 300}>
+          {/* Render each gear as a separate line */}
+          <For each={gearDataArrays()}>
+            {(gearData, idx) => (
+              <Show when={gearData.length > 0}>
+                <VisLine
+                  data={gearData}
+                  x={xAccessor}
+                  y={yAccessor}
+                  color={GEAR_COLORS[idx() % GEAR_COLORS.length]}
+                  lineWidth={2}
+                  curveType={CurveType.Linear}
+                  duration={0}
+                />
+              </Show>
+            )}
+          </For>
+          {/* Redline horizontal line */}
+          <Show when={redlineData().length > 0}>
+            <VisLine
+              data={redlineData()}
+              x={xAccessor}
+              y={yAccessor}
+              color="#ef4444"
+              lineWidth={2}
+              curveType={CurveType.Linear}
+              duration={0}
+            />
+          </Show>
           <VisAxis
             type="x"
-            label={props.compact ? undefined : "RPM"}
+            label={props.compact ? undefined : "Speed (kph)"}
             gridLine={true}
+            duration={0}
           />
           <VisAxis
             type="y"
-            label={props.compact ? undefined : "Speed (kph)"}
+            label={props.compact ? undefined : "RPM"}
             gridLine={true}
+            duration={0}
           />
-          <VisCrosshair template={tooltipTemplate} color={lineColors()} />
-          <VisTooltip />
         </VisXYContainer>
       </Show>
 
@@ -131,6 +171,16 @@ export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
               </div>
             )}
           </For>
+          {/* Redline legend item */}
+          <Show when={props.redlineRpm}>
+            <div class="flex items-center gap-1.5">
+              <span
+                class="w-3 h-0.5"
+                style={{ background: "#ef4444" }}
+              />
+              <span class="text-xs text-neutral-400">Redline ({props.redlineRpm} RPM)</span>
+            </div>
+          </Show>
         </div>
       </Show>
     </div>

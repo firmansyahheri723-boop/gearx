@@ -252,6 +252,7 @@ export const TransmissionSection: Component = () => {
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
+              redlineRpm={vehicleInputs.redlineRpm}
               height={320}
             />
           </div>

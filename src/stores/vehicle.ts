@@ -38,6 +38,8 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   dampingRatio: 1.0, // ζ (0.65+ for racecars)
   tireRate: 343232.75, // N/m - tire spring rate
   magicNumber: 58.8, // % front/rear roll stiffness distribution
+  // Engine redline
+  redlineRpm: 8000, // RPM limit
 });
 
 // Suspension Output - Springs
