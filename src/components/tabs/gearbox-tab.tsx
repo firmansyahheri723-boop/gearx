@@ -18,15 +18,15 @@ import {
 import { calculateGearboxOutputs } from '../../utils/gearbox';
 import type { TireCompound, SpeedRpmPoint } from '../../types';
 import { GEAR_LABELS } from '../../types';
+import { TIRE_OPTIONS } from './gearbox/gearbox-tab-constants';
 
-// Help tooltip content for gearbox sections
 const HELP_CONTENT: Record<
   string,
   { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
 > = {
   calculatedMetrics: {
     description:
-      "Key performance metrics calculated from your engine and drivetrain setup. Peak HP shows maximum power output, traction limit is the maximum torque the tires can handle before wheelspin, and final drive is the differential ratio that multiplies all gear ratios.",
+      "Key performance metrics calculated from your engine and drivetrain setup. Peak HP shows maximum power output, traction limit is maximum torque the tires can handle before wheelspin, and final drive is the differential ratio that multiplies all gear ratios.",
     articles: [
       { label: "Wikipedia: Horsepower", url: "https://en.wikipedia.org/wiki/Horsepower" },
       { label: "Wikipedia: Final Drive", url: "https://en.wikipedia.org/wiki/Final_drive" },
@@ -104,32 +104,6 @@ const HELP_CONTENT: Record<
   },
 };
 
-const TIRE_OPTIONS: { value: TireCompound; label: string; friction: number }[] = [
-  { value: 'street', label: 'Street', friction: 1.12 },
-  { value: 'street+', label: 'Street+', friction: 1.16 },
-  { value: 'sport', label: 'Sport', friction: 1.40 },
-  { value: 'sport+', label: 'Sport+', friction: 1.45 },
-  { value: 'racing', label: 'Racing', friction: 1.70 },
-  { value: 'racing+', label: 'Racing+', friction: 1.836 },
-];
-
-// Row type for Speed vs RPM table
-interface SpeedRpmTableRow {
-  rpmIndex: number;
-  rpm: number;
-  gearSpeeds: { gearIndex: number; gearName: string; speed: number; exceedsTraction: boolean }[];
-}
-
-// Row type for Wheel Torque table
-interface WheelTorqueTableRow {
-  rpmIndex: number;
-  rpm: number;
-  torque: number;
-  hp: number;
-  isAtPeakHp: boolean;
-  gearTorques: { gearIndex: number; gearName: string; wheelTorque: number; exceedsTraction: boolean }[];
-}
-
 export function GearboxTab() {
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
@@ -149,8 +123,6 @@ export function GearboxTab() {
     })
   );
 
-  
-  // index corresponds directly to position in gearRatios array and outputs arrays
   const activeGears = createMemo(() => {
     const gears: { index: number; name: string; ratio: number }[] = [];
     for (let i = 0; i < gearRatios.length; i++) {
@@ -162,7 +134,6 @@ export function GearboxTab() {
     return gears;
   });
 
-  // Chart data - only include active gears with data
   const chartSpeedRpmData = createMemo(() => {
     return activeGears()
       .map((gear) => outputs().speedRpmData[gear.index])
@@ -175,166 +146,9 @@ export function GearboxTab() {
       .map((gear) => gear.name);
   });
 
-  // Speed vs RPM table data
-  const speedRpmTableData = createMemo((): SpeedRpmTableRow[] => {
-    return torqueRpmData.map((row, rpmIndex) => ({
-      rpmIndex,
-      rpm: row.rpm,
-      gearSpeeds: activeGears().map((gear) => {
-        const data = outputs().speedRpmData[gear.index]?.[rpmIndex];
-        return {
-          gearIndex: gear.index,
-          gearName: gear.name,
-          speed: data?.speed ?? 0,
-          exceedsTraction: data?.exceedsTraction ?? false,
-        };
-      }),
-    }));
-  });
-
-  // Wheel Torque table data
-  const wheelTorqueTableData = createMemo((): WheelTorqueTableRow[] => {
-    return torqueRpmData.map((row, rpmIndex) => {
-      const firstGearData = outputs().speedRpmData[activeGears()[0]?.index]?.[rpmIndex];
-      return {
-        rpmIndex,
-        rpm: row.rpm,
-        torque: row.torque,
-        hp: firstGearData?.hp ?? 0,
-        isAtPeakHp: row.rpm === outputs().peakHpRpm,
-        gearTorques: activeGears().map((gear) => {
-          const data = outputs().speedRpmData[gear.index]?.[rpmIndex];
-          return {
-            gearIndex: gear.index,
-            gearName: gear.name,
-            wheelTorque: data?.wheelTorque ?? 0,
-            exceedsTraction: data?.exceedsTraction ?? false,
-          };
-        }),
-      };
-    });
-  });
-
-  // Speed vs RPM columns (dynamic based on active gears)
-  const speedRpmColumns = createMemo((): ColumnDef<SpeedRpmTableRow>[] => {
-    const cols: ColumnDef<SpeedRpmTableRow>[] = [
-      {
-        accessorKey: 'rpm',
-        header: 'RPM',
-        cell: (info) => (
-          <span class="block px-3 py-1.5 text-center text-neutral-400 bg-neutral-900/30">
-            {info.getValue() as number}
-          </span>
-        ),
-      },
-    ];
-
-    // Add dynamic gear columns
-    for (const gear of activeGears()) {
-      cols.push({
-        id: `gear-${gear.index}`,
-        header: `${gear.name} (kph)`,
-        cell: (info) => {
-          const gearData = info.row.original.gearSpeeds.find((g) => g.gearIndex === gear.index);
-          return (
-            <span
-              class="block px-3 py-1.5 text-center"
-              classList={{
-                'bg-red-500/10 text-red-400': gearData?.exceedsTraction,
-                'bg-neutral-900/30 text-amber-400': !gearData?.exceedsTraction,
-              }}
-            >
-              {gearData?.speed.toFixed(1) ?? '-'}
-            </span>
-          );
-        },
-      });
-    }
-
-    return cols;
-  });
-
-  // Wheel Torque columns (dynamic based on active gears)
-  const wheelTorqueColumns = createMemo((): ColumnDef<WheelTorqueTableRow>[] => {
-    const cols: ColumnDef<WheelTorqueTableRow>[] = [
-      {
-        accessorKey: 'rpm',
-        header: 'RPM',
-        cell: (info) => {
-          const row = info.row.original;
-          return (
-            <span
-              class="block px-3 py-1.5 text-center"
-              classList={{
-                'bg-emerald-500/10 text-emerald-400 font-medium': row.isAtPeakHp,
-                'bg-neutral-900/30 text-neutral-400': !row.isAtPeakHp,
-              }}
-            >
-              {row.rpm}
-              {row.isAtPeakHp && <span class="ml-1 text-[9px]">(peak)</span>}
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: 'torque',
-        header: 'Engine Nm',
-        cell: (info) => (
-          <span class="block px-3 py-1.5 text-center text-neutral-300 bg-neutral-900/30">
-            {info.getValue() as number}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'hp',
-        header: 'HP',
-        cell: (info) => {
-          const row = info.row.original;
-          return (
-            <span
-              class="block px-3 py-1.5 text-center"
-              classList={{
-                'bg-emerald-500/10 text-emerald-400 font-medium': row.isAtPeakHp,
-                'bg-neutral-900/30 text-neutral-400': !row.isAtPeakHp,
-              }}
-            >
-              {row.hp.toFixed(1)}
-            </span>
-          );
-        },
-      },
-    ];
-
-    // Add dynamic gear columns for wheel torque
-    for (const gear of activeGears()) {
-      cols.push({
-        id: `gear-torque-${gear.index}`,
-        header: `${gear.name} Wheel Nm`,
-        cell: (info) => {
-          const gearData = info.row.original.gearTorques.find((g) => g.gearIndex === gear.index);
-          return (
-            <span
-              class="block px-3 py-1.5 text-center"
-              classList={{
-                'bg-red-500/10 text-red-400 font-medium': gearData?.exceedsTraction,
-                'bg-neutral-900/30 text-amber-400': !gearData?.exceedsTraction,
-              }}
-            >
-              {gearData?.wheelTorque.toFixed(0) ?? '-'}
-            </span>
-          );
-        },
-      });
-    }
-
-    return cols;
-  });
-
   return (
     <div class="space-y-4">
-      {/* Top Row: Metrics + Tire Selector */}
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Key Metrics */}
         <div class="lg:col-span-2 border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Calculated Metrics"
@@ -390,7 +204,6 @@ export function GearboxTab() {
           </div>
         </div>
 
-        {/* Tire Compound Selector */}
         <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Tire Compound"
@@ -425,7 +238,6 @@ export function GearboxTab() {
         </div>
       </div>
 
-      {/* Effective Ratios Row */}
       <div class="border border-neutral-800/50 bg-neutral-950/50">
         <SectionHeader
           title="Effective Drive Ratios (Gear x Final)"
@@ -465,9 +277,7 @@ export function GearboxTab() {
         </div>
       </div>
 
-      {/* Charts Row */}
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        {/* Speed vs RPM Chart */}
         <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Speed vs RPM Chart"
@@ -486,7 +296,6 @@ export function GearboxTab() {
           </div>
         </div>
 
-        {/* Wheel Torque Chart */}
         <div class="border border-neutral-800/50 bg-neutral-950/50">
           <SectionHeader
             title="Wheel Torque vs RPM Chart"
@@ -508,117 +317,88 @@ export function GearboxTab() {
         </div>
       </div>
 
-      {/* Speed vs RPM Table */}
-      <div class="border border-neutral-800/50 bg-neutral-950/50">
-        <SectionHeader
-          title="Speed vs RPM per Gear"
-          variant="output"
-          help={{
-            ...HELP_CONTENT.speedVsRpm,
-            position: "right",
-          }}
-        />
-        <DataTable
-          data={speedRpmTableData()}
-          columns={speedRpmColumns()}
-          stickyHeader
-        />
-      </div>
+      <TractionAnalysisSection outputs={outputs()} activeGears={activeGears()} />
+    </div>
+  );
+}
 
-      {/* Wheel Torque Table */}
-      <div class="border border-neutral-800/50 bg-neutral-950/50">
-        <SectionHeader
-          title="Wheel Torque Output"
-          variant="output"
-          help={{
-            ...HELP_CONTENT.wheelTorqueOutput,
-            position: "right",
-          }}
-        />
-        <div class="px-3 py-2 border-b border-neutral-800/30 bg-neutral-900/30 flex items-center gap-4">
-          <span class="text-[10px] uppercase tracking-wider text-neutral-500">
-            Traction limit: {outputs().tractionLimitTorque.toFixed(0)} Nm
-          </span>
-          <span class="flex items-center gap-2 text-[10px] text-neutral-500">
-            <span class="w-3 h-3 bg-red-500/30 border border-red-500/50" />
-            Exceeds traction
-          </span>
-        </div>
-        <DataTable
-          data={wheelTorqueTableData()}
-          columns={wheelTorqueColumns()}
-          stickyHeader
-          maxHeight="400px"
-        />
-      </div>
+type GearInfo = {
+  index: number;
+  name: string;
+  ratio: number;
+}
 
-      {/* Traction Analysis */}
-      <div class="border border-neutral-800/50 bg-neutral-950/50">
-        <SectionHeader
-          title="Traction Analysis"
-          variant="output"
-          help={{
-            ...HELP_CONTENT.tractionAnalysis,
-            position: "top",
-          }}
-        />
-        <div class="p-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <For each={activeGears()}>
-              {(gear) => {
-                const gearData = () => outputs().speedRpmData[gear.index] ?? [];
-                const tractionExceededPoints = () =>
-                  gearData().filter((p) => p.exceedsTraction);
-                const tractionOkPoints = () =>
-                  gearData().filter((p) => !p.exceedsTraction);
-                const percentExceeded = () =>
-                  gearData().length > 0
-                    ? (tractionExceededPoints().length / gearData().length) * 100
-                    : 0;
+type TractionProps = {
+  activeGears: GearInfo[];
+  outputs: any;
+}
 
-                return (
-                  <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
-                    <div class="flex items-center justify-between mb-3">
-                      <span class="text-sm font-medium text-neutral-300">{gear.name}</span>
-                      <span
-                        class="text-xs px-2 py-0.5"
-                        classList={{
-                          'bg-red-500/20 text-red-400 border border-red-500/30':
-                            percentExceeded() > 50,
-                          'bg-amber-500/20 text-amber-400 border border-amber-500/30':
-                            percentExceeded() > 0 && percentExceeded() <= 50,
-                          'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30':
-                            percentExceeded() === 0,
-                        }}
-                      >
-                        {percentExceeded() > 0
-                          ? `${percentExceeded().toFixed(0)}% wheelspin`
-                          : 'Full traction'}
-                      </span>
-                    </div>
+function TractionAnalysisSection(props: TractionProps) {
+  return (
+    <div class="border border-neutral-800/50 bg-neutral-950/50">
+      <SectionHeader
+        title="Traction Analysis"
+        variant="output"
+        help={{
+          ...HELP_CONTENT.tractionAnalysis,
+          position: "top",
+        }}
+      />
+      <div class="p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <For each={props.activeGears}>
+            {(gear) => {
+              const gearData = () => props.outputs.speedRpmData[gear.index] ?? [];
+              const tractionExceededPoints = () =>
+                gearData().filter((p: any) => p.exceedsTraction);
+              const tractionOkPoints = () =>
+                gearData().filter((p: any) => !p.exceedsTraction);
+              const percentExceeded = () =>
+                gearData().length > 0
+                  ? (tractionExceededPoints().length / gearData().length) * 100
+                  : 0;
 
-                    {/* Visual bar */}
-                    <div class="h-2 bg-neutral-800 rounded">
-                      <div
-                        class="h-full bg-red-500/70 transition-all"
-                        style={{ width: `${percentExceeded()}%` }}
-                      />
-                    </div>
-
-                    <div class="flex justify-between text-[10px] text-neutral-500">
-                      <span>
-                        Grip zone:{' '}
-                        {tractionOkPoints().length > 0
-                          ? `${tractionOkPoints()[0]?.rpm} - ${tractionOkPoints()[tractionOkPoints().length - 1]?.rpm} RPM`
-                          : 'None'}
-                      </span>
-                      <span>Max: {outputs().maxSpeedPerGear[gear.index].toFixed(0)} kph</span>
-                    </div>
+              return (
+                <div class="border border-neutral-700/50 bg-neutral-900/30 p-3">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-medium text-neutral-300">{gear.name}</span>
+                    <span
+                      class="text-xs px-2 py-0.5"
+                      classList={{
+                        'bg-red-500/20 text-red-400 border border-red-500/30':
+                          percentExceeded() > 50,
+                        'bg-amber-500/20 text-amber-400 border border-amber-500/30':
+                          percentExceeded() > 0 && percentExceeded() <= 50,
+                        'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30':
+                          percentExceeded() === 0,
+                      }}
+                    >
+                      {percentExceeded() > 0
+                        ? `${percentExceeded().toFixed(0)}% wheelspin`
+                        : 'Full traction'}
+                    </span>
                   </div>
-                );
-              }}
-            </For>
-          </div>
+
+                  <div class="h-2 bg-neutral-800 rounded">
+                    <div
+                      class="h-full bg-red-500/70 transition-all"
+                      style={{ width: `${percentExceeded()}%` }}
+                    />
+                  </div>
+
+                  <div class="flex justify-between text-[10px] text-neutral-500">
+                    <span>
+                      Grip zone:{' '}
+                      {tractionOkPoints().length > 0
+                        ? `${tractionOkPoints()[0]?.rpm} - ${tractionOkPoints()[tractionOkPoints().length - 1]?.rpm} RPM`
+                        : 'None'}
+                    </span>
+                    <span>Max: {props.outputs.maxSpeedPerGear[gear.index].toFixed(0)} kph</span>
+                  </div>
+                </div>
+              );
+            }}
+          </For>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { Component, createMemo, Show, For } from "solid-js";
+import { Component, createMemo, Show } from "solid-js";
 import { SectionHeader } from "./ui/section-header";
-import { Dropdown, DropdownOption } from "./ui/dropdown";
-import { HelpTooltip, HelpLink } from "./ui/help-tooltip";
+import { Dropdown, type DropdownOption } from "./ui/dropdown";
 import { NumberInput } from "./ui/number-input";
+import { InputRow } from "./ui/input-row";
+import { SegmentedRow, type SegmentedRowOption } from "./ui/segmented-row";
 import { vehicleInputs, setVehicleInputs } from "../stores/vehicle";
 import {
   carData,
@@ -13,148 +14,13 @@ import {
   getSelectedCar,
   getSelectedEngine,
 } from "../stores/car-data";
-
-// Help tooltip content for each input field
-const HELP_CONTENT: Record<
-  string,
-  { description: string; articles?: HelpLink[]; videos?: HelpLink[] }
-> = {
-  carSelection: {
-    description:
-      "Select the vehicle chassis and body configuration from your imported car data. This determines the base platform including wheelbase, track width, and suspension geometry that will be used for calculations.",
-    videos: [
-      { label: "Engine & Transmission Swap Guide", url: "https://youtu.be/iP2bXvSc0WU?si=Tcy02GPdHieKN8gz" },
-    ],
-  },
-  engineSelection: {
-    description:
-      "Choose the engine/powertrain configuration. You can use the car's default engine or select a swapped engine from another vehicle. Engine selection affects power delivery, torque curves, and optimal gear ratios.",
-    videos: [
-      { label: "Engine & Transmission Swap Guide", url: "https://youtu.be/iP2bXvSc0WU?si=Tcy02GPdHieKN8gz" },
-      { label: "Engine Talk", url: "https://youtu.be/A6SZfn6Kgfg?si=J3IxTU4NBJ42-M10" },
-    ],
-  },
-  weight: {
-    description:
-      "Total vehicle curb weight in kilograms, including fluids but without passengers or cargo. Lighter vehicles accelerate faster and handle better, but may sacrifice traction. Consider weight reduction mods carefully - removing too much can upset balance.",
-    articles: [{ label: "Wikipedia: Curb Weight", url: "https://en.wikipedia.org/wiki/Curb_weight" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  frontWeightDistribution: {
-    description:
-      "Percentage of total weight resting on the front axle. Most vehicles range from 50-60%. Front-heavy cars (>55%) tend to understeer, while rear-biased setups (<50%) promote oversteer. Adjust based on your driving style and track characteristics.",
-    articles: [{ label: "Wikipedia: Weight Distribution", url: "https://en.wikipedia.org/wiki/Weight_distribution" }],
-    videos: [
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  frontWheelOffset: {
-    description:
-      "Distance in centimeters from the wheel centerline to the hub mounting surface for front wheels. Positive offset pushes wheels inward, negative pushes them outward. Affects scrub radius, steering feel, and fender clearance. Incorrect offset can cause accelerated tire wear and handling issues.",
-    articles: [{ label: "Wikipedia: Wheel Offset", url: "https://en.wikipedia.org/wiki/Offset_(wheel)" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  rearWheelOffset: {
-    description:
-      "Distance in centimeters from the wheel centerline to the hub mounting surface for rear wheels. On RWD/AWD vehicles, rear offset significantly impacts traction and stability. Wider stance (more negative offset) improves grip but may cause rubbing issues.",
-    articles: [{ label: "Wikipedia: Wheel Offset", url: "https://en.wikipedia.org/wiki/Offset_(wheel)" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  rideFrequency: {
-    description:
-      "Natural oscillation frequency of the suspension in Hz. Lower values (2-3 Hz) provide comfort, higher values (3-5 Hz) improve handling response. Race cars typically run 3.5-5 Hz. Front should generally be slightly lower than rear to prevent pitch oscillation.",
-    articles: [{ label: "Wikipedia: Suspension", url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)" }],
-    videos: [
-      { label: "Springs & Dampers Guide", url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  rollGradient: {
-    description:
-      "Degrees of body roll per G of lateral acceleration. Lower values mean less body roll during cornering. Street cars: 0.4-0.7 deg/G. Track cars: 0.2-0.4 deg/G. Race cars: 0.02-0.2 deg/G. Too stiff causes snap oversteer and reduces tire compliance.",
-    articles: [{ label: "Wikipedia: Roll Center", url: "https://en.wikipedia.org/wiki/Roll_center" }],
-    videos: [
-      { label: "Anti-Roll Bars Guide", url: "https://youtu.be/It-V_Yt_PDc?si=njpT1_KasdUdZGxY" },
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  wheelDiameter: {
-    description:
-      "Rim diameter in inches. Larger wheels accommodate bigger brakes and reduce sidewall flex for sharper handling, but add unsprung mass which hurts ride and acceleration. Higher-powered vehicles benefit from larger wheels. Underpowered cars should avoid oversized wheels as they slow acceleration.",
-    articles: [{ label: "Wikipedia: Wheel Sizing", url: "https://en.wikipedia.org/wiki/Wheel_sizing" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  profile: {
-    description:
-      "Tire aspect ratio - sidewall height as a percentage of tire width. Lower profile (30-45%) provides quicker steering response and less flex, but harsher ride and more vulnerable to pothole damage. Higher profile (50-65%) offers better comfort and protection. Match to your wheel diameter and intended use.",
-    articles: [{ label: "Wikipedia: Tire Code", url: "https://en.wikipedia.org/wiki/Tire_code" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  tireWidth: {
-    description:
-      "Tire tread width in millimeters. Wider tires provide more grip but increase rolling resistance, weight, and risk of hydroplaning. Width should match your vehicle's power - excessive width on low-power cars wastes grip potential and adds drag. Consider front/rear stagger for RWD vehicles.",
-    articles: [{ label: "Wikipedia: Tire Code", url: "https://en.wikipedia.org/wiki/Tire_code" }],
-    videos: [
-      { label: "Wheels & Body Talk", url: "https://youtu.be/1-7kXw3KWao?si=LDoJEixORdoFeNgS" },
-    ],
-  },
-  cogHeight: {
-    description:
-      "Center of gravity height from ground in inches. Lower CoG dramatically improves handling, reducing body roll and weight transfer. Typical values: Sports cars 18-20\", Sedans 20-24\", SUVs 26-30\". Lowering suspension, lightweight wheels, and low-mounted components all help reduce CoG.",
-    articles: [{ label: "Wikipedia: Center of Mass", url: "https://en.wikipedia.org/wiki/Center_of_mass" }],
-    videos: [
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  acceleration: {
-    description:
-      "Target acceleration time from 0 to 100 km/h in seconds. Used to calculate optimal gear ratios and final drive. Realistic targets depend on power-to-weight ratio. Sub-4s requires 400+ hp/ton, 4-6s needs 200-400 hp/ton, 6-10s is typical for 100-200 hp/ton.",
-    articles: [{ label: "Wikipedia: Car Performance", url: "https://en.wikipedia.org/wiki/Car_performance" }],
-    videos: [
-      { label: "Gear Ratios Guide", url: "https://youtu.be/8_SaobHPhWs?si=_5gsrOEVdybXMOXN" },
-    ],
-  },
-  redlineRpm: {
-    description:
-      "Engine rev limiter (redline) in RPM. This is the maximum engine speed before the limiter kicks in. Used to display the redline on speed/RPM charts and calculate maximum speeds per gear. Typical values: economy cars 6000-7000, sports cars 7000-8500, race engines 8000-10000+.",
-    articles: [{ label: "Wikipedia: Redline", url: "https://en.wikipedia.org/wiki/Redline" }],
-    videos: [
-      { label: "Engine Talk", url: "https://youtu.be/A6SZfn6Kgfg?si=J3IxTU4NBJ42-M10" },
-    ],
-  },
-  maxSpeed118m: {
-    description:
-      "Maximum sustained cornering speed in km/h at 118m radius - the standard skidpad test. This indicates lateral grip capability. Higher speeds require better tires, lower CoG, and stiffer suspension. Used to calculate lateral G capability and appropriate spring/damper rates.",
-    articles: [{ label: "Wikipedia: Skidpad", url: "https://en.wikipedia.org/wiki/Skidpad" }],
-    videos: [
-      { label: "Suspension Talk", url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq" },
-    ],
-  },
-  drivetrain: {
-    description:
-      "Power delivery configuration. FWD (front-wheel drive) is efficient but limited by weight transfer under acceleration. RWD (rear-wheel drive) allows better weight transfer utilization. AWD distributes power to all wheels for maximum traction but adds weight and complexity.",
-    articles: [{ label: "Wikipedia: Drivetrain", url: "https://en.wikipedia.org/wiki/Drivetrain" }],
-    videos: [
-      { label: "Transmission Talk", url: "https://youtu.be/oGohWF7HZrw?si=yFHI1mTFhoMXlQ2M" },
-    ],
-  },
-};
-
-const DRIVETRAIN_OPTIONS = ["FWD", "RWD/AWD"] as const;
-const WHEEL_DIAMETER_OPTIONS = [16, 17, 18, 19, 20, 21, 22] as const;
+import {
+  HELP_CONTENT,
+  DRIVETRAIN_OPTIONS,
+  WHEEL_DIAMETER_OPTIONS,
+} from "./input-section-constants";
 
 export const InputSection: Component = () => {
-  
   const carOptions = createMemo((): DropdownOption[] => {
     if (carData.length === 0) {
       return [{ value: "", label: "No cars imported" }];
@@ -165,7 +31,6 @@ export const InputSection: Component = () => {
     });
   });
 
-  
   const engineOptions = createMemo((): DropdownOption[] => {
     if (carData.length === 0) {
       return [{ value: "", label: "No engines imported" }];
@@ -179,9 +44,7 @@ export const InputSection: Component = () => {
         const name = car.car || "Unknown";
         let label = name;
 
-        // Add suffix based on name
         if (name.toLowerCase().endsWith("engine")) {
-          // Keep as-is
         } else if (name.toLowerCase().includes("swapped engine")) {
           label = name.replace(/swapped engine/i, "[Swapped Engine]");
         } else {
@@ -192,7 +55,6 @@ export const InputSection: Component = () => {
       });
   });
 
-  // Handle car selection change
   const handleCarChange = (carName: string) => {
     const index = carData.findIndex((car) => car.car === carName);
     if (index >= 0) {
@@ -200,7 +62,6 @@ export const InputSection: Component = () => {
     }
   };
 
-  // Handle engine selection change
   const handleEngineChange = (carName: string) => {
     const index = carData.findIndex((car) => car.car === carName);
     if (index >= 0) {
@@ -208,7 +69,6 @@ export const InputSection: Component = () => {
     }
   };
 
-  // Slider fill percentage calculator
   const getSliderFill = (value: number, min: number, max: number) => {
     const range = max - min;
     if (range === 0) return 0;
@@ -219,7 +79,6 @@ export const InputSection: Component = () => {
     <div class="border border-neutral-800/50 bg-neutral-950/50">
       <SectionHeader title="Vehicle Input" variant="input" />
 
-      {/* Selection info banner */}
       <Show
         when={selectedCarIndex() !== null || selectedEngineIndex() !== null}
       >
@@ -247,12 +106,10 @@ export const InputSection: Component = () => {
 
       <table class="w-full border-collapse text-sm">
         <tbody>
-          {/* Car Selection */}
           <tr>
             <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50 w-1/3">
               <div class="flex items-center justify-between">
                 <span>Car selection</span>
-                <HelpTooltip description={HELP_CONTENT.carSelection.description} />
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0">
@@ -266,12 +123,10 @@ export const InputSection: Component = () => {
             </td>
           </tr>
 
-          {/* Engine Selection */}
           <tr>
             <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Engine selection</span>
-                <HelpTooltip description={HELP_CONTENT.engineSelection.description} />
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0">
@@ -285,110 +140,73 @@ export const InputSection: Component = () => {
             </td>
           </tr>
 
-          {/* Weight */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Weight</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.weight.description}
-                  articles={HELP_CONTENT.weight.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.weight}
-                  onChange={(val) => setVehicleInputs("weight", val)}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Weight"
+            description={HELP_CONTENT.weight.description}
+            articles={HELP_CONTENT.weight.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.weight}
+                onChange={(val) => setVehicleInputs("weight", val)}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
+            </div>
+          </InputRow>
 
-          {/* Front Weight Distribution */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Front weight distribution</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.frontWeightDistribution.description}
-                  articles={HELP_CONTENT.frontWeightDistribution.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.frontWeightDistribution}
-                  onChange={(val) => setVehicleInputs("frontWeightDistribution", val)}
-                  step={0.1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Front weight distribution"
+            description={HELP_CONTENT.frontWeightDistribution.description}
+            articles={HELP_CONTENT.frontWeightDistribution.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.frontWeightDistribution}
+                onChange={(val) => setVehicleInputs("frontWeightDistribution", val)}
+                step={0.1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+            </div>
+          </InputRow>
 
-          {/* Front Wheel Offset */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Front wheel offset</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.frontWheelOffset.description}
-                  articles={HELP_CONTENT.frontWheelOffset.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.frontWheelOffset}
-                  onChange={(val) => setVehicleInputs("frontWheelOffset", val)}
-                  step={0.1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Front wheel offset"
+            description={HELP_CONTENT.frontWheelOffset.description}
+            articles={HELP_CONTENT.frontWheelOffset.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.frontWheelOffset}
+                onChange={(val) => setVehicleInputs("frontWheelOffset", val)}
+                step={0.1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
+            </div>
+          </InputRow>
 
-          {/* Rear Wheel Offset */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Rear wheel offset</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.rearWheelOffset.description}
-                  articles={HELP_CONTENT.rearWheelOffset.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.rearWheelOffset}
-                  onChange={(val) => setVehicleInputs("rearWheelOffset", val)}
-                  step={0.1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Rear wheel offset"
+            description={HELP_CONTENT.rearWheelOffset.description}
+            articles={HELP_CONTENT.rearWheelOffset.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.rearWheelOffset}
+                onChange={(val) => setVehicleInputs("rearWheelOffset", val)}
+                step={0.1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
+            </div>
+          </InputRow>
 
-          {/* Ride Frequency - Slider */}
           <tr>
             <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Ride frequency</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.rideFrequency.description}
-                  articles={HELP_CONTENT.rideFrequency.articles}
-                />
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
@@ -437,15 +255,10 @@ export const InputSection: Component = () => {
             </td>
           </tr>
 
-          {/* Roll Gradient - Slider */}
           <tr>
             <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
               <div class="flex items-center justify-between">
                 <span>Roll gradient</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.rollGradient.description}
-                  articles={HELP_CONTENT.rollGradient.articles}
-                />
               </div>
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
@@ -494,225 +307,123 @@ export const InputSection: Component = () => {
             </td>
           </tr>
 
-          {/* Wheel Diameter - Segmented */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Wheel diameter</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.wheelDiameter.description}
-                  articles={HELP_CONTENT.wheelDiameter.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center px-2 py-1.5">
-                <div class="flex gap-0.5">
-                  <For each={[...WHEEL_DIAMETER_OPTIONS]}>
-                    {(size) => (
-                      <button
-                        type="button"
-                        onClick={() => setVehicleInputs("wheelDiameter", size)}
-                        class="px-2 py-1 text-xs transition-all duration-100"
-                        classList={{
-                          "bg-neutral-500/20 text-neutral-400 border border-neutral-500/50":
-                            vehicleInputs.wheelDiameter === size,
-                          "bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300":
-                            vehicleInputs.wheelDiameter !== size,
-                        }}
-                      >
-                        {size}
-                      </button>
-                    )}
-                  </For>
-                </div>
-                <span class="px-2 text-neutral-500 text-xs">in</span>
-              </div>
-            </td>
-          </tr>
+          <SegmentedRow
+            label="Wheel diameter"
+            description={HELP_CONTENT.wheelDiameter.description}
+            articles={HELP_CONTENT.wheelDiameter.articles}
+            value={vehicleInputs.wheelDiameter}
+            onChange={(val) => setVehicleInputs("wheelDiameter", val as number)}
+            unit="in"
+            options={WHEEL_DIAMETER_OPTIONS.map((size) => ({ label: size.toString(), value: size })) as SegmentedRowOption[]}
+          />
 
-          {/* Profile */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Profile</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.profile.description}
-                  articles={HELP_CONTENT.profile.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.profile}
-                  onChange={(val) => setVehicleInputs("profile", val)}
-                  step={1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Profile"
+            description={HELP_CONTENT.profile.description}
+            articles={HELP_CONTENT.profile.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.profile}
+                onChange={(val) => setVehicleInputs("profile", val)}
+                step={1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+            </div>
+          </InputRow>
 
-          {/* Tire Width */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Tire width</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.tireWidth.description}
-                  articles={HELP_CONTENT.tireWidth.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.tireWidth}
-                  onChange={(val) => setVehicleInputs("tireWidth", val)}
-                  step={5}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Tire width"
+            description={HELP_CONTENT.tireWidth.description}
+            articles={HELP_CONTENT.tireWidth.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.tireWidth}
+                onChange={(val) => setVehicleInputs("tireWidth", val)}
+                step={5}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
+            </div>
+          </InputRow>
 
-          {/* CoG Height */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>CoG height</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.cogHeight.description}
-                  articles={HELP_CONTENT.cogHeight.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.cogHeight}
-                  onChange={(val) => setVehicleInputs("cogHeight", val)}
-                  step={0.1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="CoG height"
+            description={HELP_CONTENT.cogHeight.description}
+            articles={HELP_CONTENT.cogHeight.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.cogHeight}
+                onChange={(val) => setVehicleInputs("cogHeight", val)}
+                step={0.1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
+            </div>
+          </InputRow>
 
-          {/* 0-100 km/h */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>0-100 km/h</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.acceleration.description}
-                  articles={HELP_CONTENT.acceleration.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.acceleration0to100}
-                  onChange={(val) => setVehicleInputs("acceleration0to100", val)}
-                  step={0.1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="0-100 km/h"
+            description={HELP_CONTENT.acceleration.description}
+            articles={HELP_CONTENT.acceleration.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.acceleration0to100}
+                onChange={(val) => setVehicleInputs("acceleration0to100", val)}
+                step={0.1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
+            </div>
+          </InputRow>
 
-          {/* Redline RPM */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Redline RPM</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.redlineRpm.description}
-                  articles={HELP_CONTENT.redlineRpm.articles}
-                  videos={HELP_CONTENT.redlineRpm.videos}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.redlineRpm}
-                  onChange={(val) => setVehicleInputs("redlineRpm", val)}
-                  step={100}
-                  min={3000}
-                  max={15000}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Redline RPM"
+            description={HELP_CONTENT.redlineRpm.description}
+            articles={HELP_CONTENT.redlineRpm.articles}
+            videos={HELP_CONTENT.redlineRpm.videos}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.redlineRpm}
+                onChange={(val) => setVehicleInputs("redlineRpm", val)}
+                step={100}
+                min={3000}
+                max={15000}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
+            </div>
+          </InputRow>
 
-          {/* Max Speed @ 118m radius */}
-          <tr>
-            <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Max speed @ 118m</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.maxSpeed118m.description}
-                  articles={HELP_CONTENT.maxSpeed118m.articles}
-                />
-              </div>
-            </td>
-            <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center">
-                <NumberInput
-                  value={vehicleInputs.maxSpeed118mRadius}
-                  onChange={(val) => setVehicleInputs("maxSpeed118mRadius", val)}
-                  step={1}
-                  class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
-                />
-                <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
-              </div>
-            </td>
-          </tr>
+          <InputRow
+            label="Max speed @ 118m"
+            description={HELP_CONTENT.maxSpeed118m.description}
+            articles={HELP_CONTENT.maxSpeed118m.articles}
+          >
+            <div class="flex items-center">
+              <NumberInput
+                value={vehicleInputs.maxSpeed118mRadius}
+                onChange={(val) => setVehicleInputs("maxSpeed118mRadius", val)}
+                step={1}
+                class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
+              />
+              <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
+            </div>
+          </InputRow>
 
-          {/* Drivetrain - Segmented */}
-          <tr>
-            <td class="border-r border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50">
-              <div class="flex items-center justify-between">
-                <span>Drivetrain</span>
-                <HelpTooltip
-                  description={HELP_CONTENT.drivetrain.description}
-                  articles={HELP_CONTENT.drivetrain.articles}
-                />
-              </div>
-            </td>
-            <td class="border-neutral-800/50 p-0 bg-neutral-800/40">
-              <div class="flex items-center px-2 py-1.5">
-                <div class="flex gap-0.5">
-                  <For each={[...DRIVETRAIN_OPTIONS]}>
-                    {(option) => (
-                      <button
-                        type="button"
-                        onClick={() => setVehicleInputs("drivetrain", option)}
-                        class="px-3 py-1 text-xs transition-all duration-100"
-                        classList={{
-                          "bg-neutral-500/20 text-neutral-400 border border-neutral-500/50":
-                            vehicleInputs.drivetrain === option,
-                          "bg-neutral-900/50 text-neutral-500 border border-neutral-700/50 hover:text-neutral-300":
-                            vehicleInputs.drivetrain !== option,
-                        }}
-                      >
-                        {option}
-                      </button>
-                    )}
-                  </For>
-                </div>
-              </div>
-            </td>
-          </tr>
+          <SegmentedRow
+            label="Drivetrain"
+            description={HELP_CONTENT.drivetrain.description}
+            articles={HELP_CONTENT.drivetrain.articles}
+            value={vehicleInputs.drivetrain}
+            onChange={(val) => setVehicleInputs("drivetrain", val as string)}
+            options={DRIVETRAIN_OPTIONS.map((opt) => ({ label: opt, value: opt })) as SegmentedRowOption[]}
+          />
         </tbody>
       </table>
     </div>
