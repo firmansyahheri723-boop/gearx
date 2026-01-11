@@ -1,18 +1,23 @@
+import { createFileRoute } from '@tanstack/solid-router';
 import { For, createMemo } from 'solid-js';
-import { SectionHeader } from '../ui/section-header';
-import { DataTable } from '../ui/data-table';
-import { SuspensionOutput } from '../suspension-output';
-import { vehicleInputs } from '../../stores/vehicle';
-import { calculateSuspensionOutputs } from '../../utils/suspension';
+import { SectionHeader } from '../components/ui/section-header';
+import { DataTable } from '../components/ui/data-table';
+import { SuspensionOutput } from '../components/suspension-output';
+import { vehicleInputs } from '../stores/vehicle';
+import { calculateSuspensionOutputs } from '../utils/suspension';
 
-import { SuspensionParametersSection } from './suspension/suspension-parameters-section';
-import { SpringsStiffnessSection } from './suspension/springs-stiffness-section';
-import { AntiRollBarsSection } from './suspension/anti-roll-bars-section';
-import { DampersSection } from './suspension/dampers-section';
-import { AccelerationMetricsSection } from './suspension/acceleration-metrics-section';
-import { FormulaReferenceSection } from './suspension/formula-reference-section';
+import { SuspensionParametersSection } from '../components/tabs/suspension/suspension-parameters-section';
+import { SpringsStiffnessSection } from '../components/tabs/suspension/springs-stiffness-section';
+import { AntiRollBarsSection } from '../components/tabs/suspension/anti-roll-bars-section';
+import { DampersSection } from '../components/tabs/suspension/dampers-section';
+import { AccelerationMetricsSection } from '../components/tabs/suspension/acceleration-metrics-section';
+import { FormulaReferenceSection } from '../components/tabs/suspension/formula-reference-section';
 
-export function SuspensionTab() {
+export const Route = createFileRoute('/suspension')({
+  component: Suspension,
+});
+
+function Suspension() {
   const cogHeightM = () => vehicleInputs.cogHeight * 0.0254;
 
   const outputs = createMemo(() =>

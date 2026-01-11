@@ -1,13 +1,14 @@
+import { createFileRoute } from '@tanstack/solid-router';
 import { For, createMemo } from 'solid-js';
 import type { ColumnDef } from '@tanstack/solid-table';
-import { SectionHeader } from '../ui/section-header';
-import { DataTable } from '../ui/data-table';
-import { GearSpeedChart } from '../ui/gear-speed-chart';
-import { GearTorqueChart } from '../ui/gear-torque-chart';
-import { MetricCard } from '../ui/metric-card';
-import type { HelpLink } from '../ui/help-tooltip';
+import { SectionHeader } from '../components/ui/section-header';
+import { DataTable } from '../components/ui/data-table';
+import { GearSpeedChart } from '../components/ui/gear-speed-chart';
+import { GearTorqueChart } from '../components/ui/gear-torque-chart';
+import { MetricCard } from '../components/ui/metric-card';
+import type { HelpLink } from '../components/ui/help-tooltip';
 import { RadioGroupRoot, RadioGroupItem, RadioGroupItemControl, RadioGroupItemText, RadioGroupItemHiddenInput, type RadioGroupValueChangeDetails } from '@ark-ui/solid/radio-group';
-import { GEAR_COLORS } from '../../constants/colors';
+import { GEAR_COLORS } from '../constants/colors';
 import {
   vehicleInputs,
   torqueRpmData,
@@ -17,11 +18,11 @@ import {
   setTireCompound,
   tractionMode,
   setTractionMode,
-} from '../../stores/vehicle';
-import { calculateGearboxOutputs } from '../../utils/gearbox';
-import type { TireCompound, TractionMode, SpeedRpmPoint } from '../../types';
-import { GEAR_LABELS } from '../../types';
-import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from './gearbox/gearbox-tab-constants';
+} from '../stores/vehicle';
+import { calculateGearboxOutputs } from '../utils/gearbox';
+import type { TireCompound, TractionMode, SpeedRpmPoint } from '../types';
+import { GEAR_LABELS } from '../types';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../components/tabs/gearbox/gearbox-tab-constants';
 
 const HELP_CONTENT: Record<
   string,
@@ -107,7 +108,11 @@ const HELP_CONTENT: Record<
   },
 };
 
-export function GearboxTab() {
+export const Route = createFileRoute('/gearbox')({
+  component: Gearbox,
+});
+
+function Gearbox() {
   const outputs = createMemo(() =>
     calculateGearboxOutputs({
       frontWheel: vehicleInputs.frontWheel,

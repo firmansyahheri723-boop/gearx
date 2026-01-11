@@ -1,9 +1,10 @@
+import { createFileRoute } from '@tanstack/solid-router';
 import { For, createMemo, createSignal } from 'solid-js';
 import type { ColumnDef, SortingState } from '@tanstack/solid-table';
-import { DataTable } from '../ui/data-table';
-import { carData, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '../../stores/car-data';
-import { CSV_COLUMNS } from '../../utils/csv';
-import type { CarData } from '../../types';
+import { DataTable } from '../components/ui/data-table';
+import { carData, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '../stores/car-data';
+import { CSV_COLUMNS } from '../utils/csv';
+import type { CarData } from '../types';
 
 // Sort car data: regular cars first, then engines, then transmissions
 // Within each group, items are sorted alphabetically
@@ -97,7 +98,11 @@ type CarDataRow = CarData & {
   _originalIndex: number;
 }
 
-export function DatabaseTab() {
+export const Route = createFileRoute('/database')({
+  component: Database,
+});
+
+function Database() {
   // Sorting state
   const [sorting, setSorting] = createSignal<SortingState>([]);
 
