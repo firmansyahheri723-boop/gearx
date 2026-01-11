@@ -1,5 +1,6 @@
 import { Component, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
 import type { TorqueExtractorCalibration } from '../../../types/extraction';
+import { NumberInput } from '../number-input';
 
 interface CalibrationOverlayProps {
   imageData: ImageData;
@@ -241,19 +242,17 @@ export const CalibrationOverlay: Component<CalibrationOverlayProps> = (props) =>
           <span class="text-[10px] text-neutral-500 uppercase tracking-wider block">RPM Scale</span>
           <div class="flex gap-2 items-center">
             <span class="text-[10px] text-neutral-600 w-8 uppercase">Min:</span>
-            <input
-              type="number"
+            <NumberInput
               value={props.calibration.minRpm}
-              onInput={(e) => props.onChange({ ...props.calibration, minRpm: parseFloat(e.currentTarget.value) || 0 })}
+              onChange={(val) => props.onChange({ ...props.calibration, minRpm: val })}
               class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
             />
           </div>
           <div class="flex gap-2 items-center">
             <span class="text-[10px] text-neutral-600 w-8 uppercase">Max:</span>
-            <input
-              type="number"
+            <NumberInput
               value={props.calibration.maxRpm}
-              onInput={(e) => props.onChange({ ...props.calibration, maxRpm: parseFloat(e.currentTarget.value) || 0 })}
+              onChange={(val) => props.onChange({ ...props.calibration, maxRpm: val })}
               class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
             />
           </div>
@@ -263,19 +262,17 @@ export const CalibrationOverlay: Component<CalibrationOverlayProps> = (props) =>
           <span class="text-[10px] text-neutral-500 uppercase tracking-wider block">Torque (Nm)</span>
           <div class="flex gap-2 items-center">
             <span class="text-[10px] text-neutral-600 w-8 uppercase">Min:</span>
-            <input
-              type="number"
+            <NumberInput
               value={props.calibration.minTorque}
-              onInput={(e) => props.onChange({ ...props.calibration, minTorque: parseFloat(e.currentTarget.value) || 0 })}
+              onChange={(val) => props.onChange({ ...props.calibration, minTorque: val })}
               class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
             />
           </div>
           <div class="flex gap-2 items-center">
             <span class="text-[10px] text-neutral-600 w-8 uppercase">Max:</span>
-            <input
-              type="number"
+            <NumberInput
               value={props.calibration.maxTorque}
-              onInput={(e) => props.onChange({ ...props.calibration, maxTorque: parseFloat(e.currentTarget.value) || 0 })}
+              onChange={(val) => props.onChange({ ...props.calibration, maxTorque: val })}
               class="flex-1 bg-neutral-800 border border-neutral-700 text-neutral-300 px-2 py-1.5 text-xs focus:border-neutral-500 focus:outline-none"
             />
           </div>

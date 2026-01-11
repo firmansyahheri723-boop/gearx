@@ -1,6 +1,7 @@
 import { Component, createSignal, Show } from 'solid-js';
 import type { GearRatio } from '../../types';
 import { GEAR_COLORS, FINAL_DRIVE_COLOR } from '../../constants/colors';
+import { NumberInput } from './number-input';
 
 interface GearSliderProps {
   gear: GearRatio;
@@ -59,12 +60,11 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
                 </button>
               }
             >
-              <input
-                type="number"
+              <NumberInput
                 value={props.gear.min}
-                step="0.1"
-                onInput={(e) => props.onMinChange(parseFloat(e.currentTarget.value) || 0)}
+                onChange={(val) => props.onMinChange(val)}
                 onBlur={() => setIsEditing(false)}
+                step={0.1}
                 class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
                 style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
               />
@@ -117,12 +117,11 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
                 </button>
               }
             >
-              <input
-                type="number"
+              <NumberInput
                 value={props.gear.max}
-                step="0.1"
-                onInput={(e) => props.onMaxChange(parseFloat(e.currentTarget.value) || 0)}
+                onChange={(val) => props.onMaxChange(val)}
                 onBlur={() => setIsEditing(false)}
+                step={0.1}
                 class="w-full px-1.5 py-0.5 bg-neutral-800 text-xs border border-neutral-700 focus:outline-none"
                 style={{ color: gearColor(), "border-color": `${gearColor()}80` }}
               />
@@ -131,11 +130,10 @@ export const GearSlider: Component<GearSliderProps> = (props) => {
         </div>
       </td>
       <td class="px-3 py-2.5 bg-neutral-900/30 w-24 border-r border-neutral-800/50">
-        <input
-          type="number"
-          value={props.gear.ratio.toFixed(2)}
-          step="0.01"
-          onInput={(e) => props.onRatioChange(parseFloat(e.currentTarget.value) || 0)}
+        <NumberInput
+          value={props.gear.ratio}
+          onChange={(val) => props.onRatioChange(val)}
+          step={0.01}
           class="w-full bg-transparent text-center focus:outline-none font-medium"
           style={{ color: gearColor() }}
         />

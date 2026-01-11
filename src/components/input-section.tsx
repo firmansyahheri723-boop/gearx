@@ -2,6 +2,7 @@ import { Component, createMemo, Show, For } from "solid-js";
 import { SectionHeader } from "./ui/section-header";
 import { Dropdown, DropdownOption } from "./ui/dropdown";
 import { HelpTooltip, HelpLink } from "./ui/help-tooltip";
+import { NumberInput } from "./ui/number-input";
 import { vehicleInputs, setVehicleInputs } from "../stores/vehicle";
 import {
   carData,
@@ -297,15 +298,9 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.weight}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "weight",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
+                  onChange={(val) => setVehicleInputs("weight", val)}
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
@@ -326,16 +321,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.frontWeightDistribution}
+                  onChange={(val) => setVehicleInputs("frontWeightDistribution", val)}
                   step={0.1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "frontWeightDistribution",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
@@ -356,16 +345,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.frontWheelOffset}
+                  onChange={(val) => setVehicleInputs("frontWheelOffset", val)}
                   step={0.1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "frontWheelOffset",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
@@ -386,16 +369,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.rearWheelOffset}
+                  onChange={(val) => setVehicleInputs("rearWheelOffset", val)}
                   step={0.1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "rearWheelOffset",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
@@ -448,20 +425,12 @@ export const InputSection: Component = () => {
                   />
                 </div>
                 <span class="text-neutral-600 text-xs w-6">5</span>
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.desiredRideFrequency}
+                  onChange={(val) => setVehicleInputs("desiredRideFrequency", val)}
                   step={0.1}
                   min={3}
                   max={5}
-                  onInput={(e) => {
-                    const val = parseFloat(e.currentTarget.value);
-                    if (!isNaN(val))
-                      setVehicleInputs(
-                        "desiredRideFrequency",
-                        Math.min(5, Math.max(3, val)),
-                      );
-                  }}
                   class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
                 />
               </div>
@@ -513,20 +482,12 @@ export const InputSection: Component = () => {
                   />
                 </div>
                 <span class="text-neutral-600 text-xs w-6">.7</span>
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.desiredRollGradient}
+                  onChange={(val) => setVehicleInputs("desiredRollGradient", val)}
                   step={0.01}
                   min={0.02}
                   max={0.7}
-                  onInput={(e) => {
-                    const val = parseFloat(e.currentTarget.value);
-                    if (!isNaN(val))
-                      setVehicleInputs(
-                        "desiredRollGradient",
-                        Math.min(0.7, Math.max(0.02, val)),
-                      );
-                  }}
                   class="w-14 px-2 py-0.5 bg-neutral-900/50 border border-neutral-700/50 rounded text-neutral-400 text-sm text-center focus:outline-none focus:text-emerald-400"
                 />
               </div>
@@ -583,16 +544,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.profile}
+                  onChange={(val) => setVehicleInputs("profile", val)}
                   step={1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "profile",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
@@ -613,16 +568,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.tireWidth}
+                  onChange={(val) => setVehicleInputs("tireWidth", val)}
                   step={5}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "tireWidth",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">mm</span>
@@ -643,16 +592,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.cogHeight}
+                  onChange={(val) => setVehicleInputs("cogHeight", val)}
                   step={0.1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "cogHeight",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">in</span>
@@ -673,16 +616,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.acceleration0to100}
+                  onChange={(val) => setVehicleInputs("acceleration0to100", val)}
                   step={0.1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "acceleration0to100",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">s</span>
@@ -704,18 +641,12 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.redlineRpm}
+                  onChange={(val) => setVehicleInputs("redlineRpm", val)}
                   step={100}
                   min={3000}
                   max={15000}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "redlineRpm",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">rpm</span>
@@ -736,16 +667,10 @@ export const InputSection: Component = () => {
             </td>
             <td class="border-b border-neutral-800/50 p-0 bg-neutral-800/40">
               <div class="flex items-center">
-                <input
-                  type="number"
+                <NumberInput
                   value={vehicleInputs.maxSpeed118mRadius}
+                  onChange={(val) => setVehicleInputs("maxSpeed118mRadius", val)}
                   step={1}
-                  onInput={(e) =>
-                    setVehicleInputs(
-                      "maxSpeed118mRadius",
-                      parseFloat(e.currentTarget.value) || 0,
-                    )
-                  }
                   class="flex-1 px-3 py-2 bg-transparent text-neutral-400 focus:outline-none focus:text-emerald-400"
                 />
                 <span class="px-3 py-2 text-neutral-500 text-xs">km/h</span>
