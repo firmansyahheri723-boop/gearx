@@ -13,7 +13,7 @@ const typeStyles: Record<NotificationType, TypeStyle> = {
     bg: 'bg-emerald-500/20',
     border: 'border-emerald-500/30',
     text: 'text-emerald-400',
-    icon: 'NOM',
+    icon: 'OK',
   },
   error: {
     bg: 'bg-red-500/20',

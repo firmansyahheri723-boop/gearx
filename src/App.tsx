@@ -97,8 +97,8 @@ function App() {
   });
 
   return (
-    <div class="min-h-screen p-4 lg:p-6 font-mono flex justify-center">
-      <div class="w-full max-w-7xl">
+    <div class="min-h-screen p-2 sm:p-4 lg:p-6 font-mono flex justify-center">
+      <div class="w-full max-w-full lg:max-w-7xl">
         <DashboardHeader />
 
         <TabMenu activeTab={activeTab()} onTabChange={handleTabChange} />
@@ -122,7 +122,7 @@ function App() {
         </Switch>
 
         {/* Footer */}
-        <footer class="mt-6 flex items-center justify-center gap-2 text-neutral-700 text-xs">
+        <footer class="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-neutral-700 text-[10px] sm:text-xs">
           <span class="text-neutral-600">{'///'}</span>
           <span>GEARX SUSPENSION CALCULATOR v1.0.0</span>
           <span class="text-neutral-600">{'///'}</span>

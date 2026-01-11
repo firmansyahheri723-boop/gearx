@@ -248,21 +248,21 @@ export const TransmissionSection: Component = () => {
           </span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 mb-10">
-          <div class="p-3 border-r border-neutral-800/30">
+          <div class="p-2 sm:p-3 border-r border-neutral-800/30">
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               redlineRpm={vehicleInputs.redlineRpm}
-              height={320}
+              height={220}
             />
           </div>
-          <div class="p-3">
+          <div class="p-2 sm:p-3">
             <GearTorqueChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               tractionLimit={outputs().tractionLimitTorque}
               peakHpRpm={outputs().peakHpRpm}
-              height={320}
+              height={220}
             />
           </div>
         </div>

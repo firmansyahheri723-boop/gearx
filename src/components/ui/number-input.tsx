@@ -11,6 +11,7 @@ type NumberInputProps = {
   style?: JSX.CSSProperties;
   placeholder?: string;
   disabled?: boolean;
+  id?: string;
 }
 
 export function NumberInput(props: NumberInputProps) {

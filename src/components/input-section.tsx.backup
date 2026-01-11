@@ -87,18 +87,18 @@ export const InputSection: Component = () => {
         <div class="px-3 py-1.5 border-b border-neutral-800/50 bg-neutral-900/50 flex items-center gap-4 text-[10px]">
           <Show when={getSelectedCar()}>
             <span class="flex items-center gap-1.5">
-              <span class="w-2 h-2 bg-green-500 rounded-full" />
+              <span class="w-2 h-2 bg-green-500 rounded-full shrink-0" />
               <span class="text-neutral-400">Chassis:</span>
-              <span class="text-green-400 font-medium">
+              <span class="text-green-400 font-medium truncate max-w-[100px] sm:max-w-none">
                 {getSelectedCar()?.car}
               </span>
             </span>
           </Show>
           <Show when={getSelectedEngine()}>
             <span class="flex items-center gap-1.5">
-              <span class="w-2 h-2 bg-amber-500 rounded-full" />
+              <span class="w-2 h-2 bg-amber-500 rounded-full shrink-0" />
               <span class="text-neutral-400">Engine:</span>
-              <span class="text-amber-400 font-medium">
+              <span class="text-amber-400 font-medium truncate max-w-[100px] sm:max-w-none">
                 {getSelectedEngine()?.car}
               </span>
             </span>
@@ -106,7 +106,8 @@ export const InputSection: Component = () => {
         </div>
       </Show>
 
-      <table class="w-full border-collapse text-sm">
+      {/* Desktop Layout - Table */}
+      <table class="hidden sm:table w-full border-collapse text-sm">
         <tbody>
           <tr>
             <td class="border-r border-b border-neutral-800/50 px-3 py-2 text-xs uppercase tracking-wide text-neutral-400 bg-neutral-900/50 w-1/3">
@@ -429,9 +430,10 @@ export const InputSection: Component = () => {
         </tbody>
       </table>
 
+      {/* Mobile Layout - Stacked */}
       <div class="block sm:hidden space-y-3 p-3">
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Car selection</div>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Car selection</div>
           <Dropdown
             value={vehicleInputs.carSelection}
             options={carOptions()}
@@ -442,7 +444,7 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Engine selection</div>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Engine selection</div>
           <Dropdown
             value={vehicleInputs.engineSelection}
             options={engineOptions()}
@@ -455,21 +457,69 @@ export const InputSection: Component = () => {
         <div class="space-y-1">
           <label for="mobile-weight" class="block text-xs uppercase tracking-wide text-neutral-400">Weight</label>
           <div class="flex items-center">
-            <NumberInput
-              id="mobile-weight"
-              value={vehicleInputs.weight}
-              onChange={(val) => setVehicleInputs("weight", val)}
-              class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
-            />
-            <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
-          </div>
+          <NumberInput
+            id="mobile-weight"
+            value={vehicleInputs.weight}
+            onChange={(val) => setVehicleInputs("weight", val)}
+            class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+          />
+          <span class="px-3 py-2 text-neutral-500 text-xs">kg</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label for="mobile-front-weight-distribution" class="block text-xs uppercase tracking-wide text-neutral-400">Front weight distribution</label>
+        <div class="flex items-center">
+          <NumberInput
+            id="mobile-front-weight-distribution"
+            value={vehicleInputs.frontWeightDistribution}
+            onChange={(val) => setVehicleInputs("frontWeightDistribution", val)}
+            step={0.1}
+            class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+          />
+          <span class="px-3 py-2 text-neutral-500 text-xs">%</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label for="mobile-front-wheel-offset" class="block text-xs uppercase tracking-wide text-neutral-400">Front wheel offset</label>
+        <div class="flex items-center">
+          <NumberInput
+            id="mobile-front-wheel-offset"
+            value={vehicleInputs.frontWheelOffset}
+            onChange={(val) => setVehicleInputs("frontWheelOffset", val)}
+            step={0.1}
+            class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+          />
+          <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label for="mobile-rear-wheel-offset" class="block text-xs uppercase tracking-wide text-neutral-400">Rear wheel offset</label>
+        <div class="flex items-center">
+          <NumberInput
+            id="mobile-rear-wheel-offset"
+            value={vehicleInputs.rearWheelOffset}
+            onChange={(val) => setVehicleInputs("rearWheelOffset", val)}
+            step={0.1}
+            class="flex-1 px-3 py-2 bg-neutral-900/50 border border-neutral-800/50 rounded text-neutral-400 focus:outline-none focus:border-emerald-500/50"
+          />
+          <span class="px-3 py-2 text-neutral-500 text-xs">cm</span>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center justify-between">
+          <label for="mobile-ride-frequency" class="block text-xs uppercase tracking-wide text-neutral-400">Ride frequency</label>
+          <span class="text-sm text-neutral-400">{vehicleInputs.desiredRideFrequency.toFixed(decimals(0.1))} Hz</span>
+        </div>
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-front-weight-dist" class="block text-xs uppercase tracking-wide text-neutral-400">Front weight distribution</label>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Front weight distribution</div>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-front-weight-dist"
               value={vehicleInputs.frontWeightDistribution}
               onChange={(val) => setVehicleInputs("frontWeightDistribution", val)}
               step={0.1}
@@ -480,10 +530,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-front-offset" class="block text-xs uppercase tracking-wide text-neutral-400">Front wheel offset</label>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Front wheel offset</div>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-front-offset"
               value={vehicleInputs.frontWheelOffset}
               onChange={(val) => setVehicleInputs("frontWheelOffset", val)}
               step={0.1}
@@ -494,10 +543,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-rear-offset" class="block text-xs uppercase tracking-wide text-neutral-400">Rear wheel offset</label>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Rear wheel offset</div>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-rear-offset"
               value={vehicleInputs.rearWheelOffset}
               onChange={(val) => setVehicleInputs("rearWheelOffset", val)}
               step={0.1}
@@ -509,7 +557,7 @@ export const InputSection: Component = () => {
 
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label for="mobile-ride-freq" class="block text-xs uppercase tracking-wide text-neutral-400">Ride frequency</label>
+            <label for="mobile-ride-frequency" class="block text-xs uppercase tracking-wide text-neutral-400">Ride frequency</label>
             <span class="text-sm text-neutral-400">{vehicleInputs.desiredRideFrequency.toFixed(decimals(0.1))} Hz</span>
           </div>
           <div class="flex items-center gap-2">
@@ -524,7 +572,22 @@ export const InputSection: Component = () => {
                 />
               </div>
               <input
-                id="mobile-ride-freq"
+                id="mobile-ride-frequency"
+                type="range"
+                min={3}
+                max={5}
+                step={0.1}
+                value={vehicleInputs.desiredRideFrequency}
+                onInput={(e) =>
+                  setVehicleInputs(
+                    "desiredRideFrequency",
+                    parseFloat(e.currentTarget.value),
+                  )
+                }
+                class="absolute inset-0 w-full opacity-0 cursor-pointer"
+              />
+              </div>
+              <input
                 type="range"
                 min={3}
                 max={5}
@@ -551,7 +614,7 @@ export const InputSection: Component = () => {
 
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label for="mobile-roll-grad" class="block text-xs uppercase tracking-wide text-neutral-400">Roll gradient</label>
+            <div class="block text-xs uppercase tracking-wide text-neutral-400">Roll gradient</div>
             <span class="text-sm text-neutral-400">{vehicleInputs.desiredRollGradient.toFixed(decimals(0.01))}</span>
           </div>
           <div class="flex items-center gap-2">
@@ -566,7 +629,6 @@ export const InputSection: Component = () => {
                 />
               </div>
               <input
-                id="mobile-roll-grad"
                 type="range"
                 min={0.02}
                 max={0.7}
@@ -592,7 +654,7 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Wheel diameter</div>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Wheel diameter</div>
           <div class="flex items-center gap-1">
             <For each={WHEEL_DIAMETER_OPTIONS}>
               {(size) => (
@@ -614,10 +676,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-profile" class="block text-xs uppercase tracking-wide text-neutral-400">Profile</label>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Profile</div>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-profile"
               value={vehicleInputs.profile}
               onChange={(val) => setVehicleInputs("profile", val)}
               step={1}
@@ -628,10 +689,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-tire-width" class="block text-xs uppercase tracking-wide text-neutral-400">Tire width</label>
+          <div class="block text-xs uppercase tracking-wide text-neutral-400">Tire width</div>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-tire-width"
               value={vehicleInputs.tireWidth}
               onChange={(val) => setVehicleInputs("tireWidth", val)}
               step={5}
@@ -642,10 +702,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-cog-height" class="block text-xs uppercase tracking-wide text-neutral-400">CoG height</label>
+          <label class="block text-xs uppercase tracking-wide text-neutral-400">CoG height</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-cog-height"
               value={vehicleInputs.cogHeight}
               onChange={(val) => setVehicleInputs("cogHeight", val)}
               step={0.1}
@@ -656,10 +715,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-acceleration" class="block text-xs uppercase tracking-wide text-neutral-400">0-100 km/h</label>
+          <label class="block text-xs uppercase tracking-wide text-neutral-400">0-100 km/h</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-acceleration"
               value={vehicleInputs.acceleration0to100}
               onChange={(val) => setVehicleInputs("acceleration0to100", val)}
               step={0.1}
@@ -670,10 +728,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-redline" class="block text-xs uppercase tracking-wide text-neutral-400">Redline RPM</label>
+          <label class="block text-xs uppercase tracking-wide text-neutral-400">Redline RPM</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-redline"
               value={vehicleInputs.redlineRpm}
               onChange={(val) => setVehicleInputs("redlineRpm", val)}
               step={100}
@@ -686,10 +743,9 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <label for="mobile-max-speed" class="block text-xs uppercase tracking-wide text-neutral-400">Max speed @ 118m</label>
+          <label class="block text-xs uppercase tracking-wide text-neutral-400">Max speed @ 118m</label>
           <div class="flex items-center">
             <NumberInput
-              id="mobile-max-speed"
               value={vehicleInputs.maxSpeed118mRadius}
               onChange={(val) => setVehicleInputs("maxSpeed118mRadius", val)}
               step={1}
@@ -700,7 +756,7 @@ export const InputSection: Component = () => {
         </div>
 
         <div class="space-y-1">
-          <div class="text-xs uppercase tracking-wide text-neutral-400">Drivetrain</div>
+          <label class="block text-xs uppercase tracking-wide text-neutral-400">Drivetrain</label>
           <div class="flex items-center gap-1">
             <For each={DRIVETRAIN_OPTIONS}>
               {(option) => (

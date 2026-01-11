@@ -7,6 +7,16 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -201,4 +211,14 @@ input[type='range']:focus::-moz-range-thumb {
 .placeholder-text {
   background: transparent;
   border: none;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

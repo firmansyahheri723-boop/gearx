@@ -287,11 +287,11 @@ export function GearboxTab() {
               position: "bottom",
             }}
           />
-          <div class="p-4">
+          <div class="p-2 sm:p-4">
             <GearSpeedChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
-              height={280}
+              height={220}
             />
           </div>
         </div>
@@ -305,13 +305,13 @@ export function GearboxTab() {
               position: "bottom",
             }}
           />
-          <div class="p-4">
+          <div class="p-2 sm:p-4">
             <GearTorqueChart
               speedRpmData={chartSpeedRpmData()}
               gearNames={chartGearNames()}
               tractionLimit={outputs().tractionLimitTorque}
               peakHpRpm={outputs().peakHpRpm}
-              height={280}
+              height={220}
             />
           </div>
         </div>
