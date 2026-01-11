@@ -29,6 +29,7 @@ import {
   tireCompound,
   aeroSettings,
 } from "../stores/vehicle";
+import { getSelectedCar, getSelectedEngine } from "../stores/car-data";
 import systemPrompt from "../constants/prompt.md?raw";
 
 export const Route = createFileRoute("/chat")({
@@ -36,37 +37,52 @@ export const Route = createFileRoute("/chat")({
 });
 
 function buildSystemContext(): string {
-  const currentSetup = {
-    vehicle: {
-      weight: vehicleInputs.weight,
-      frontWeightDistribution: vehicleInputs.frontWeightDistribution,
-      drivetrain: vehicleInputs.drivetrain,
-      wheelbase: vehicleInputs.wheelbase,
-      cogHeight: vehicleInputs.cogHeight,
-    },
-    suspension: {
-      desiredRideFrequency: vehicleInputs.desiredRideFrequency,
-      desiredRollGradient: vehicleInputs.desiredRollGradient,
-      dampingRatio: vehicleInputs.dampingRatio,
-    },
-    gearbox: {
-      gearRatios: gearRatios
-        .map((g, i) => ({ gear: i + 1, ratio: g.ratio }))
-        .filter((g) => g.ratio > 0),
-      finalDrive: finalDrive.ratio,
-      tireCompound: tireCompound.value,
-    },
-    aero: {
-      frontAero: aeroSettings.frontAero,
-      rearAero: aeroSettings.rearAero,
-      airResistance: aeroSettings.airResistance,
-    },
+  const gearRatiosStr = gearRatios
+    .map((g, i) => `${i + 1}:${g.ratio}`)
+    .filter((s) => s.endsWith(":0") === false)
+    .join(", ");
+
+  const selectedCar = getSelectedCar();
+  const selectedEngine = getSelectedEngine();
+
+  const carName = selectedCar?.car || vehicleInputs.carSelection || "Unknown";
+  const engineName = selectedEngine?.car || vehicleInputs.engineSelection || "Unknown";
+
+  const formatNum = (n: number | null | undefined, decimals: number = 1): string => {
+    if (n === null || n === undefined) return "N/A";
+    return n.toFixed(decimals).replace(/\.?0+$/, "");
   };
 
-  return systemPrompt.replaceAll(
-    "@setup",
-    JSON.stringify(currentSetup, null, 2),
-  );
+  return systemPrompt
+    .replaceAll("@car_name", carName)
+    .replaceAll("@model", selectedModel())
+    .replaceAll("@weight", formatNum(vehicleInputs.weight))
+    .replaceAll("@front_weight", formatNum(vehicleInputs.frontWeightDistribution))
+    .replaceAll("@drivetrain", vehicleInputs.drivetrain)
+    .replaceAll("@wheelbase", formatNum(vehicleInputs.wheelbase, 0))
+    .replaceAll("@cog_height", formatNum(vehicleInputs.cogHeight, 1))
+    .replaceAll("@f_track_width", formatNum(vehicleInputs.frontTrackWidth, 0))
+    .replaceAll("@r_track_width", formatNum(vehicleInputs.rearTrackWidth, 0))
+    .replaceAll("@f_wheel_offset", formatNum(vehicleInputs.frontWheelOffset, 1))
+    .replaceAll("@r_wheel_offset", formatNum(vehicleInputs.rearWheelOffset, 1))
+    .replaceAll("@engine_name", engineName)
+    .replaceAll("@power", formatNum(selectedEngine?.powerHp, 0))
+    .replaceAll("@engine_mass", formatNum(selectedEngine?.massKg, 0))
+    .replaceAll("@rev_limiter", formatNum(selectedEngine?.revLimiter, 0))
+    .replaceAll("@curve_fall", formatNum(selectedEngine?.curveFallRpm, 0))
+    .replaceAll("@turbo_press", formatNum(selectedEngine?.turboPress, 2))
+    .replaceAll("@inertia_ratio", formatNum(selectedEngine?.inertiaRatio, 2))
+    .replaceAll("@gears", formatNum(selectedCar?.gears, 0))
+    .replaceAll("@shift_time", formatNum(selectedCar?.shiftTime, 2))
+    .replaceAll("@ride_freq", formatNum(vehicleInputs.desiredRideFrequency, 2))
+    .replaceAll("@roll_grad", formatNum(vehicleInputs.desiredRollGradient, 2))
+    .replaceAll("@damping", formatNum(vehicleInputs.dampingRatio, 2))
+    .replaceAll("@gear_ratios", gearRatiosStr)
+    .replaceAll("@final_drive", formatNum(finalDrive.ratio, 2))
+    .replaceAll("@tire_compound", tireCompound.value)
+    .replaceAll("@front_aero", formatNum(aeroSettings.frontAero, 0))
+    .replaceAll("@rear_aero", formatNum(aeroSettings.rearAero, 0))
+    .replaceAll("@air_resistance", formatNum(aeroSettings.airResistance, 2));
 }
 
 function Chat() {
