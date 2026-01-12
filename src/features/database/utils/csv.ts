@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { CarData } from '../../../types';
+import type { CarData } from '@/types';
 
 // Column mapping from CSV headers to CarData fields
 const HEADER_MAP: Record<string, keyof CarData> = {

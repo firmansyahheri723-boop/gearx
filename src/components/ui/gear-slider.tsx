@@ -1,6 +1,6 @@
 import { createSignal, Show } from "solid-js";
-import type { GearRatio } from "../../types";
-import { GEAR_COLORS, FINAL_DRIVE_COLOR } from "../../constants/colors";
+import type { GearRatio } from "@/types";
+import { GEAR_COLORS, FINAL_DRIVE_COLOR } from "@/constants/colors";
 import { NumberInput } from "./number-input";
 import {
   SliderRoot,

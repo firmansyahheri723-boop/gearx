@@ -1,6 +1,6 @@
 import { createSignal, createEffect, onMount, onCleanup } from 'solid-js';
-import type { TorqueExtractorCalibration, ExtractedDataPoint } from '../../../types/extraction';
-import { pixelToValues } from '../../../features/gearbox/utils/image-extraction';
+import type { TorqueExtractorCalibration, ExtractedDataPoint } from '@/types/extraction';
+import { pixelToValues } from '@/features/gearbox/utils/image-extraction';
 
 type CurveEditorProps = {
   imageData: ImageData;

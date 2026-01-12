@@ -1,11 +1,11 @@
-import { SectionHeader } from '../../../components/ui/section-header';
-import { MetricCard } from '../../../components/ui/metric-card';
-import { HelpTooltip } from '../../../components/ui/help-tooltip';
-import type { SuspensionOutputs } from '../utils/suspension';
+import { SectionHeader } from "@/components/ui/section-header";
+import { MetricCard } from "@/components/ui/metric-card";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
+import type { SuspensionOutputs } from "../utils/suspension";
 
 type Props = {
   outputs: SuspensionOutputs;
-}
+};
 
 export function SpringsStiffnessSection(props: Props) {
   return (
@@ -14,19 +14,26 @@ export function SpringsStiffnessSection(props: Props) {
         title="Springs Stiffness"
         variant="output"
         help={{
-          description: 'Spring stiffness calculated from ride frequency and sprung mass per corner. Higher values mean stiffer springs with less body roll but harsher ride.',
-          formula: 'K = 4 \\pi^2 f^2 m',
+          description:
+            "Spring stiffness calculated from ride frequency and sprung mass per corner. Higher values mean stiffer springs with less body roll but harsher ride.",
+          formula: "K = 4 \\pi^2 f^2 m",
           variables: [
-            'K = spring stiffness (N/m)',
-            'f = ride frequency (Hz)',
-            'm = sprung mass per corner (kg)',
+            "K = spring stiffness (N/m)",
+            "f = ride frequency (Hz)",
+            "m = sprung mass per corner (kg)",
           ],
-          position: 'bottom',
+          position: "bottom",
           articles: [
-            { label: 'Wikipedia: Spring Rate', url: 'https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate' },
+            {
+              label: "Wikipedia: Spring Rate",
+              url: "https://en.wikipedia.org/wiki/Spring_(device)#Spring_rate",
+            },
           ],
           videos: [
-            { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
+            {
+              label: "Springs & Dampers Guide",
+              url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc",
+            },
           ],
         }}
       />
@@ -54,9 +61,9 @@ export function SpringsStiffnessSection(props: Props) {
               description="Sprung mass is the portion of the vehicle supported by the suspension. Calculated per corner by taking half the axle weight minus the wheel weight (unsprung mass)."
               formula="m_{sprung} = \frac{W_{axle}}{2} - W_{wheel}"
               variables={[
-                'm_sprung = sprung mass per corner (kg)',
-                'W_axle = axle weight (kg)',
-                'W_wheel = wheel weight (kg)',
+                "m_sprung = sprung mass per corner (kg)",
+                "W_axle = axle weight (kg)",
+                "W_wheel = wheel weight (kg)",
               ]}
               position="bottom"
             />

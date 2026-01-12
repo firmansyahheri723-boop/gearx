@@ -1,5 +1,5 @@
 import { createStore } from "solid-js/store";
-import type { AlignmentInputs } from "../../types";
+import type { AlignmentInputs } from "@/types";
 import { ALIGNMENT_PRESETS } from "./types";
 
 export const [alignmentInputs, setAlignmentInputs] =

@@ -1,4 +1,4 @@
-import type { TireCompound, TractionMode } from '../../../types';
+import type { TireCompound, TractionMode } from '@/types';
 
 export type TireOption = {
   value: TireCompound;

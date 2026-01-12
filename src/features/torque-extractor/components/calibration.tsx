@@ -1,6 +1,6 @@
 import { createSignal, createEffect, onMount, onCleanup } from 'solid-js';
-import type { TorqueExtractorCalibration } from '../../../types/extraction';
-import { NumberInput } from '../../../components/ui/number-input';
+import type { TorqueExtractorCalibration } from '@/types/extraction';
+import { NumberInput } from '@/components/ui/number-input';
 
 type CalibrationOverlayProps = {
   imageData: ImageData;

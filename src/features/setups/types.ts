@@ -1,4 +1,4 @@
-import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, AeroSettings, AlignmentInputs } from "../../types";
+import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, AeroSettings, AlignmentInputs } from "@/types";
 
 export type SetupTag = {
   id: string;

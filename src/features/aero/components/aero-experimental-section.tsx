@@ -1,8 +1,8 @@
 import { Component, Show } from 'solid-js';
-import { SectionHeader } from '../../../components/ui/section-header';
-import { HelpTooltip } from '../../../components/ui/help-tooltip';
+import { SectionHeader } from '@/components/ui/section-header';
+import { HelpTooltip } from '@/components/ui/help-tooltip';
 import { AeroChart } from './aero-chart';
-import type { AeroExperimentalOutput } from '../../../types';
+import type { AeroExperimentalOutput } from '@/types';
 
 interface AeroExperimentalSectionProps {
   output: AeroExperimentalOutput;

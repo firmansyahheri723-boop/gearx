@@ -1,4 +1,4 @@
-import type { VehicleInputs, HelpContent } from '../../../types';
+import type { VehicleInputs, HelpContent } from '@/types';
 
 export type SliderConfig = {
   key: keyof VehicleInputs;

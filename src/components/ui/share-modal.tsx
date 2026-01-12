@@ -1,5 +1,5 @@
 import { createSignal, Show } from 'solid-js';
-import { generateShareUrl } from "../../features/setups/utils/share";
+import { generateShareUrl } from "@/features/setups/utils/share";
 
 export function ShareModal(props: { onClose: () => void }) {
   const [copied, setCopied] = createSignal(false);

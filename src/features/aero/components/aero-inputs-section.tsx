@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { SectionHeader } from '../../../components/ui/section-header';
-import { RangeSliderInput } from '../../../components/ui/range-slider-input';
-import { aeroSettings, setAeroSettings } from '../../../features/aero/store';
+import { SectionHeader } from '@/components/ui/section-header';
+import { RangeSliderInput } from '@/components/ui/range-slider-input';
+import { aeroSettings, setAeroSettings } from '@/features/aero/store';
 
 export function AeroInputsSection() {
   return (

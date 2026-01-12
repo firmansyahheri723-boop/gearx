@@ -1,9 +1,6 @@
-import { createSignal, For, Show, createMemo } from 'solid-js';
-import { getSetups, getSetupById, createSetup } from '../store';
-import type { SavedSetup, SetupDiffField } from '../../../types';
-import { compareTwoSetups } from '../utils/setup-compare';
-import { SetupSaveDialog } from './setup-save-dialog';
-import { SetupTag } from './setup-tag';
+import { createSignal, For, Show, createMemo } from "solid-js";
+import { getSetups, getSetupById, createSetup } from "../store";
+import { compareTwoSetups } from "../utils/setup-compare";
 
 interface SetupMergerProps {
   onClose: () => void;
@@ -11,11 +8,12 @@ interface SetupMergerProps {
 }
 
 export function SetupMerger(props: SetupMergerProps) {
-  const [setupAId, setSetupAId] = createSignal<string>('');
-  const [setupBId, setSetupBId] = createSignal<string>('');
-  const [selectedFields, setSelectedFields] = createSignal<Set<string>>(new Set());
-  const [newSetupName, setNewSetupName] = createSignal('');
-  const [showSaveDialog, setShowSaveDialog] = createSignal(false);
+  const [setupAId, setSetupAId] = createSignal<string>("");
+  const [setupBId, setSetupBId] = createSignal<string>("");
+  const [selectedFields, setSelectedFields] = createSignal<Set<string>>(
+    new Set(),
+  );
+  const [newSetupName, setNewSetupName] = createSignal("");
 
   const allSetups = getSetups();
   const selectedSetupA = createMemo(() => getSetupById(setupAId()));
@@ -73,8 +71,8 @@ export function SetupMerger(props: SetupMergerProps) {
 
     allDiffs().forEach((field) => {
       if (selected.has(field.path)) {
-        const parts = field.path.split('.');
-        if (parts[0] === 'inputs') {
+        const parts = field.path.split(".");
+        if (parts[0] === "inputs") {
           parts.shift();
           let current: Record<string, unknown> = merged.inputs;
           for (let i = 0; i < parts.length - 1; i++) {
@@ -84,26 +82,38 @@ export function SetupMerger(props: SetupMergerProps) {
             current = current[parts[i]] as Record<string, unknown>;
           }
           current[parts[parts.length - 1]] = field.newValue;
-        } else if (parts[0] === 'torqueRpmData' || parts[0] === 'gearRatios') {
-          const arrayName = parts[0] as 'torqueRpmData' | 'gearRatios';
+        } else if (parts[0] === "torqueRpmData" || parts[0] === "gearRatios") {
+          const arrayName = parts[0] as "torqueRpmData" | "gearRatios";
           const index = parseInt(parts[1], 10);
           if (!Array.isArray(merged[arrayName])) {
-            (merged as unknown as Record<string, unknown[]>)[arrayName] = [...(a as unknown as Record<string, unknown[]>)[arrayName]];
+            (merged as unknown as Record<string, unknown[]>)[arrayName] = [
+              ...(a as unknown as Record<string, unknown[]>)[arrayName],
+            ];
           }
-          const item = { ...(merged as unknown as Record<string, Record<string, unknown>[]>)[arrayName][index] };
+          const item = {
+            ...(merged as unknown as Record<string, Record<string, unknown>[]>)[
+              arrayName
+            ][index],
+          };
           item[parts[2]] = field.newValue;
-          (merged as unknown as Record<string, Record<string, unknown>[]>)[arrayName][index] = item;
-        } else if (parts[0] === 'finalDrive') {
-          (merged.finalDrive as Record<string, unknown>)[parts[1]] = field.newValue;
-        } else if (parts[0] === 'aeroSettings') {
-          (merged.aeroSettings as Record<string, unknown>)[parts[1]] = field.newValue;
-        } else if (parts[0] === 'alignmentInputs') {
+          (merged as unknown as Record<string, Record<string, unknown>[]>)[
+            arrayName
+          ][index] = item;
+        } else if (parts[0] === "finalDrive") {
+          (merged.finalDrive as Record<string, unknown>)[parts[1]] =
+            field.newValue;
+        } else if (parts[0] === "aeroSettings") {
+          (merged.aeroSettings as Record<string, unknown>)[parts[1]] =
+            field.newValue;
+        } else if (parts[0] === "alignmentInputs") {
           if (!merged.alignmentInputs) {
             merged.alignmentInputs = {};
           }
-          (merged.alignmentInputs as Record<string, unknown>)[parts[1]] = field.newValue;
+          (merged.alignmentInputs as Record<string, unknown>)[parts[1]] =
+            field.newValue;
         } else if (parts.length === 1) {
-          (merged as unknown as Record<string, unknown>)[parts[0]] = field.newValue;
+          (merged as unknown as Record<string, unknown>)[parts[0]] =
+            field.newValue;
         }
       }
     });
@@ -111,7 +121,10 @@ export function SetupMerger(props: SetupMergerProps) {
     const newSetup = createSetup({
       name: newSetupName() || `Merged: ${a.name} + ${b.name}`,
       description: `Hybrid setup merging ${a.name} and ${b.name}`,
-      tags: [...a.tags, ...b.tags.filter((t) => !a.tags.some((at) => at.id === t.id))],
+      tags: [
+        ...a.tags,
+        ...b.tags.filter((t) => !a.tags.some((at) => at.id === t.id)),
+      ],
       notes: `Created from merging:\n- ${a.name}\n- ${b.name}`,
       carName: a.carName,
       inputs: merged.inputs,
@@ -122,6 +135,7 @@ export function SetupMerger(props: SetupMergerProps) {
       tractionMode: merged.tractionMode,
       aeroSettings: merged.aeroSettings,
       alignmentInputs: merged.alignmentInputs,
+      version: merged.version,
     });
 
     props.onCreated();
@@ -130,7 +144,10 @@ export function SetupMerger(props: SetupMergerProps) {
 
   return (
     <div class="fixed inset-0 z-50 flex items-center justify-center">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={props.onClose} />
+      <div
+        class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={props.onClose}
+      />
       <div class="relative bg-surface/95 border border-border/50 shadow-2xl shadow-black/40 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between px-4 py-3 border-b border-border/50 sticky top-0 bg-surface/95">
           <h2 class="text-sm font-bold uppercase tracking-widest text-foreground">
@@ -170,9 +187,7 @@ export function SetupMerger(props: SetupMergerProps) {
               >
                 <option value="">Select setup...</option>
                 <For each={allSetups}>
-                  {(setup) => (
-                    <option value={setup.id}>{setup.name}</option>
-                  )}
+                  {(setup) => <option value={setup.id}>{setup.name}</option>}
                 </For>
               </select>
             </div>
@@ -187,9 +202,7 @@ export function SetupMerger(props: SetupMergerProps) {
               >
                 <option value="">Select setup...</option>
                 <For each={allSetups}>
-                  {(setup) => (
-                    <option value={setup.id}>{setup.name}</option>
-                  )}
+                  {(setup) => <option value={setup.id}>{setup.name}</option>}
                 </For>
               </select>
             </div>
@@ -212,7 +225,9 @@ export function SetupMerger(props: SetupMergerProps) {
                   {(category) => (
                     <div class="p-3">
                       <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-foreground">{category.label}</span>
+                        <span class="text-xs font-bold text-foreground">
+                          {category.label}
+                        </span>
                         <div class="flex gap-1">
                           <button
                             type="button"
@@ -241,16 +256,21 @@ export function SetupMerger(props: SetupMergerProps) {
                                 onChange={() => toggleField(field.path)}
                                 class="w-3 h-3 border-border/50"
                               />
-                              <span class="text-xs text-muted flex-1">{field.label}</span>
+                              <span class="text-xs text-muted flex-1">
+                                {field.label}
+                              </span>
                               <span class="text-[10px] text-muted font-mono">
                                 {field.formattedOld} → {field.formattedNew}
                               </span>
                               <div
                                 class="w-1.5 h-1.5"
                                 style={{
-                                  'background-color':
-                                    field.impact === 'high' ? '#ef4444' :
-                                    field.impact === 'medium' ? '#f59e0b' : '#22c55e'
+                                  "background-color":
+                                    field.impact === "high"
+                                      ? "#ef4444"
+                                      : field.impact === "medium"
+                                        ? "#f59e0b"
+                                        : "#22c55e",
                                 }}
                               />
                             </label>

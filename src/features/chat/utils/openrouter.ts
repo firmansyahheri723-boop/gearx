@@ -1,4 +1,4 @@
-import type { OpenRouterModel, OpenRouterModelsResponse, ChatProvider } from '../types';
+import type { OpenRouterModel, OpenRouterModelsResponse, ChatProvider } from '@/types';
 
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/models';
 

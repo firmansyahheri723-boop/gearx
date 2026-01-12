@@ -1,4 +1,4 @@
-import type { AlignmentInputs } from "../../types";
+import type { AlignmentInputs } from "@/types";
 
 export type AlignmentPresetType = "grip" | "drift" | "street" | "drag";
 

@@ -1,24 +1,28 @@
 import { createSignal, createMemo } from "solid-js";
 import { createFileRoute } from "@tanstack/solid-router";
-import { createMutation } from "@tanstack/solid-query";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
-import { SectionHeader } from "../components/ui/section-header";
-import { ApiKeyInput } from "../features/chat/components/api-key-input";
-import { InferenceSelector } from "../features/chat/components/inference-selector";
-import { MessageList } from "../features/chat/components/message-list";
-import { ChatInput } from "../features/chat/components/chat-input";
-import { apiKey, setApiKey, selectedModel, setSelectedModel } from "../features/chat/store";
+import { SectionHeader } from "@/components/ui/section-header";
+import { ApiKeyInput } from "@/features/chat/components/api-key-input";
+import { InferenceSelector } from "@/features/chat/components/inference-selector";
+import { MessageList } from "@/features/chat/components/message-list";
+import { ChatInput } from "@/features/chat/components/chat-input";
+import {
+  apiKey,
+  setApiKey,
+  selectedModel,
+  setSelectedModel,
+} from "@/features/chat/store";
 import {
   vehicleInputs,
   gearRatios,
   finalDrive,
   tireCompound,
-} from "../stores/vehicle";
-import { aeroSettings } from "../features/aero/store";
-import { getSelectedCar, getSelectedEngine } from "../features/database/store";
-import systemPrompt from "../constants/prompt.md?raw";
-import type { ChatMessage } from "../types";
+} from "@/stores/vehicle";
+import { aeroSettings } from "@/features/aero/store";
+import { getSelectedCar, getSelectedEngine } from "@/features/database/store";
+import systemPrompt from "@/constants/prompt.md?raw";
+import type { ChatMessage } from "@/types";
 
 export const Route = createFileRoute("/chat")({
   component: Chat,
@@ -34,9 +38,13 @@ function buildSystemContext(): string {
   const selectedEngine = getSelectedEngine();
 
   const carName = selectedCar?.car || vehicleInputs.carSelection || "Unknown";
-  const engineName = selectedEngine?.car || vehicleInputs.engineSelection || "Unknown";
+  const engineName =
+    selectedEngine?.car || vehicleInputs.engineSelection || "Unknown";
 
-  const formatNum = (n: number | null | undefined, decimals: number = 1): string => {
+  const formatNum = (
+    n: number | null | undefined,
+    decimals: number = 1,
+  ): string => {
     if (n === null || n === undefined) return "N/A";
     return n.toFixed(decimals).replace(/\.?0+$/, "");
   };
@@ -45,7 +53,10 @@ function buildSystemContext(): string {
     .replaceAll("@car_name", carName)
     .replaceAll("@model", selectedModel())
     .replaceAll("@weight", formatNum(vehicleInputs.weight))
-    .replaceAll("@front_weight", formatNum(vehicleInputs.frontWeightDistribution))
+    .replaceAll(
+      "@front_weight",
+      formatNum(vehicleInputs.frontWeightDistribution),
+    )
     .replaceAll("@drivetrain", vehicleInputs.drivetrain)
     .replaceAll("@wheelbase", formatNum(vehicleInputs.wheelbase, 0))
     .replaceAll("@cog_height", formatNum(vehicleInputs.cogHeight, 1))
@@ -123,19 +134,19 @@ function Chat() {
       let fullContent = "";
       let fullReasoning = "";
       for await (const part of result.fullStream) {
-        if (part.type === 'text' || part.type === 'text-delta') {
+        if (part.type === "text-delta") {
           fullContent += part.text;
           setMessages((msgs) =>
             msgs.map((m) =>
-              m.id === assistantMsg.id ? { ...m, content: fullContent } : m
-            )
+              m.id === assistantMsg.id ? { ...m, content: fullContent } : m,
+            ),
           );
-        } else if (part.type === 'reasoning-delta') {
+        } else if (part.type === "reasoning-delta") {
           fullReasoning += part.text;
           setMessages((msgs) =>
             msgs.map((m) =>
-              m.id === assistantMsg.id ? { ...m, reasoning: fullReasoning } : m
-            )
+              m.id === assistantMsg.id ? { ...m, reasoning: fullReasoning } : m,
+            ),
           );
         }
       }
@@ -146,9 +157,13 @@ function Chat() {
       setMessages((msgs) =>
         msgs.map((m) =>
           m.id === assistantMsg.id
-            ? { ...m, content: "Sorry, an error occurred. Please check your API key and try again." }
-            : m
-        )
+            ? {
+                ...m,
+                content:
+                  "Sorry, an error occurred. Please check your API key and try again.",
+              }
+            : m,
+        ),
       );
     } finally {
       setIsLoading(false);

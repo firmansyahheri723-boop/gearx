@@ -1,17 +1,17 @@
-import { createSignal, For, Show, createMemo } from 'solid-js';
-import { getSetups, getSetupById } from '../store';
-import type { SavedSetup, SetupDiff } from '../../../types';
-import { compareTwoSetups } from '../utils/setup-compare';
-import { ComparisonTable } from './comparison-table';
+import { createSignal, For, Show, createMemo } from "solid-js";
+import { getSetups, getSetupById } from "../store";
+import type { SetupDiff } from "@/types";
+import { compareTwoSetups } from "../utils/setup-compare";
+import { ComparisonTable } from "./comparison-table";
 
 interface ComparisonViewProps {
   onApplyValue: (path: string, value: unknown) => void;
 }
 
 export function ComparisonView(props: ComparisonViewProps) {
-  const [setupAId, setSetupAId] = createSignal<string>('');
-  const [setupBId, setSetupBId] = createSignal<string>('');
-  const [viewMode, setViewMode] = createSignal<'select' | 'compare'>('select');
+  const [setupAId, setSetupAId] = createSignal<string>("");
+  const [setupBId, setSetupBId] = createSignal<string>("");
+  const [viewMode, setViewMode] = createSignal<"select" | "compare">("select");
 
   const allSetups = getSetups();
   const selectedSetupA = createMemo(() => getSetupById(setupAId()));
@@ -26,7 +26,7 @@ export function ComparisonView(props: ComparisonViewProps) {
 
   const handleStartComparison = () => {
     if (setupAId() && setupBId()) {
-      setViewMode('compare');
+      setViewMode("compare");
     }
   };
 
@@ -39,17 +39,19 @@ export function ComparisonView(props: ComparisonViewProps) {
   };
 
   const handleReset = () => {
-    setViewMode('select');
-    setSetupAId('');
-    setSetupBId('');
+    setViewMode("select");
+    setSetupAId("");
+    setSetupBId("");
   };
 
   return (
     <div class="space-y-4">
-      <Show when={viewMode() === 'select'}>
+      <Show when={viewMode() === "select"}>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="border border-border/50 bg-surface/50 p-4">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">Setup A (Base)</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">
+              Setup A (Base)
+            </h3>
             <div class="space-y-2 max-h-60 overflow-y-auto">
               <For each={allSetups}>
                 {(setup) => (
@@ -57,12 +59,14 @@ export function ComparisonView(props: ComparisonViewProps) {
                     type="button"
                     class={`w-full text-left p-2 border transition-colors ${
                       setupAId() === setup.id
-                        ? 'border-foreground bg-foreground/10'
-                        : 'border-border/30 hover:border-foreground/30'
+                        ? "border-foreground bg-foreground/10"
+                        : "border-border/30 hover:border-foreground/30"
                     }`}
                     onClick={() => handleSelectForA(setup.id)}
                   >
-                    <div class="text-xs font-bold text-foreground">{setup.name}</div>
+                    <div class="text-xs font-bold text-foreground">
+                      {setup.name}
+                    </div>
                     <div class="text-[10px] text-muted">{setup.carName}</div>
                   </button>
                 )}
@@ -74,7 +78,9 @@ export function ComparisonView(props: ComparisonViewProps) {
           </div>
 
           <div class="border border-border/50 bg-surface/50 p-4">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">Setup B (Compare)</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">
+              Setup B (Compare)
+            </h3>
             <div class="space-y-2 max-h-60 overflow-y-auto">
               <For each={allSetups}>
                 {(setup) => (
@@ -82,12 +88,14 @@ export function ComparisonView(props: ComparisonViewProps) {
                     type="button"
                     class={`w-full text-left p-2 border transition-colors ${
                       setupBId() === setup.id
-                        ? 'border-foreground bg-foreground/10'
-                        : 'border-border/30 hover:border-foreground/30'
+                        ? "border-foreground bg-foreground/10"
+                        : "border-border/30 hover:border-foreground/30"
                     }`}
                     onClick={() => handleSelectForB(setup.id)}
                   >
-                    <div class="text-xs font-bold text-foreground">{setup.name}</div>
+                    <div class="text-xs font-bold text-foreground">
+                      {setup.name}
+                    </div>
                     <div class="text-[10px] text-muted">{setup.carName}</div>
                   </button>
                 )}
@@ -111,7 +119,7 @@ export function ComparisonView(props: ComparisonViewProps) {
         </div>
       </Show>
 
-      <Show when={viewMode() === 'compare' && comparisonDiff()}>
+      <Show when={viewMode() === "compare" && comparisonDiff()}>
         <div class="flex items-center justify-between mb-4">
           <button
             type="button"
@@ -121,13 +129,26 @@ export function ComparisonView(props: ComparisonViewProps) {
             ← Back to Selection
           </button>
           <div class="flex items-center gap-2 text-xs text-muted">
-            <span class="text-foreground">{comparisonDiff()?.summary.totalDiffs} of {comparisonDiff()?.categories.reduce((acc, cat) => acc + cat.fields.length, 0)} fields differ</span>
+            <span class="text-foreground">
+              {comparisonDiff()?.summary.totalDiffs} of{" "}
+              {comparisonDiff()?.categories.reduce(
+                (acc, cat) => acc + cat.fields.length,
+                0,
+              )}{" "}
+              fields differ
+            </span>
             <span class="w-1 h-1 bg-muted" />
-            <span class="text-red-500">{comparisonDiff()?.summary.highImpact} high</span>
+            <span class="text-red-500">
+              {comparisonDiff()?.summary.highImpact} high
+            </span>
             <span class="w-1 h-1 bg-muted" />
-            <span class="text-yellow-500">{comparisonDiff()?.summary.mediumImpact} medium</span>
+            <span class="text-yellow-500">
+              {comparisonDiff()?.summary.mediumImpact} medium
+            </span>
             <span class="w-1 h-1 bg-muted" />
-            <span class="text-green-500">{comparisonDiff()?.summary.lowImpact} low</span>
+            <span class="text-green-500">
+              {comparisonDiff()?.summary.lowImpact} low
+            </span>
           </div>
         </div>
 

@@ -9,8 +9,8 @@ import {
   DialogCloseTrigger,
   useDialogContext,
 } from '@ark-ui/solid';
-import type { TorqueExtractorCalibration, ExtractedDataPoint, ExtractionStep } from '../../../types/extraction';
-import { extractTorqueCurve } from "../../../features/gearbox/utils/image-extraction";
+import type { TorqueExtractorCalibration, ExtractedDataPoint, ExtractionStep } from '@/types/extraction';
+import { extractTorqueCurve } from "@/features/gearbox/utils/image-extraction";
 import { CalibrationOverlay } from './calibration';
 import { CurveEditor } from './curve-editor';
 import { DataPreview } from './data-preview';

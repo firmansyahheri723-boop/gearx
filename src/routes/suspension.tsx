@@ -1,23 +1,21 @@
-import { createFileRoute } from '@tanstack/solid-router';
-import { For, createMemo } from 'solid-js';
-import { SectionHeader } from '../components/ui/section-header';
-import { DataTable } from '../components/ui/data-table';
-import { SuspensionOutput } from '../features/suspension/components/suspension-output';
-import { vehicleInputs } from '../stores/vehicle';
-import { aeroSettings, aeroExperimentalEnabled } from '../features/aero/store';
-import { calculateSuspensionOutputs } from '../features/suspension/utils/suspension';
-import { getSelectedCar } from '../features/database/store';
-import { calculateExperimentalAero } from '../features/aero/utils/aero';
-import type { AeroExperimentalOutput } from '../types';
+import { createFileRoute } from "@tanstack/solid-router";
+import { For, createMemo } from "solid-js";
+import { SuspensionOutput } from "@/features/suspension/components/suspension-output";
+import { vehicleInputs } from "@/stores/vehicle";
+import { aeroSettings, aeroExperimentalEnabled } from "@/features/aero/store";
+import { calculateSuspensionOutputs } from "@/features/suspension/utils/suspension";
+import { getSelectedCar } from "@/features/database/store";
+import { calculateExperimentalAero } from "@/features/aero/utils/aero";
+import type { AeroExperimentalOutput } from "@/types";
 
-import { SuspensionParametersSection } from '../features/suspension/components/suspension-parameters-section';
-import { SpringsStiffnessSection } from '../features/suspension/components/springs-stiffness-section';
-import { AntiRollBarsSection } from '../features/suspension/components/anti-roll-bars-section';
-import { DampersSection } from '../features/suspension/components/dampers-section';
-import { AccelerationMetricsSection } from '../features/suspension/components/acceleration-metrics-section';
-import { FormulaReferenceSection } from '../features/suspension/components/formula-reference-section';
+import { SuspensionParametersSection } from "@/features/suspension/components/suspension-parameters-section";
+import { SpringsStiffnessSection } from "@/features/suspension/components/springs-stiffness-section";
+import { AntiRollBarsSection } from "@/features/suspension/components/anti-roll-bars-section";
+import { DampersSection } from "@/features/suspension/components/dampers-section";
+import { AccelerationMetricsSection } from "@/features/suspension/components/acceleration-metrics-section";
+import { FormulaReferenceSection } from "@/features/suspension/components/formula-reference-section";
 
-export const Route = createFileRoute('/suspension')({
+export const Route = createFileRoute("/suspension")({
   component: Suspension,
 });
 
@@ -25,7 +23,7 @@ function Suspension() {
   const cogHeightM = () => vehicleInputs.cogHeight * 0.0254;
 
   const aeroData = createMemo((): AeroExperimentalOutput | null => {
-    if (!aeroExperimentalEnabled.value) return null;
+    if (!aeroExperimentalEnabled()) return null;
     const carData = getSelectedCar();
     return calculateExperimentalAero(aeroSettings, carData, 200);
   });
@@ -51,7 +49,7 @@ function Suspension() {
         aeroFrontDownforceN: aeroData()!.frontDownforceN,
         aeroRearDownforceN: aeroData()!.rearDownforceN,
       }),
-    })
+    }),
   );
 
   return (
@@ -65,7 +63,10 @@ function Suspension() {
       </div>
 
       <DampersSection outputs={outputs()} />
-      <AccelerationMetricsSection outputs={outputs()} frontWeightDistribution={vehicleInputs.frontWeightDistribution} />
+      <AccelerationMetricsSection
+        outputs={outputs()}
+        frontWeightDistribution={vehicleInputs.frontWeightDistribution}
+      />
       <FormulaReferenceSection />
     </div>
   );

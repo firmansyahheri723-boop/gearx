@@ -1,8 +1,8 @@
-import { createSignal, For, Show } from 'solid-js';
-import type { SetupTag, SetupTagColor } from '../../../types';
-import { SETUP_TAG_COLORS } from '../../../types';
-import { createSetup, updateSetup, getAllTags } from '../store';
-import { vehicleInputs } from "../../../stores/vehicle";
+import { createSignal, For, Show } from "solid-js";
+import type { SetupTag, SetupTagColor } from "@/types";
+import { SETUP_TAG_COLORS } from "@/types";
+import { createSetup, updateSetup, getAllTags } from "../store";
+import { vehicleInputs } from "@/stores/vehicle";
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -21,14 +21,18 @@ interface SetupSaveDialogProps {
 }
 
 export function SetupSaveDialog(props: SetupSaveDialogProps) {
-  const [name, setName] = createSignal(props.setup?.name ?? '');
-  const [description, setDescription] = createSignal(props.setup?.description ?? '');
-  const [notes, setNotes] = createSignal(props.setup?.notes ?? '');
+  const [name, setName] = createSignal(props.setup?.name ?? "");
+  const [description, setDescription] = createSignal(
+    props.setup?.description ?? "",
+  );
+  const [notes, setNotes] = createSignal(props.setup?.notes ?? "");
   const [tags, setTags] = createSignal<SetupTag[]>(props.setup?.tags ?? []);
-  const [tagInput, setTagInput] = createSignal('');
-  const [selectedColor, setSelectedColor] = createSignal<SetupTagColor>(SETUP_TAG_COLORS[0]);
+  const [tagInput, setTagInput] = createSignal("");
+  const [selectedColor, setSelectedColor] = createSignal<SetupTagColor>(
+    SETUP_TAG_COLORS[0],
+  );
   const [saving, setSaving] = createSignal(false);
-  const [error, setError] = createSignal('');
+  const [error, setError] = createSignal("");
 
   const existingTags = getAllTags();
 
@@ -43,7 +47,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
     };
 
     setTags([...tags(), newTag]);
-    setTagInput('');
+    setTagInput("");
   };
 
   const handleRemoveTag = (tagId: string) => {
@@ -52,12 +56,12 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 
   const handleSubmit = async () => {
     if (!name().trim()) {
-      setError('Name is required');
+      setError("Name is required");
       return;
     }
 
     setSaving(true);
-    setError('');
+    setError("");
 
     try {
       if (props.setup?.id) {
@@ -68,13 +72,24 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
           tags: tags(),
         });
       } else {
-        const torqueRpmData = (window as unknown as { torqueRpmData?: unknown[] }).torqueRpmData ?? [];
-        const gearRatios = (window as unknown as { gearRatios?: unknown[] }).gearRatios ?? [];
-        const finalDrive = (window as unknown as { finalDrive?: unknown }).finalDrive ?? { ratio: 3.0, min: 2.0, max: 5.0 };
-        const tireCompound = (window as unknown as { tireCompound?: string }).tireCompound ?? 'racing';
-        const tractionMode = (window as unknown as { tractionMode?: string }).tractionMode ?? 'launch';
-        const aeroSettings = (window as unknown as { aeroSettings?: unknown }).aeroSettings ?? { frontAero: 10, rearAero: 5, airResistance: 0 };
-        const alignmentInputs = (window as unknown as { alignmentInputs?: unknown }).alignmentInputs;
+        const torqueRpmData =
+          (window as unknown as { torqueRpmData?: unknown[] }).torqueRpmData ??
+          [];
+        const gearRatios =
+          (window as unknown as { gearRatios?: unknown[] }).gearRatios ?? [];
+        const finalDrive = (window as unknown as { finalDrive?: unknown })
+          .finalDrive ?? { ratio: 3.0, min: 2.0, max: 5.0 };
+        const tireCompound =
+          (window as unknown as { tireCompound?: string }).tireCompound ??
+          "racing";
+        const tractionMode =
+          (window as unknown as { tractionMode?: string }).tractionMode ??
+          "launch";
+        const aeroSettings = (window as unknown as { aeroSettings?: unknown })
+          .aeroSettings ?? { frontAero: 10, rearAero: 5, airResistance: 0 };
+        const alignmentInputs = (
+          window as unknown as { alignmentInputs?: unknown }
+        ).alignmentInputs;
 
         createSetup({
           name: name().trim(),
@@ -86,17 +101,38 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
           torqueRpmData: torqueRpmData as unknown[],
           gearRatios: gearRatios as unknown[],
           finalDrive: finalDrive as { ratio: number; min: number; max: number },
-          tireCompound: tireCompound as 'street' | 'street+' | 'sport' | 'sport+' | 'racing' | 'racing+',
-          tractionMode: tractionMode as 'launch' | 'rolling',
-          aeroSettings: aeroSettings as { frontAero: number; rearAero: number; airResistance: number },
-          alignmentInputs: alignmentInputs as { frontCamber: number; frontCaster: number; frontToe: number; frontAckermann: number; frontSteeringSensitivity: number; rearCamber: number; rearToe: number; maxSteeringAngle: number } | undefined,
+          tireCompound: tireCompound as
+            | "street"
+            | "street+"
+            | "sport"
+            | "sport+"
+            | "racing"
+            | "racing+",
+          tractionMode: tractionMode as "launch" | "rolling",
+          aeroSettings: aeroSettings as {
+            frontAero: number;
+            rearAero: number;
+            airResistance: number;
+          },
+          alignmentInputs: alignmentInputs as
+            | {
+                frontCamber: number;
+                frontCaster: number;
+                frontToe: number;
+                frontAckermann: number;
+                frontSteeringSensitivity: number;
+                rearCamber: number;
+                rearToe: number;
+                maxSteeringAngle: number;
+              }
+            | undefined,
         });
       }
 
       props.onSave();
       props.onClose();
     } catch {
-      setError('Failed to save setup');
+      setError("Failed to save setup");
     } finally {
       setSaving(false);
     }
@@ -104,11 +140,14 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 
   return (
     <div class="fixed inset-0 z-50 flex items-center justify-center">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={props.onClose} />
+      <div
+        class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={props.onClose}
+      />
       <div class="relative bg-surface/95 border border-border/50 shadow-2xl shadow-black/40 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between px-4 py-3 border-b border-border/50 sticky top-0 bg-surface/95">
           <h2 class="text-sm font-bold uppercase tracking-widest text-foreground">
-            {props.setup ? 'Edit Setup' : 'Save Setup'}
+            {props.setup ? "Edit Setup" : "Save Setup"}
           </h2>
           <button
             onClick={props.onClose}
@@ -174,9 +213,9 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
                   <span
                     class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] uppercase tracking-wider"
                     style={{
-                      'background-color': `${tag.color}20`,
-                      'border': `1px solid ${tag.color}40`,
-                      'color': tag.color,
+                      "background-color": `${tag.color}20`,
+                      border: `1px solid ${tag.color}40`,
+                      color: tag.color,
                     }}
                   >
                     {tag.name}
@@ -197,7 +236,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
                 value={tagInput()}
                 onInput={(e) => setTagInput(e.currentTarget.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     handleAddTag();
                   }
                 }}
@@ -210,9 +249,11 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
                     <button
                       type="button"
                       class={`w-5 h-5 border ${
-                        selectedColor() === color ? 'border-foreground' : 'border-transparent'
+                        selectedColor() === color
+                          ? "border-foreground"
+                          : "border-transparent"
                       }`}
-                      style={{ 'background-color': color }}
+                      style={{ "background-color": color }}
                       onClick={() => setSelectedColor(color)}
                     />
                   )}
@@ -255,7 +296,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
               disabled={saving() || !name().trim()}
               class="flex-1 px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50"
             >
-              {saving() ? 'Saving...' : 'Save'}
+              {saving() ? "Saving..." : "Save"}
             </button>
           </div>
         </div>

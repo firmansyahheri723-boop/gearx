@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 import { createSignal } from "solid-js";
 import { makePersisted } from "@solid-primitives/storage";
-import type { AeroSettings } from "../../types";
+import type { AeroSettings } from "@/types";
 
 export const [aeroSettings, setAeroSettings] = createStore<AeroSettings>({
   frontAero: 10,

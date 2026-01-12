@@ -1,6 +1,6 @@
-import { For, Show } from 'solid-js';
-import type { SetupDiff, SetupDiffField, SetupDiffCategory } from '../../../types';
-import { getImpactColor } from '../utils/setup-compare';
+import { For, Show } from "solid-js";
+import type { SetupDiff, SetupDiffField, SetupDiffCategory } from "@/types";
+import { getImpactColor } from "../utils/setup-compare";
 
 interface ComparisonTableProps {
   diff: SetupDiff;
@@ -8,18 +8,23 @@ interface ComparisonTableProps {
 }
 
 export function ComparisonTable(props: ComparisonTableProps) {
-  const totalDiffs = () => props.diff.categories.reduce((acc, cat) => acc + cat.fields.filter(f => f.hasDifference).length, 0);
-  const totalFields = () => props.diff.categories.reduce((acc, cat) => acc + cat.fields.length, 0);
+  const totalDiffs = () =>
+    props.diff.categories.reduce(
+      (acc, cat) => acc + cat.fields.filter((f) => f.hasDifference).length,
+      0,
+    );
+  const totalFields = () =>
+    props.diff.categories.reduce((acc, cat) => acc + cat.fields.length, 0);
 
   const formatValue = (value: unknown): string => {
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return Number.isInteger(value) ? value.toString() : value.toFixed(3);
     }
-    if (typeof value === 'boolean') {
-      return value ? 'Yes' : 'No';
+    if (typeof value === "boolean") {
+      return value ? "Yes" : "No";
     }
     if (value === null || value === undefined) {
-      return '-';
+      return "-";
     }
     return String(value);
   };
@@ -28,28 +33,45 @@ export function ComparisonTable(props: ComparisonTableProps) {
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4 p-3 bg-surface-elevated/30 border border-border/50">
         <div>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-muted">Setup A</h3>
-          <p class="text-sm font-bold text-foreground mt-1">{props.diff.setupA.name}</p>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-muted">
+            Setup A
+          </h3>
+          <p class="text-sm font-bold text-foreground mt-1">
+            {props.diff.setupA.name}
+          </p>
           <p class="text-[10px] text-muted">{props.diff.setupA.carName}</p>
         </div>
         <div>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-muted">Setup B</h3>
-          <p class="text-sm font-bold text-foreground mt-1">{props.diff.setupB.name}</p>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-muted">
+            Setup B
+          </h3>
+          <p class="text-sm font-bold text-foreground mt-1">
+            {props.diff.setupB.name}
+          </p>
           <p class="text-[10px] text-muted">{props.diff.setupB.carName}</p>
         </div>
       </div>
 
       <div class="flex items-center gap-4 text-xs">
         <div class="flex items-center gap-1.5">
-          <div class="w-2 h-2" style={{ 'background-color': getImpactColor('high') }} />
+          <div
+            class="w-2 h-2"
+            style={{ "background-color": getImpactColor("high") }}
+          />
           <span class="text-muted">High Impact</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <div class="w-2 h-2" style={{ 'background-color': getImpactColor('medium') }} />
+          <div
+            class="w-2 h-2"
+            style={{ "background-color": getImpactColor("medium") }}
+          />
           <span class="text-muted">Medium</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <div class="w-2 h-2" style={{ 'background-color': getImpactColor('low') }} />
+          <div
+            class="w-2 h-2"
+            style={{ "background-color": getImpactColor("low") }}
+          />
           <span class="text-muted">Low Impact</span>
         </div>
         <div class="ml-auto text-muted">
@@ -113,31 +135,37 @@ interface ComparisonRowProps {
 
 function ComparisonRow(props: ComparisonRowProps) {
   const isIncrease = (val: unknown): boolean => {
-    if (typeof val === 'number' && typeof props.field.oldValue === 'number') {
+    if (typeof val === "number" && typeof props.field.oldValue === "number") {
       return val > props.field.oldValue;
     }
     return false;
   };
 
   return (
-    <div class={`px-3 py-2 ${props.field.hasDifference ? '' : 'opacity-50'}`}>
+    <div class={`px-3 py-2 ${props.field.hasDifference ? "" : "opacity-50"}`}>
       <div class="flex items-center justify-between mb-1">
         <span class="text-xs text-foreground">{props.field.label}</span>
         <div class="flex items-center gap-1">
           <div
             class="w-1.5 h-1.5"
-            style={{ 'background-color': getImpactColor(props.field.impact) }}
+            style={{ "background-color": getImpactColor(props.field.impact) }}
             title={`${props.field.impact} impact`}
           />
-          <span class="text-[10px] text-muted uppercase">{props.field.impact}</span>
+          <span class="text-[10px] text-muted uppercase">
+            {props.field.impact}
+          </span>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div class="flex items-center gap-2">
           <div class="flex-1 text-right">
-            <span class="text-xs font-mono text-muted">{props.field.formattedOld}</span>
+            <span class="text-xs font-mono text-muted">
+              {props.field.formattedOld}
+            </span>
           </div>
-          <Show when={props.field.hasDifference && props.field.impact === 'high'}>
+          <Show
+            when={props.field.hasDifference && props.field.impact === "high"}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -155,7 +183,9 @@ function ComparisonRow(props: ComparisonRowProps) {
           </Show>
         </div>
         <div class="flex items-center gap-2">
-          <Show when={props.field.hasDifference && props.field.impact === 'high'}>
+          <Show
+            when={props.field.hasDifference && props.field.impact === "high"}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -172,7 +202,11 @@ function ComparisonRow(props: ComparisonRowProps) {
             </svg>
           </Show>
           <div class="flex-1 text-left">
-            <span class={`text-xs font-mono ${props.field.hasDifference ? 'text-foreground' : 'text-muted'}`}>{props.field.formattedNew}</span>
+            <span
+              class={`text-xs font-mono ${props.field.hasDifference ? "text-foreground" : "text-muted"}`}
+            >
+              {props.field.formattedNew}
+            </span>
           </div>
           <Show when={props.onApply && props.field.hasDifference}>
             <button
@@ -184,7 +218,9 @@ function ComparisonRow(props: ComparisonRowProps) {
             </button>
           </Show>
           <Show when={props.onApply && !props.field.hasDifference}>
-            <span class="text-[10px] text-muted uppercase tracking-wider">Same</span>
+            <span class="text-[10px] text-muted uppercase tracking-wider">
+              Same
+            </span>
           </Show>
         </div>
       </div>

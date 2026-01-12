@@ -1,7 +1,7 @@
-import type { SpeedRpmPoint, GearboxOutputs, TireCompound } from '../types';
-import { TIRE_FRICTION_COEFFICIENTS, AWD_TRACTION_MULTIPLIER } from '../types';
-import type { GearRatio, TorqueRpmRow, WheelData, Drivetrain, TractionMode } from '../../../types';
-import { GRAVITY_MS2, KPH_100_IN_MS, INCHES_PER_MILE, MM_TO_INCHES, KW_TO_HP } from '../../../constants/physics';
+import type { SpeedRpmPoint, GearboxOutputs, TireCompound } from '@/types';
+import { TIRE_FRICTION_COEFFICIENTS, AWD_TRACTION_MULTIPLIER } from '@/types';
+import type { GearRatio, TorqueRpmRow, WheelData, Drivetrain, TractionMode } from '@/types';
+import { GRAVITY_MS2, KPH_100_IN_MS, INCHES_PER_MILE, MM_TO_INCHES, KW_TO_HP } from '@/constants/physics';
 
 type GearboxCalcInputs = {
   frontWheel: WheelData;

@@ -1,8 +1,8 @@
-import { For } from 'solid-js';
-import { SectionHeader } from '../../../components/ui/section-header';
-import { SliderRow } from '../../../components/ui/slider-row';
-import { vehicleInputs, setVehicleInputs } from '../store';
-import { SUSPENSION_SLIDERS } from './suspension-tab-constants';
+import { For } from "solid-js";
+import { SectionHeader } from "@/components/ui/section-header";
+import { SliderRow } from "@/components/ui/slider-row";
+import { vehicleInputs, setVehicleInputs } from "../store";
+import { SUSPENSION_SLIDERS } from "./suspension-tab-constants";
 
 export function SuspensionParametersSection() {
   return (
@@ -11,14 +11,24 @@ export function SuspensionParametersSection() {
         title="Suspension Parameters"
         variant="input"
         help={{
-          description: 'Core suspension settings that define how your car handles bumps and cornering. Ride frequency controls how quickly the suspension oscillates, damping ratio affects how oscillations decay, and roll gradient determines body roll during turns.',
-          position: 'bottom',
+          description:
+            "Core suspension settings that define how your car handles bumps and cornering. Ride frequency controls how quickly the suspension oscillates, damping ratio affects how oscillations decay, and roll gradient determines body roll during turns.",
+          position: "bottom",
           articles: [
-            { label: 'Wikipedia: Suspension', url: 'https://en.wikipedia.org/wiki/Suspension_(vehicle)' },
+            {
+              label: "Wikipedia: Suspension",
+              url: "https://en.wikipedia.org/wiki/Suspension_(vehicle)",
+            },
           ],
           videos: [
-            { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
-            { label: 'Suspension Talk', url: 'https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq' },
+            {
+              label: "Springs & Dampers Guide",
+              url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc",
+            },
+            {
+              label: "Suspension Talk",
+              url: "https://youtu.be/rBcvqjVe_yI?si=poiSskSvUs5W3gXq",
+            },
           ],
         }}
       />

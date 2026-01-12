@@ -1,5 +1,5 @@
 import { createStore } from "solid-js/store";
-import type { GearRatio, FinalDrive, TireCompound, TractionMode } from "../../types";
+import type { GearRatio, FinalDrive, TireCompound, TractionMode } from "@/types";
 
 export const [torqueRpmData, setTorqueRpmData] = createStore<{ torque: number; rpm: number }[]>([
   { torque: 411, rpm: 358 },

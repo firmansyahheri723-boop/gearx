@@ -1,7 +1,7 @@
 import { For, Show, createEffect, createSignal } from 'solid-js';
 import { SolidMarkdown } from 'solid-markdown';
 import remarkGfm from 'remark-gfm';
-import type { ChatMessage } from '../../../types';
+import type { ChatMessage } from '@/types';
 
 type MessageListProps = {
   messages: ChatMessage[];

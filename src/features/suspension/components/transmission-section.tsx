@@ -1,14 +1,14 @@
-import { Component, For, createMemo, createSignal, Show } from "solid-js";
+import { For, createMemo, createSignal, Show } from "solid-js";
 import type { ColumnDef } from "@tanstack/solid-table";
-import { SectionHeader } from "../../../components/ui/section-header";
-import { EditableCell } from "../../../components/ui/editable-cell";
-import { GearSlider } from "../../../components/ui/gear-slider";
-import { DataTable } from "../../../components/ui/data-table";
-import { GearSpeedChart } from "../../../components/ui/gear-speed-chart";
-import { GearTorqueChart } from "../../../components/ui/gear-torque-chart";
-import { HelpTooltip } from "../../../components/ui/help-tooltip";
-import type { HelpLink } from "../../../types";
-import { TorqueExtractor } from "../../torque-extractor/components";
+import { SectionHeader } from "@/components/ui/section-header";
+import { EditableCell } from "@/components/ui/editable-cell";
+import { GearSlider } from "@/components/ui/gear-slider";
+import { DataTable } from "@/components/ui/data-table";
+import { GearSpeedChart } from "@/components/ui/gear-speed-chart";
+import { GearTorqueChart } from "@/components/ui/gear-torque-chart";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
+import type { HelpLink } from "@/types";
+import { TorqueExtractor } from "@/features/torque-extractor/components";
 import {
   torqueRpmData,
   setTorqueRpmData,
@@ -19,10 +19,10 @@ import {
   vehicleInputs,
   tireCompound,
   tractionMode,
-} from "../../../stores/vehicle";
-import { calculateGearboxOutputs } from "../../../features/gearbox/utils/gearbox";
-import type { TorqueRpmRow } from "../../../types";
-import { GEAR_LABELS } from "../../../types";
+} from "@/stores/vehicle";
+import { calculateGearboxOutputs } from "@/features/gearbox/utils/gearbox";
+import type { TorqueRpmRow } from "@/types";
+import { GEAR_LABELS } from "@/types";
 
 // Help tooltip content for transmission sections
 const HELP_CONTENT: Record<
@@ -295,7 +295,7 @@ export function TransmissionSection() {
                 <button
                   type="button"
                   onClick={() => setShowExtractor(true)}
-                  class="w-full aspect-[4/3] max-h-48 border border-border hover:border-border bg-surface/50 hover:bg-surface flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
+                  class="w-full aspect-4/3 max-h-48 border border-border hover:border-border bg-surface/50 hover:bg-surface flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer group"
                 >
                   <div class="w-10 h-10 border border-border group-hover:border-border bg-surface-elevated/50 flex items-center justify-center transition-colors">
                     <svg
@@ -320,7 +320,7 @@ export function TransmissionSection() {
               }
             >
               <div class="flex flex-col gap-2">
-                <div class="w-full aspect-[4/3] max-h-48 border border-border bg-surface/50 overflow-hidden">
+                <div class="w-full aspect-4/3 max-h-48 border border-border bg-surface/50 overflow-hidden">
                   <img
                     src={importedImageUrl()!}
                     alt="Imported torque curve"
@@ -355,9 +355,7 @@ export function TransmissionSection() {
                 position="bottom"
               />
             </div>
-            <span class="text-[9px] text-muted">
-              click min/max to edit
-            </span>
+            <span class="text-[9px] text-muted">click min/max to edit</span>
           </div>
           <table class="w-full border-collapse text-sm">
             <thead>
@@ -422,4 +420,4 @@ export function TransmissionSection() {
       </Show>
     </div>
   );
-};
+}

@@ -1,13 +1,15 @@
+import { createSignal, Show, For, onMount, onCleanup } from "solid-js";
 import {
   Outlet,
   useLocation,
   createRootRoute,
   Link,
 } from "@tanstack/solid-router";
-import { DashboardHeader } from "../components/ui/dashboard-header";
-import { initThemeListener } from "../stores/theme";
-import { clearSelection } from "../stores/selection";
-import { applySharedSetup } from "../stores/vehicle";
+import { DashboardHeader } from "@/components/ui/dashboard-header";
+import { initThemeListener } from "@/stores/theme";
+import { clearSelection } from "@/stores/selection";
+import { applySharedSetup } from "@/stores/vehicle";
+import { deserializeSetup } from "@/features/setups/utils/share";
 
 const TABS = [
   { id: "main", label: "Input", to: "/" },

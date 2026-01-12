@@ -1,5 +1,5 @@
-import type { SetupTag, SetupTagColor } from '../../../types';
-import { SETUP_TAG_COLORS } from '../../../types';
+import type { SetupTag, SetupTagColor } from '@/types';
+import { SETUP_TAG_COLORS } from '@/types';
 
 interface SetupTagProps {
   tag: SetupTag;

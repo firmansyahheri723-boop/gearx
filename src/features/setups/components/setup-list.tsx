@@ -1,21 +1,41 @@
-import { createSignal, For, Show, createMemo } from 'solid-js';
-import { getFilteredSetups, getAllTags, getAllCarNames, setFilter, clearFilter, deleteSetup, duplicateSetup } from '../store';
-import type { SavedSetup, SetupTag } from '../../../types';
-import { SetupCard } from './setup-card';
-import { SetupSaveDialog } from './setup-save-dialog';
-import { exportToJSON, downloadJSON, importFromFile } from '../utils/setup-import';
+import { createSignal, For, Show, createMemo } from "solid-js";
+import {
+  getFilteredSetups,
+  getAllTags,
+  getAllCarNames,
+  setFilter,
+  clearFilter,
+  deleteSetup,
+  duplicateSetup,
+} from "../store";
+import type { SavedSetup, SetupTag } from "@/types";
+import { SetupCard } from "./setup-card";
+import { SetupSaveDialog } from "./setup-save-dialog";
+import {
+  exportToJSON,
+  downloadJSON,
+  importFromFile,
+} from "../utils/setup-import";
 
 interface SetupListProps {
   onApplySetup: (setup: SavedSetup) => void;
 }
 
 export function SetupList(props: SetupListProps) {
-  const [search, setSearch] = createSignal('');
+  const [search, setSearch] = createSignal("");
   const [selectedTagIds, setSelectedTagIds] = createSignal<string[]>([]);
   const [carFilter, setCarFilter] = createSignal<string | null>(null);
-  const [sortBy, setSortBy] = createSignal<'name' | 'createdAt' | 'updatedAt'>('updatedAt');
-  const [sortOrder, setSortOrder] = createSignal<'asc' | 'desc'>('desc');
-  const [editingSetup, setEditingSetup] = createSignal<{ id: string; name: string; description: string; tags: SetupTag[]; notes: string } | null>(null);
+  const [sortBy, setSortBy] = createSignal<"name" | "createdAt" | "updatedAt">(
+    "updatedAt",
+  );
+  const [sortOrder, setSortOrder] = createSignal<"asc" | "desc">("desc");
+  const [editingSetup, setEditingSetup] = createSignal<{
+    id: string;
+    name: string;
+    description: string;
+    tags: SetupTag[];
+    notes: string;
+  } | null>(null);
   const [showSaveDialog, setShowSaveDialog] = createSignal(false);
   const [importing, setImporting] = createSignal(false);
 
@@ -46,12 +66,12 @@ export function SetupList(props: SetupListProps) {
     setFilter({ carFilter: car });
   };
 
-  const handleSort = (field: 'name' | 'createdAt' | 'updatedAt') => {
+  const handleSort = (field: "name" | "createdAt" | "updatedAt") => {
     if (sortBy() === field) {
-      setSortOrder(sortOrder() === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder() === "asc" ? "desc" : "asc");
     } else {
       setSortBy(field);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
     setFilter({ sortBy: field, sortOrder: sortOrder() });
   };
@@ -80,17 +100,17 @@ export function SetupList(props: SetupListProps) {
     const result = await importFromFile(file);
 
     if (!result.success) {
-      alert(`Import failed: ${result.errors.map((e) => e.message).join(', ')}`);
+      alert(`Import failed: ${result.errors.map((e) => e.message).join(", ")}`);
     } else {
       alert(`Imported ${result.setups.length} setup(s)`);
     }
 
     setImporting(false);
-    input.value = '';
+    input.value = "";
   };
 
   const handleClearFilters = () => {
-    setSearch('');
+    setSearch("");
     setSelectedTagIds([]);
     setCarFilter(null);
     clearFilter();
@@ -110,7 +130,7 @@ export function SetupList(props: SetupListProps) {
         </div>
         <div class="flex gap-2">
           <select
-            value={carFilter() ?? ''}
+            value={carFilter() ?? ""}
             onChange={(e) => handleCarSelect(e.currentTarget.value || null)}
             class="bg-surface-elevated/50 border border-border/50 px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:border-foreground/50"
           >
@@ -127,7 +147,7 @@ export function SetupList(props: SetupListProps) {
             Export
           </button>
           <label class="px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer">
-            {importing() ? 'Importing...' : 'Import'}
+            {importing() ? "Importing..." : "Import"}
             <input
               type="file"
               accept=".json"
@@ -145,15 +165,21 @@ export function SetupList(props: SetupListProps) {
               type="button"
               class={`px-2 py-0.5 text-[10px] uppercase tracking-wider border transition-colors ${
                 selectedTagIds().includes(tag.id)
-                  ? 'border-foreground bg-foreground/10'
-                  : 'border-border/30 bg-surface/50 text-muted hover:border-foreground/30'
+                  ? "border-foreground bg-foreground/10"
+                  : "border-border/30 bg-surface/50 text-muted hover:border-foreground/30"
               }`}
               onClick={() => handleTagToggle(tag.id)}
               style={{
-                '--tag-color': tag.color,
-                'border-color': selectedTagIds().includes(tag.id) ? tag.color : undefined,
-                'background-color': selectedTagIds().includes(tag.id) ? `${tag.color}20` : undefined,
-                'color': selectedTagIds().includes(tag.id) ? tag.color : undefined,
+                "--tag-color": tag.color,
+                "border-color": selectedTagIds().includes(tag.id)
+                  ? tag.color
+                  : undefined,
+                "background-color": selectedTagIds().includes(tag.id)
+                  ? `${tag.color}20`
+                  : undefined,
+                color: selectedTagIds().includes(tag.id)
+                  ? tag.color
+                  : undefined,
               }}
             >
               {tag.name}
@@ -174,26 +200,28 @@ export function SetupList(props: SetupListProps) {
       <div class="flex items-center gap-1 text-[10px] text-muted">
         <button
           type="button"
-          onClick={() => handleSort('updatedAt')}
-          class={`hover:text-foreground ${sortBy() === 'updatedAt' ? 'text-foreground' : ''}`}
+          onClick={() => handleSort("updatedAt")}
+          class={`hover:text-foreground ${sortBy() === "updatedAt" ? "text-foreground" : ""}`}
         >
-          Updated {sortBy() === 'updatedAt' && (sortOrder() === 'desc' ? '↓' : '↑')}
+          Updated{" "}
+          {sortBy() === "updatedAt" && (sortOrder() === "desc" ? "↓" : "↑")}
         </button>
         <span class="text-muted">|</span>
         <button
           type="button"
-          onClick={() => handleSort('createdAt')}
-          class={`hover:text-foreground ${sortBy() === 'createdAt' ? 'text-foreground' : ''}`}
+          onClick={() => handleSort("createdAt")}
+          class={`hover:text-foreground ${sortBy() === "createdAt" ? "text-foreground" : ""}`}
         >
-          Created {sortBy() === 'createdAt' && (sortOrder() === 'desc' ? '↓' : '↑')}
+          Created{" "}
+          {sortBy() === "createdAt" && (sortOrder() === "desc" ? "↓" : "↑")}
         </button>
         <span class="text-muted">|</span>
         <button
           type="button"
-          onClick={() => handleSort('name')}
-          class={`hover:text-foreground ${sortBy() === 'name' ? 'text-foreground' : ''}`}
+          onClick={() => handleSort("name")}
+          class={`hover:text-foreground ${sortBy() === "name" ? "text-foreground" : ""}`}
         >
-          Name {sortBy() === 'name' && (sortOrder() === 'desc' ? '↓' : '↑')}
+          Name {sortBy() === "name" && (sortOrder() === "desc" ? "↓" : "↑")}
         </button>
       </div>
 
@@ -215,8 +243,8 @@ export function SetupList(props: SetupListProps) {
       <Show when={filteredSetups().length === 0}>
         <div class="text-center py-8 text-muted text-sm">
           {search() || selectedTagIds().length > 0 || carFilter()
-            ? 'No setups match your filters'
-            : 'No saved setups yet. Save your first setup!'}
+            ? "No setups match your filters"
+            : "No saved setups yet. Save your first setup!"}
         </div>
       </Show>
 

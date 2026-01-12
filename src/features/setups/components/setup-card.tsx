@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import type { SavedSetup } from "../../types";
+import type { SavedSetup } from "@/types";
 import { SetupTag as SetupTagComponent } from "./setup-tag";
 
 interface SetupCardProps {

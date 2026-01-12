@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { isCellSelected } from '../../stores/selection';
+import { isCellSelected } from '@/stores/selection';
 import { Dropdown, DropdownOption } from './dropdown';
 
 interface SelectCellProps {

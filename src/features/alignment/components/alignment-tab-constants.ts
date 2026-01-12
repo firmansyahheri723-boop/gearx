@@ -1,5 +1,5 @@
-import type { AlignmentInputs, HelpContent } from "../../../types";
-import { SegmentedRowOption } from "../../ui/segmented-row";
+import type { AlignmentInputs, HelpContent } from "@/types";
+import { SegmentedRowOption } from "@/components/ui/segmented-row";
 
 export type SliderConfig = {
   key: keyof AlignmentInputs;

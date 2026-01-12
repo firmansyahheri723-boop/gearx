@@ -1,11 +1,11 @@
-import { SectionHeader } from '../../../components/ui/section-header';
-import { MetricCard, MetricCardWithHelp } from '../../../components/ui/metric-card';
-import type { SuspensionOutputs } from '../utils/suspension';
+import { SectionHeader } from "@/components/ui/section-header";
+import { MetricCard, MetricCardWithHelp } from "@/components/ui/metric-card";
+import type { SuspensionOutputs } from "../utils/suspension";
 
 type Props = {
   outputs: SuspensionOutputs;
   frontWeightDistribution: number;
-}
+};
 
 export function AccelerationMetricsSection(props: Props) {
   return (
@@ -14,16 +14,17 @@ export function AccelerationMetricsSection(props: Props) {
         title="Acceleration & Weight Transfer"
         variant="output"
         help={{
-          description: 'Weight transfers from front to rear under acceleration, affecting traction distribution.',
-          formula: '\\Delta W = \\frac{h}{L} \\cdot W \\cdot a',
+          description:
+            "Weight transfers from front to rear under acceleration, affecting traction distribution.",
+          formula: "\\Delta W = \\frac{h}{L} \\cdot W \\cdot a",
           variables: [
-            'ΔW = weight transfer (kg)',
-            'h = CoG height (m)',
-            'L = wheelbase (m)',
-            'W = total weight (kg)',
-            'a = longitudinal acceleration (g)',
+            "ΔW = weight transfer (kg)",
+            "h = CoG height (m)",
+            "L = wheelbase (m)",
+            "W = total weight (kg)",
+            "a = longitudinal acceleration (g)",
           ],
-          position: 'bottom',
+          position: "bottom",
         }}
       />
       <div class="p-4">
@@ -34,13 +35,15 @@ export function AccelerationMetricsSection(props: Props) {
             unit="g"
             highlight
             help={{
-              description: 'Longitudinal acceleration calculated from 0-100 kph time. This determines how much weight transfers under acceleration.',
-              formula: 'a = \\frac{v_f - v_s}{\\Delta t \\cdot g} = \\frac{27.78}{t_{0-100} \\cdot 9.81}',
+              description:
+                "Longitudinal acceleration calculated from 0-100 kph time. This determines how much weight transfers under acceleration.",
+              formula:
+                "a = \\frac{v_f - v_s}{\\Delta t \\cdot g} = \\frac{27.78}{t_{0-100} \\cdot 9.81}",
               variables: [
-                'a = acceleration (g)',
-                'v_f = final velocity (27.78 m/s = 100 kph)',
-                'v_s = starting velocity (0 m/s)',
-                't = 0-100 kph time (s)',
+                "a = acceleration (g)",
+                "v_f = final velocity (27.78 m/s = 100 kph)",
+                "v_s = starting velocity (0 m/s)",
+                "t = 0-100 kph time (s)",
               ],
             }}
           />
@@ -50,13 +53,14 @@ export function AccelerationMetricsSection(props: Props) {
             unit="g"
             highlight
             help={{
-              description: 'Lateral acceleration at a given corner speed and radius. Uses 118m radius as a standard reference corner.',
-              formula: 'A_a = \\frac{V^2}{R \\cdot g}',
+              description:
+                "Lateral acceleration at a given corner speed and radius. Uses 118m radius as a standard reference corner.",
+              formula: "A_a = \\frac{V^2}{R \\cdot g}",
               variables: [
-                'A_a = lateral acceleration (g)',
-                'V = velocity (m/s)',
-                'R = corner radius (118 m)',
-                'g = gravity (9.81 m/s²)',
+                "A_a = lateral acceleration (g)",
+                "V = velocity (m/s)",
+                "R = corner radius (118 m)",
+                "g = gravity (9.81 m/s²)",
               ],
             }}
           />
@@ -65,14 +69,15 @@ export function AccelerationMetricsSection(props: Props) {
             value={props.outputs.acceleration.weightTransfer.toFixed(1)}
             unit="kg"
             help={{
-              description: 'Weight transfers from front to rear under acceleration, affecting traction distribution.',
-              formula: '\\Delta W = \\frac{h}{L} \\cdot W \\cdot a',
+              description:
+                "Weight transfers from front to rear under acceleration, affecting traction distribution.",
+              formula: "\\Delta W = \\frac{h}{L} \\cdot W \\cdot a",
               variables: [
-                'ΔW = weight transfer (kg)',
-                'h = CoG height (m)',
-                'L = wheelbase (m)',
-                'W = total weight (kg)',
-                'a = longitudinal acceleration (g)',
+                "ΔW = weight transfer (kg)",
+                "h = CoG height (m)",
+                "L = wheelbase (m)",
+                "W = total weight (kg)",
+                "a = longitudinal acceleration (g)",
               ],
             }}
           />
@@ -100,7 +105,9 @@ export function AccelerationMetricsSection(props: Props) {
           <div class="relative h-6 bg-surface-elevated rounded">
             <div
               class="absolute left-0 top-0 h-full bg-foreground/30 border-r border-foreground-secondary transition-all"
-              style={{ width: `${props.outputs.acceleration.frontBiasOnAccel}%` }}
+              style={{
+                width: `${props.outputs.acceleration.frontBiasOnAccel}%`,
+              }}
             />
             <div class="absolute inset-0 flex items-center justify-between px-2 text-[10px]">
               <span class="text-foreground-secondary font-medium">
@@ -114,7 +121,12 @@ export function AccelerationMetricsSection(props: Props) {
           <div class="mt-1 flex justify-between text-[10px] text-muted">
             <span>Static: {props.frontWeightDistribution}% front</span>
             <span>
-              Change: {(props.frontWeightDistribution - props.outputs.acceleration.frontBiasOnAccel).toFixed(1)}%
+              Change:{" "}
+              {(
+                props.frontWeightDistribution -
+                props.outputs.acceleration.frontBiasOnAccel
+              ).toFixed(1)}
+              %
             </span>
           </div>
         </div>

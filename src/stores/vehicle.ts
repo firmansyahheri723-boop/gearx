@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
-import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, SavedSetup, SetupData } from "../types";
-import { setAlignmentInputs } from "../features/alignment/store";
+import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, SavedSetup, SetupData } from "@/types";
+import { setAlignmentInputs } from "@/features/alignment/store";
 
 export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   carSelection: "Dodge Challenger SRT",

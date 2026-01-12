@@ -1,8 +1,8 @@
 import { Component, createMemo, For, Show } from 'solid-js';
 import { VisXYContainer, VisLine, VisAxis } from '@unovis/solid';
 import { CurveType } from '@unovis/ts';
-import type { SpeedRpmPoint } from '../../types';
-import { GEAR_COLORS } from '../../constants/colors';
+import type { SpeedRpmPoint } from '@/types';
+import { GEAR_COLORS } from '@/constants/colors';
 
 interface GearSpeedChartProps {
   /** Speed/RPM data for each gear: speedRpmData[gearIndex][rpmIndex] */

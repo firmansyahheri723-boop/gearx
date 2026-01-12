@@ -1,5 +1,5 @@
-import { SectionHeader } from '../../../components/ui/section-header';
-import { FormulaCard } from '../../../components/ui/metric-card';
+import { SectionHeader } from '@/components/ui/section-header';
+import { FormulaCard } from '@/components/ui/metric-card';
 
 export function AlignmentFormulaReferenceSection() {
   return (

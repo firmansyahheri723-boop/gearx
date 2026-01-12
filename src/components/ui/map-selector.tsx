@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import type { GameMapConfig } from "../../types/map";
+import type { GameMapConfig } from "@/types/map";
 
 type MapSelectorProps = {
   maps: GameMapConfig[];

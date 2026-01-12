@@ -1,4 +1,4 @@
-import type { TorqueExtractorPoint, TorqueExtractorCalibration, ExtractedDataPoint } from '../../../types/extraction';
+import type { TorqueExtractorPoint, TorqueExtractorCalibration, ExtractedDataPoint } from '@/types/extraction';
 
 function rgbToHsv(r: number, g: number, b: number): [number, number, number] {
   r /= 255;

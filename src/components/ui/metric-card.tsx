@@ -1,7 +1,7 @@
 import { Show, For } from 'solid-js';
 import { HelpTooltip } from './help-tooltip';
 import { Formula } from './formula';
-import type { HelpContent } from '../../types';
+import type { HelpContent } from '@/types';
 
 type MetricCardProps = {
   label: string;

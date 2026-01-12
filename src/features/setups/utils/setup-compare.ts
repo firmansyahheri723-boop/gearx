@@ -1,4 +1,4 @@
-import type { SavedSetup, SetupDiff, SetupDiffField, SetupDiffCategory } from '../types';
+import type { SavedSetup, SetupDiff, SetupDiffField, SetupDiffCategory } from '@/types';
 
 const CATEGORY_CONFIG: Record<string, { name: string; label: string; impactThreshold: number }> = {
   general: { name: 'general', label: 'General', impactThreshold: 10 },

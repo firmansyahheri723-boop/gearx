@@ -1,14 +1,5 @@
-/**
- * Suspension Calculator
- * Based on formula.xlsx "Suspension calculator" sheet
- */
-
-import {
-  GRAVITY_MS2,
-  KPH_100_IN_MS,
-  REFERENCE_CORNER_RADIUS_M,
-} from '../../../constants/physics';
-import { calcLongitudinalAccelG } from '../../gearbox/utils/gearbox';
+import { GRAVITY_MS2 } from "@/constants/physics";
+import { calcLongitudinalAccelG } from "@/features/gearbox/utils/gearbox";
 
 export type SuspensionInputs = {
   weight: number;
@@ -93,7 +84,7 @@ export type SuspensionOutputs = {
 function calcSprungMass(
   weight: number,
   frontWeightDist: number,
-  wheelWeight: number
+  wheelWeight: number,
 ): { front: number; rear: number } {
   // Front/rear axle weights
   const frontAxleWeight = weight * (frontWeightDist / 100);
@@ -111,9 +102,14 @@ function calcSprungMass(
  * Excel: D4 = 4 * 3.14^2 * f^2 * m / 1000 (result in kN/m)
  * K = 4 × π² × f² × m
  */
-function calcSpringStiffness(sprungMassPerCorner: number, rideFrequency: number): number {
+function calcSpringStiffness(
+  sprungMassPerCorner: number,
+  rideFrequency: number,
+): number {
   // Returns N/m (multiply by 1000 from kN/m in Excel, but we keep as N/m)
-  return 4 * Math.PI * Math.PI * rideFrequency * rideFrequency * sprungMassPerCorner;
+  return (
+    4 * Math.PI * Math.PI * rideFrequency * rideFrequency * sprungMassPerCorner
+  );
 }
 
 /**
@@ -121,7 +117,10 @@ function calcSpringStiffness(sprungMassPerCorner: number, rideFrequency: number)
  * Excel: D8 = 2 * SQRT(D4 * 1000 * A10)
  * Ccrit = 2 × √(K × m)
  */
-function calcCriticalDamping(stiffnessNm: number, sprungMassPerCorner: number): number {
+function calcCriticalDamping(
+  stiffnessNm: number,
+  sprungMassPerCorner: number,
+): number {
   return 2 * Math.sqrt(stiffnessNm * sprungMassPerCorner);
 }
 
@@ -137,7 +136,7 @@ function calcCriticalDamping(stiffnessNm: number, sprungMassPerCorner: number): 
 function calcDampingForces(
   critDampingFront: number,
   critDampingRear: number,
-  dampingRatio: number
+  dampingRatio: number,
 ): DampersOutput {
   const dampingForceFront = critDampingFront * dampingRatio;
   const dampingForceRear = critDampingRear * dampingRatio;
@@ -181,7 +180,7 @@ function calcWeightTransfer(
   cogHeightM: number,
   wheelbaseM: number,
   massKg: number,
-  longAccelG: number
+  longAccelG: number,
 ): number {
   return (cogHeightM / wheelbaseM) * massKg * longAccelG;
 }
@@ -189,17 +188,17 @@ function calcWeightTransfer(
 /**
  * Calculate anti-roll bar stiffness
  * Based on Excel formulas:
- * 
+ *
  * KφDES = W × H / (φ/Ay)  [W in kg, result in Nm/deg]
- * 
+ *
  * t = average track width = (front + rear) / 2
  * Kw = average wheel rate = (front + rear) / 2
- * 
+ *
  * KφA = (π/180) × (KφDES × Kt × (t²/2)) / ((Kt × (t²/2) × π/180 - KφDES) - (π × Kw × (t²/2) / 180))
- * 
+ *
  * KφFA = KφA × Nmag / 100
  * KφRA = KφA × (100 - Nmag) / 100
- * 
+ *
  * FARB = KφFA × π / (180 × t²)
  * RARB = KφRA × π / (180 × t²)
  */
@@ -212,7 +211,7 @@ function calcAntiRollBars(
   tireRate: number, // Kt in N/m
   frontTrackWidth: number, // meters
   rearTrackWidth: number, // meters
-  magicNumber: number // % for front distribution
+  magicNumber: number, // % for front distribution
 ): AntiRollBarsOutput {
   const W = weight; // Keep in kg as per Excel formula D28 = A4 * A24 / D24
   const H = rollCenterToCoG;
@@ -239,7 +238,7 @@ function calcAntiRollBars(
   const subtractTerm = (Math.PI * Kw * tSquaredHalf) / 180;
 
   // Excel formula structure: numerator / denom1 - subtractTerm
-  const KphiA = denom1 !== 0 ? (numerator / denom1) - subtractTerm : 0;
+  const KphiA = denom1 !== 0 ? numerator / denom1 - subtractTerm : 0;
 
   // Front and rear roll rates (Excel: A35, B35)
   const KphiFA = KphiA * (magicNumber / 100);
@@ -265,7 +264,9 @@ function calcAntiRollBars(
 /**
  * Main function to calculate all suspension outputs
  */
-export function calculateSuspensionOutputs(inputs: SuspensionInputs): SuspensionOutputs {
+export function calculateSuspensionOutputs(
+  inputs: SuspensionInputs,
+): SuspensionOutputs {
   const {
     weight,
     frontWeightDistribution,
@@ -301,13 +302,19 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
 
   if (hasAero) {
     // Divide aero load by 2 for per-corner values
-    adjustedFrontSprungMass = sprungMass.front + (aeroFrontLoadKg / 2);
-    adjustedRearSprungMass = sprungMass.rear + (aeroRearLoadKg / 2);
+    adjustedFrontSprungMass = sprungMass.front + aeroFrontLoadKg / 2;
+    adjustedRearSprungMass = sprungMass.rear + aeroRearLoadKg / 2;
   }
 
   // Calculate spring stiffness (N/m)
-  const frontStiffness = calcSpringStiffness(adjustedFrontSprungMass, rideFrequency);
-  const rearStiffness = calcSpringStiffness(adjustedRearSprungMass, rideFrequency);
+  const frontStiffness = calcSpringStiffness(
+    adjustedFrontSprungMass,
+    rideFrequency,
+  );
+  const rearStiffness = calcSpringStiffness(
+    adjustedRearSprungMass,
+    rideFrequency,
+  );
 
   const springs: SpringsOutput = {
     frontSprungMass: adjustedFrontSprungMass,
@@ -317,14 +324,29 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
   };
 
   // Calculate damping
-  const critDampingFront = calcCriticalDamping(frontStiffness, adjustedFrontSprungMass);
-  const critDampingRear = calcCriticalDamping(rearStiffness, adjustedRearSprungMass);
-  const dampers = calcDampingForces(critDampingFront, critDampingRear, dampingRatio);
+  const critDampingFront = calcCriticalDamping(
+    frontStiffness,
+    adjustedFrontSprungMass,
+  );
+  const critDampingRear = calcCriticalDamping(
+    rearStiffness,
+    adjustedRearSprungMass,
+  );
+  const dampers = calcDampingForces(
+    critDampingFront,
+    critDampingRear,
+    dampingRatio,
+  );
 
   // Calculate acceleration metrics
   const longitudinalAccelG = calcLongitudinalAccelG(acceleration0to100);
   const lateralAccelG = calcLateralAccelG(maxSpeed118mRadius, 118);
-  const weightTransfer = calcWeightTransfer(cogHeight, wheelbase, weight, longitudinalAccelG);
+  const weightTransfer = calcWeightTransfer(
+    cogHeight,
+    wheelbase,
+    weight,
+    longitudinalAccelG,
+  );
 
   const frontWeightStatic = weight * (frontWeightDistribution / 100);
   const rearWeightStatic = weight * (1 - frontWeightDistribution / 100);
@@ -357,7 +379,7 @@ export function calculateSuspensionOutputs(inputs: SuspensionInputs): Suspension
     tireRate,
     frontTrackWidth,
     rearTrackWidth,
-    magicNumber
+    magicNumber,
   );
 
   return {

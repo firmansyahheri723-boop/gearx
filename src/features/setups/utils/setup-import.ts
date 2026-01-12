@@ -1,5 +1,5 @@
-import type { SavedSetup, SetupTag } from '../types';
-import type { ShareSetupData } from '../../../utils/share';
+import type { SavedSetup } from "@/types";
+import type { ShareSetupData } from "../utils/share";
 
 export interface ImportOptions {
   replaceExisting?: boolean;
@@ -35,51 +35,46 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
-function formatValue(value: unknown): string {
-  if (typeof value === 'number') {
-    return Number.isInteger(value) ? value.toString() : value.toFixed(3);
-  }
-  if (typeof value === 'boolean') {
-    return value ? 'true' : 'false';
-  }
-  if (Array.isArray(value)) {
-    return `[${value.length} items]`;
-  }
-  if (value === null || value === undefined) {
-    return '-';
-  }
-  return String(value);
-}
-
-function validateSetup(data: Record<string, unknown>): { valid: boolean; errors: string[] } {
+function validateSetup(data: Record<string, unknown>): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
-  if (typeof data !== 'object' || data === null) {
-    return { valid: false, errors: ['Data is not an object'] };
+  if (typeof data !== "object" || data === null) {
+    return { valid: false, errors: ["Data is not an object"] };
   }
 
   const obj = data as Record<string, unknown>;
 
-  if (typeof obj.id !== 'string') {
-    errors.push('Missing or invalid id');
+  if (typeof obj.id !== "string") {
+    errors.push("Missing or invalid id");
   }
-  if (typeof obj.name !== 'string') {
-    errors.push('Missing or invalid name');
+  if (typeof obj.name !== "string") {
+    errors.push("Missing or invalid name");
   }
-  if (typeof obj.inputs !== 'object' || obj.inputs === null) {
-    errors.push('Missing or invalid inputs');
+  if (typeof obj.inputs !== "object" || obj.inputs === null) {
+    errors.push("Missing or invalid inputs");
   }
-  if (obj.version !== undefined && typeof obj.version !== 'number') {
-    errors.push('Invalid version');
+  if (obj.version !== undefined && typeof obj.version !== "number") {
+    errors.push("Invalid version");
   }
-  if (obj.version !== undefined && obj.version < MIN_VERSION) {
-    errors.push(`Version ${obj.version} is not supported. Minimum required: ${MIN_VERSION}`);
+  if (
+    obj.version !== undefined &&
+    (obj.version ?? Number.MAX_SAFE_INTEGER) < MIN_VERSION
+  ) {
+    errors.push(
+      `Version ${obj.version} is not supported. Minimum required: ${MIN_VERSION}`,
+    );
   }
 
   return { valid: errors.length === 0, errors };
 }
 
-export function exportToJSON(setups: SavedSetup[], options: ExportOptions = {}): string {
+export function exportToJSON(
+  setups: SavedSetup[],
+  options: ExportOptions = {},
+): string {
   const { includeNotes = true, minify = false } = options;
 
   const data = setups.map((setup) => {
@@ -115,13 +110,18 @@ export function exportToJSON(setups: SavedSetup[], options: ExportOptions = {}):
   return minify ? JSON.stringify(data) : JSON.stringify(data, null, 2);
 }
 
-export function downloadJSON(setups: SavedSetup[], filename?: string, options: ExportOptions = {}): void {
+export function downloadJSON(
+  setups: SavedSetup[],
+  filename?: string,
+  options: ExportOptions = {},
+): void {
   const json = exportToJSON(setups, options);
-  const name = filename ?? `gearx-setups-${new Date().toISOString().split('T')[0]}.json`;
-  const blob = new Blob([json], { type: 'application/json' });
+  const name =
+    filename ?? `gearx-setups-${new Date().toISOString().split("T")[0]}.json`;
+  const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
 
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
   link.download = name;
   document.body.appendChild(link);
@@ -130,7 +130,10 @@ export function downloadJSON(setups: SavedSetup[], filename?: string, options: E
   URL.revokeObjectURL(url);
 }
 
-export function importFromJSON(jsonData: string, options: ImportOptions = {}): ImportResult {
+export function importFromJSON(
+  jsonData: string,
+  options: ImportOptions = {},
+): ImportResult {
   const { replaceExisting = false, generateNewIds = false } = options;
   const errors: ImportError[] = [];
   const setups: SavedSetup[] = [];
@@ -142,7 +145,12 @@ export function importFromJSON(jsonData: string, options: ImportOptions = {}): I
     return {
       success: false,
       setups: [],
-      errors: [{ index: 0, message: `JSON parse error: ${e instanceof Error ? e.message : 'Unknown error'}` }],
+      errors: [
+        {
+          index: 0,
+          message: `JSON parse error: ${e instanceof Error ? e.message : "Unknown error"}`,
+        },
+      ],
     };
   }
 
@@ -150,7 +158,7 @@ export function importFromJSON(jsonData: string, options: ImportOptions = {}): I
     return {
       success: false,
       setups: [],
-      errors: [{ index: 0, message: 'Expected an array of setups' }],
+      errors: [{ index: 0, message: "Expected an array of setups" }],
     };
   }
 
@@ -160,7 +168,7 @@ export function importFromJSON(jsonData: string, options: ImportOptions = {}): I
     if (!validation.valid) {
       errors.push({
         index,
-        message: validation.errors.join('; '),
+        message: validation.errors.join("; "),
       });
       return;
     }
@@ -183,7 +191,10 @@ export function importFromJSON(jsonData: string, options: ImportOptions = {}): I
   };
 }
 
-export function importFromFile(file: File, options: ImportOptions = {}): Promise<ImportResult> {
+export function importFromFile(
+  file: File,
+  options: ImportOptions = {},
+): Promise<ImportResult> {
   return new Promise((resolve) => {
     const reader = new FileReader();
 
@@ -196,7 +207,7 @@ export function importFromFile(file: File, options: ImportOptions = {}): Promise
       resolve({
         success: false,
         setups: [],
-        errors: [{ index: 0, message: 'Failed to read file' }],
+        errors: [{ index: 0, message: "Failed to read file" }],
       });
     };
 
@@ -218,7 +229,10 @@ export function createShareDataFromSetup(setup: SavedSetup): ShareSetupData {
   };
 }
 
-export function validateImportVersion(version: number): { valid: boolean; message: string } {
+export function validateImportVersion(version: number): {
+  valid: boolean;
+  message: string;
+} {
   if (version < MIN_VERSION) {
     return {
       valid: false,
@@ -231,7 +245,7 @@ export function validateImportVersion(version: number): { valid: boolean; messag
       message: `Version ${version} may not be fully compatible. Some data might be lost.`,
     };
   }
-  return { valid: true, message: 'Version compatible' };
+  return { valid: true, message: "Version compatible" };
 }
 
 export function generateSetupSummary(setup: SavedSetup): string {
@@ -242,12 +256,14 @@ export function generateSetupSummary(setup: SavedSetup): string {
   ];
 
   if (setup.tags.length > 0) {
-    lines.push(`Tags: ${setup.tags.map((t) => t.name).join(', ')}`);
+    lines.push(`Tags: ${setup.tags.map((t) => t.name).join(", ")}`);
   }
 
   if (setup.notes) {
-    lines.push(`Notes: ${setup.notes.substring(0, 100)}${setup.notes.length > 100 ? '...' : ''}`);
+    lines.push(
+      `Notes: ${setup.notes.substring(0, 100)}${setup.notes.length > 100 ? "..." : ""}`,
+    );
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }

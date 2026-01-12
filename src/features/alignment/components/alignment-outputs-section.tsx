@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
-import { SectionHeader } from '../../../components/ui/section-header';
-import { MetricCard } from '../../../components/ui/metric-card';
-import type { AlignmentOutputs } from '../../../types';
+import { SectionHeader } from '@/components/ui/section-header';
+import { MetricCard } from '@/components/ui/metric-card';
+import type { AlignmentOutputs } from '@/types';
 
 type Props = { outputs: AlignmentOutputs };
 

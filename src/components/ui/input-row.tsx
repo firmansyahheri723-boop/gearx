@@ -1,6 +1,6 @@
 import { Component, splitProps, type JSX } from 'solid-js';
 import { HelpTooltip } from './help-tooltip';
-import type { HelpLink } from '../../types';
+import type { HelpLink } from '@/types';
 
 export type InputRowProps = {
   label: string;

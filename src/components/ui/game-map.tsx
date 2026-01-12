@@ -1,6 +1,6 @@
 import { onMount, onCleanup, createEffect } from 'solid-js';
 import L from 'leaflet';
-import type { Landmark, GameMapConfig } from '../../types/map';
+import type { Landmark, GameMapConfig } from '@/types/map';
 
 type GameMapProps = {
   config: GameMapConfig;

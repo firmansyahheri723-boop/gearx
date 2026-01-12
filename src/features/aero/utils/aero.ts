@@ -1,5 +1,5 @@
-import type { AeroSettings, AeroStandardOutput, AeroExperimentalOutput, AeroSpeedDataPoint } from '../types';
-import type { CarData } from '../../../types';
+import type { AeroSettings, AeroStandardOutput, AeroExperimentalOutput, AeroSpeedDataPoint } from '@/types';
+import type { CarData } from '@/types';
 
 const AIR_DENSITY = 1.225;
 

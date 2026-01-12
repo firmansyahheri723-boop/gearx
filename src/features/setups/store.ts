@@ -1,13 +1,13 @@
 import { createStore } from "solid-js/store";
-import { createSignal, createMemo } from "solid-js";
+import { createSignal } from "solid-js";
 import { makePersisted } from "@solid-primitives/storage";
-import type { SavedSetup, SetupTag, SetupFilter, SetupDiff } from "../types";
+import type { SavedSetup, SetupTag, SetupFilter, SetupDiff } from "@/types";
 
 const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
 
 function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
 export const [setupsStore, setSetupsStore] = createStore({
@@ -22,16 +22,18 @@ export const [setupsStore, setSetupsStore] = createStore({
   },
 });
 
-export const [editingSetup, setEditingSetup] = createSignal<SavedSetup | null>(null);
+export const [editingSetup, setEditingSetup] = createSignal<SavedSetup | null>(
+  null,
+);
 
 const [persistedSetups, setPersistedSetups] = makePersisted(
   createSignal<SavedSetup[]>([]),
-  { name: STORAGE_KEY }
+  { name: STORAGE_KEY },
 );
 
 const [persistedTags, setPersistedTags] = makePersisted(
   createSignal<SetupTag[]>([]),
-  { name: TAGS_STORAGE_KEY }
+  { name: TAGS_STORAGE_KEY },
 );
 
 export function initializeSetupsStore(): void {
@@ -62,13 +64,15 @@ export function getFilteredSetups(): SavedSetup[] {
       (s) =>
         s.name.toLowerCase().includes(search) ||
         s.carName.toLowerCase().includes(search) ||
-        s.notes?.toLowerCase().includes(search)
+        s.notes?.toLowerCase().includes(search),
     );
   }
 
   if (setupsStore.filter.tags.length > 0) {
     result = result.filter((s) =>
-      setupsStore.filter.tags.every((tagId) => s.tagIds.includes(tagId))
+      setupsStore.filter.tags.every((tagId) =>
+        s.tags.some((tag) => tag.id === tagId),
+      ),
     );
   }
 
@@ -82,7 +86,9 @@ export function getFilteredSetups(): SavedSetup[] {
     if (field === "name") {
       return a.name.localeCompare(b.name) * order;
     }
-    return (new Date(a[field]).getTime() - new Date(b[field]).getTime()) * order;
+    return (
+      (new Date(a[field]).getTime() - new Date(b[field]).getTime()) * order
+    );
   });
 
   return result;
@@ -112,7 +118,7 @@ export function clearFilter() {
 }
 
 export function saveSetup(
-  setup: Omit<SavedSetup, "id" | "createdAt" | "updatedAt">
+  setup: Omit<SavedSetup, "id" | "createdAt" | "updatedAt">,
 ) {
   const existing = editingSetup();
   let updatedSetup: SavedSetup;
@@ -121,10 +127,10 @@ export function saveSetup(
     updatedSetup = {
       ...existing,
       ...setup,
-      updatedAt: new Date().toISOString(),
+      updatedAt: Date.now(),
     };
     setSetupsStore("setups", (s) =>
-      s.id === existing.id ? updatedSetup : s
+      s.map((setup) => (setup.id === existing.id ? updatedSetup : setup)),
     );
   } else {
     updatedSetup = {
@@ -146,18 +152,23 @@ export function deleteSetup(id: string) {
   setPersistedSetups(setupsStore.setups);
 }
 
-export function duplicateSetup(id: string, newName?: string): SavedSetup | null {
+export function duplicateSetup(
+  id: string,
+  newName?: string,
+): SavedSetup | null {
   const original = getSetupById(id);
   if (!original) return null;
 
   return createSetup({
     ...original,
     name: newName ?? `${original.name} (Copy)`,
-    tags: [...original.tagIds],
+    tags: [...original.tags],
   });
 }
 
-export function createSetup(data: Omit<SavedSetup, "id" | "createdAt" | "updatedAt">): SavedSetup {
+export function createSetup(
+  data: Omit<SavedSetup, "id" | "createdAt" | "updatedAt">,
+): SavedSetup {
   const now = Date.now();
   const setup: SavedSetup = {
     ...data,
@@ -171,7 +182,10 @@ export function createSetup(data: Omit<SavedSetup, "id" | "createdAt" | "updated
   return setup;
 }
 
-export function updateSetup(id: string, updates: Partial<Omit<SavedSetup, "id" | "createdAt">>): boolean {
+export function updateSetup(
+  id: string,
+  updates: Partial<Omit<SavedSetup, "id" | "createdAt">>,
+): boolean {
   let found = false;
   setSetupsStore("setups", (s) =>
     s.map((setup) => {
@@ -180,7 +194,7 @@ export function updateSetup(id: string, updates: Partial<Omit<SavedSetup, "id" |
         return { ...setup, ...updates, updatedAt: Date.now() };
       }
       return setup;
-    })
+    }),
   );
   if (found) {
     setPersistedSetups(setupsStore.setups);
@@ -204,8 +218,8 @@ export function deleteTag(id: string) {
   setSetupsStore("setups", (s) =>
     s.map((setup) => ({
       ...setup,
-      tagIds: setup.tagIds.filter((tid) => tid !== id),
-    }))
+      tagIds: setup.tags.filter((t) => t.id !== id),
+    })),
   );
   setPersistedTags(setupsStore.tags);
   setPersistedSetups(setupsStore.setups);
@@ -213,11 +227,53 @@ export function deleteTag(id: string) {
 
 export function compareTwoSetups(a: SavedSetup, b: SavedSetup): SetupDiff {
   const categories = [
-    { name: "Vehicle", fields: ["carName", "weight", "frontWeightDistribution"] },
-    { name: "Suspension", fields: ["frontSuspension", "rearSuspension", "frontRideHeight", "rearRideHeight", "frontCamber", "rearCamber", "frontToe", "rearToe", "frontCaster", "rearCaster", "frontSpringRate", "rearSpringRate", "frontPreload", "rearPreload", "frontBumpStopRate", "rearBumpStopRate", "frontBumpStopRange", "rearBumpStopRange", "frontReboundStopRange", "rearReboundStopRange"] },
-    { name: "Alignment", fields: ["frontCamberRange", "rearCamberRange", "frontToeRange", "rearToeRange", "frontCaster", "rearCaster", "frontCasterRange", "rearCasterRange"] },
+    {
+      name: "Vehicle",
+      fields: ["carName", "weight", "frontWeightDistribution"],
+    },
+    {
+      name: "Suspension",
+      fields: [
+        "frontSuspension",
+        "rearSuspension",
+        "frontRideHeight",
+        "rearRideHeight",
+        "frontCamber",
+        "rearCamber",
+        "frontToe",
+        "rearToe",
+        "frontCaster",
+        "rearCaster",
+        "frontSpringRate",
+        "rearSpringRate",
+        "frontPreload",
+        "rearPreload",
+        "frontBumpStopRate",
+        "rearBumpStopRate",
+        "frontBumpStopRange",
+        "rearBumpStopRange",
+        "frontReboundStopRange",
+        "rearReboundStopRange",
+      ],
+    },
+    {
+      name: "Alignment",
+      fields: [
+        "frontCamberRange",
+        "rearCamberRange",
+        "frontToeRange",
+        "rearToeRange",
+        "frontCaster",
+        "rearCaster",
+        "frontCasterRange",
+        "rearCasterRange",
+      ],
+    },
     { name: "Aero", fields: ["frontDownforce", "rearDownforce", "brakeBias"] },
-    { name: "Transmission", fields: ["gearRatios", "finalDrive", "torqueRpmData"] },
+    {
+      name: "Transmission",
+      fields: ["gearRatios", "finalDrive", "torqueRpmData"],
+    },
   ];
 
   const diff: SetupDiff = {
@@ -243,7 +299,15 @@ export function compareTwoSetups(a: SavedSetup, b: SavedSetup): SetupDiff {
     })),
   };
 
-  const impactFields = ["weight", "frontWeightDistribution", "frontSuspension", "rearSuspension", "gearRatios", "finalDrive", "torqueRpmData"];
+  const impactFields = [
+    "weight",
+    "frontWeightDistribution",
+    "frontSuspension",
+    "rearSuspension",
+    "gearRatios",
+    "finalDrive",
+    "torqueRpmData",
+  ];
 
   diff.categories.forEach((cat) => {
     cat.fields.forEach((field) => {

@@ -1,7 +1,7 @@
-import { SectionHeader } from '../../../components/ui/section-header';
-import { DataTable } from '../../../components/ui/data-table';
-import { HelpTooltip } from '../../../components/ui/help-tooltip';
-import type { SuspensionOutputs } from '../utils/suspension';
+import { SectionHeader } from "@/components/ui/section-header";
+import { DataTable } from "@/components/ui/data-table";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
+import type { SuspensionOutputs } from "../utils/suspension";
 
 type DamperTableRow = {
   label: string;
@@ -9,32 +9,53 @@ type DamperTableRow = {
   front: number;
   rear: number;
   highlight?: boolean;
-}
+};
 
 type Props = {
   outputs: SuspensionOutputs;
-}
+};
 
 export function DampersSection(props: Props) {
   const damperData: DamperTableRow[] = [
-    { label: 'Bump', description: 'C × 2/3', front: props.outputs.dampers.bumpFront, rear: props.outputs.dampers.bumpRear },
-    { label: 'Fast Bump', description: 'C × 1/3', front: props.outputs.dampers.fastBumpFront, rear: props.outputs.dampers.fastBumpRear },
-    { label: 'Rebound', description: 'C × 3/2', front: props.outputs.dampers.reboundFront, rear: props.outputs.dampers.reboundRear, highlight: true },
-    { label: 'Fast Rebound', description: 'C × 3/4', front: props.outputs.dampers.fastReboundFront, rear: props.outputs.dampers.fastReboundRear },
+    {
+      label: "Bump",
+      description: "C × 2/3",
+      front: props.outputs.dampers.bumpFront,
+      rear: props.outputs.dampers.bumpRear,
+    },
+    {
+      label: "Fast Bump",
+      description: "C × 1/3",
+      front: props.outputs.dampers.fastBumpFront,
+      rear: props.outputs.dampers.fastBumpRear,
+    },
+    {
+      label: "Rebound",
+      description: "C × 3/2",
+      front: props.outputs.dampers.reboundFront,
+      rear: props.outputs.dampers.reboundRear,
+      highlight: true,
+    },
+    {
+      label: "Fast Rebound",
+      description: "C × 3/4",
+      front: props.outputs.dampers.fastReboundFront,
+      rear: props.outputs.dampers.fastReboundRear,
+    },
   ];
 
   const damperColumns = [
     {
-      accessorKey: 'label',
-      header: 'Damper Type',
+      accessorKey: "label",
+      header: "Damper Type",
       cell: (info: any) => {
         const row = info.row.original;
         return (
           <div
             class="px-4 py-2"
             classList={{
-              'bg-amber-500/5': row.highlight,
-              'bg-surface/30': !row.highlight,
+              "bg-amber-500/5": row.highlight,
+              "bg-surface/30": !row.highlight,
             }}
           >
             <div class="text-foreground">{row.label}</div>
@@ -42,19 +63,19 @@ export function DampersSection(props: Props) {
           </div>
         );
       },
-      meta: { align: 'left' as const },
+      meta: { align: "left" as const },
     },
     {
-      accessorKey: 'front',
-      header: 'Front',
+      accessorKey: "front",
+      header: "Front",
       cell: (info: any) => {
         const row = info.row.original;
         return (
           <span
             class="block px-4 py-2 text-center"
             classList={{
-              'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-surface/30 text-foreground': !row.highlight,
+              "bg-amber-500/5 text-amber-400 font-medium": row.highlight,
+              "bg-surface/30 text-foreground": !row.highlight,
             }}
           >
             {info.getValue().toFixed(0)}
@@ -63,16 +84,16 @@ export function DampersSection(props: Props) {
       },
     },
     {
-      accessorKey: 'rear',
-      header: 'Rear',
+      accessorKey: "rear",
+      header: "Rear",
       cell: (info: any) => {
         const row = info.row.original;
         return (
           <span
             class="block px-4 py-2 text-center"
             classList={{
-              'bg-amber-500/5 text-amber-400 font-medium': row.highlight,
-              'bg-surface/30 text-foreground': !row.highlight,
+              "bg-amber-500/5 text-amber-400 font-medium": row.highlight,
+              "bg-surface/30 text-foreground": !row.highlight,
             }}
           >
             {info.getValue().toFixed(0)}
@@ -88,30 +109,34 @@ export function DampersSection(props: Props) {
         title="Damper Settings"
         variant="output"
         help={{
-          description: 'Dampers control spring oscillation. Critical damping prevents oscillation; damping ratio adjusts this. Different multipliers set bump (compression) and rebound (extension) rates.',
-          formula: 'C_{crit} = 2\\sqrt{K \\cdot m}',
+          description:
+            "Dampers control spring oscillation. Critical damping prevents oscillation; damping ratio adjusts this. Different multipliers set bump (compression) and rebound (extension) rates.",
+          formula: "C_{crit} = 2\\sqrt{K \\cdot m}",
           variables: [
-            'C_crit = critical damping (N·s/m)',
-            'K = spring stiffness (N/m)',
-            'm = sprung mass (kg)',
+            "C_crit = critical damping (N·s/m)",
+            "K = spring stiffness (N/m)",
+            "m = sprung mass (kg)",
           ],
-          position: 'bottom',
+          position: "bottom",
           articles: [
-            { label: 'Wikipedia: Shock Absorber', url: 'https://en.wikipedia.org/wiki/Shock_absorber' },
+            {
+              label: "Wikipedia: Shock Absorber",
+              url: "https://en.wikipedia.org/wiki/Shock_absorber",
+            },
           ],
           videos: [
-            { label: 'Springs & Dampers Guide', url: 'https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc' },
+            {
+              label: "Springs & Dampers Guide",
+              url: "https://youtu.be/sBWmsvuTg5o?si=Sv9HVwlom2GWgTxc",
+            },
           ],
         }}
       />
-      <DataTable
-        data={damperData}
-        columns={damperColumns}
-      />
+      <DataTable data={damperData} columns={damperColumns} />
       <div class="px-4 py-2 border-t border-border/30 bg-surface/30 flex items-center gap-6">
         <div class="flex items-center gap-1.5">
           <span class="text-[10px] text-muted">
-            Critical Damping Front:{' '}
+            Critical Damping Front:{" "}
             <span class="text-foreground-secondary">
               {props.outputs.dampers.critDampingFront.toFixed(0)} N·s/m
             </span>
@@ -119,7 +144,7 @@ export function DampersSection(props: Props) {
         </div>
         <div class="flex items-center gap-1.5">
           <span class="text-[10px] text-muted">
-            Critical Damping Rear:{' '}
+            Critical Damping Rear:{" "}
             <span class="text-foreground-secondary">
               {props.outputs.dampers.critDampingRear.toFixed(0)} N·s/m
             </span>
@@ -129,13 +154,13 @@ export function DampersSection(props: Props) {
           description="Actual damping force is critical damping multiplied by damping ratio. Different settings use fractions of this base value."
           formula="C = C_{crit} \cdot \zeta"
           variables={[
-            'C = damping force (N·s/m)',
-            'C_crit = critical damping (N·s/m)',
-            'ζ = damping ratio',
-            'Bump = C × 2/3',
-            'Fast Bump = C × 1/3',
-            'Rebound = C × 3/2',
-            'Fast Rebound = C × 3/4',
+            "C = damping force (N·s/m)",
+            "C_crit = critical damping (N·s/m)",
+            "ζ = damping ratio",
+            "Bump = C × 2/3",
+            "Fast Bump = C × 1/3",
+            "Rebound = C × 3/2",
+            "Fast Rebound = C × 3/4",
           ]}
           position="top"
         />

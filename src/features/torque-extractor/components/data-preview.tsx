@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import type { ExtractedDataPoint } from '../../../types/extraction';
+import type { ExtractedDataPoint } from '@/types/extraction';
 
 type DataPreviewProps = {
   extractedPoints: ExtractedDataPoint[];

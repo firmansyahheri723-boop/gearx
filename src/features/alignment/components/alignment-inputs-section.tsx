@@ -1,12 +1,12 @@
 import { For } from "solid-js";
-import { SectionHeader } from "../../../components/ui/section-header";
-import { SliderRow } from "../../../components/ui/slider-row";
-import { SegmentedRow } from "../../../components/ui/segmented-row";
+import { SectionHeader } from "@/components/ui/section-header";
+import { SliderRow } from "@/components/ui/slider-row";
+import { SegmentedRow } from "@/components/ui/segmented-row";
 import {
   alignmentInputs,
   setAlignmentInputs,
   applyAlignmentPreset,
-} from "../../alignment/store";
+} from "../store";
 import {
   ALIGNMENT_SLIDERS,
   ALIGNMENT_PRESETS,
