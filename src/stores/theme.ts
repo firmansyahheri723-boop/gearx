@@ -1,5 +1,5 @@
 import { makePersisted } from "@solid-primitives/storage";
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { createSignal, createEffect, onCleanup, onMount } from "solid-js";
 
 const THEME_STORAGE_KEY = "gearx-theme";
 
@@ -37,19 +37,26 @@ export const [theme, setTheme] = createSignal<ResolvedTheme>(
 	resolveTheme(themePreference()),
 );
 
+createEffect(() => {
+	const pref = themePreference();
+	const resolved = resolveTheme(pref);
+	setTheme(resolved);
+});
+
 export function changeThemePreference(value: ThemePreference): void {
 	setThemePreference(value);
-	document.documentElement.classList.toggle("light", value === "light");
+	const resolved = resolveTheme(value);
+	document.documentElement.classList.toggle("light", resolved === "light");
+	document.documentElement.setAttribute("data-theme", resolved);
+	setTheme(resolved);
 }
 
 export function initThemeListener(): () => void {
 	onMount(() => {
 		const pref = themePreference();
-		if (pref === "light" || pref === "dark") {
-			document.documentElement.classList.toggle("light", pref === "light");
-		} else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-			document.documentElement.classList.add("light");
-		}
+		const resolved = resolveTheme(pref);
+		document.documentElement.classList.toggle("light", resolved === "light");
+		document.documentElement.setAttribute("data-theme", resolved);
 	});
 
 	const observer = new MutationObserver((mutations) => {
