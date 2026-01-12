@@ -265,6 +265,6 @@ const HELP_CONTENT: Record<
 const DRIVETRAIN_OPTIONS = ["FWD", "RWD", "AWD"] as const;
 export type DrivetrainOption = (typeof DRIVETRAIN_OPTIONS)[number];
 
-const WHEEL_DIAMETER_OPTIONS = [16, 17, 18, 19, 20, 21, 22] as const;
+const WHEEL_DIAMETER_OPTIONS = [14, 15, 16, 17, 18, 19, 20, 21, 22] as const;
 
 export { HELP_CONTENT, DRIVETRAIN_OPTIONS, WHEEL_DIAMETER_OPTIONS };
