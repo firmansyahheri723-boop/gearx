@@ -1,27 +1,27 @@
 /* @refresh reload */
-import './index.css';
-import { render } from 'solid-js/web';
-import 'solid-devtools';
-import { RouterProvider } from '@tanstack/solid-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/solid-query';
-import { createRouter } from './router';
+import "./index.css";
+import { render } from "solid-js/web";
+import "solid-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
+import { RouterProvider } from "@tanstack/solid-router";
+import { createRouter } from "./router";
 
-const root = document.getElementById('root');
+const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
-  throw new Error(
-    'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?',
-  );
+	throw new Error(
+		"Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?",
+	);
 }
 
 const router = createRouter();
 const queryClient = new QueryClient();
 
 render(
-  () => (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  ),
-  root!
+	() => (
+		<QueryClientProvider client={queryClient}>
+			<RouterProvider router={router} />
+		</QueryClientProvider>
+	),
+	root!,
 );
