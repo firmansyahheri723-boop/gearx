@@ -9,11 +9,12 @@ import {
 	TRACTION_MODE_OPTIONS,
 } from "@/features/gearbox/gearbox-constants";
 import {
+	setTireCompound,
 	setTractionMode,
 	tireCompound,
 	tractionMode,
-} from "@/features/gearbox/store";
-import { setTireCompound, vehicleInputs } from "@/stores/vehicle";
+	vehicleInputs,
+} from "@/features/suspension/store";
 import { setVehicleInputs } from "../store";
 import {
 	DRIVETRAIN_OPTIONS,

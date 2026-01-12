@@ -4,11 +4,11 @@ import type {
 	GearRatio,
 	TireCompound,
 	TractionMode,
+	TorqueRpmRow,
 } from "@/types";
+import { tireCompound, tractionMode } from "@/features/suspension/store";
 
-export const [torqueRpmData, setTorqueRpmData] = createStore<
-	{ torque: number; rpm: number }[]
->([
+export const [torqueRpmData, setTorqueRpmData] = createStore<TorqueRpmRow[]>([
 	{ torque: 411, rpm: 358 },
 	{ torque: 434, rpm: 626 },
 	{ torque: 465, rpm: 893 },
@@ -41,12 +41,6 @@ export const [torqueRpmData, setTorqueRpmData] = createStore<
 	{ torque: 840, rpm: 8116 },
 ]);
 
-export const [finalDrive, setFinalDrive] = createStore<FinalDrive>({
-	ratio: 3.0,
-	min: 2.0,
-	max: 5.0,
-});
-
 export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
 	{ ratio: 2.76, min: 1.5, max: 4.0 },
 	{ ratio: 2.0, min: 1.2, max: 3.0 },
@@ -58,14 +52,10 @@ export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
 	{ ratio: 0, min: 0, max: 0.9 },
 ]);
 
-export const [tireCompound, setTireCompound] = createStore<{
-	value: TireCompound;
-}>({
-	value: "racing",
+export const [finalDrive, setFinalDrive] = createStore<FinalDrive>({
+	ratio: 3.0,
+	min: 2.0,
+	max: 5.0,
 });
 
-export const [tractionMode, setTractionMode] = createStore<{
-	value: TractionMode;
-}>({
-	value: "launch",
-});
+export { tireCompound, tractionMode };

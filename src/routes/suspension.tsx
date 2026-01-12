@@ -11,7 +11,7 @@ import { SpringsStiffnessSection } from "@/features/suspension/components/spring
 import { SuspensionOutput } from "@/features/suspension/components/suspension-output";
 import { SuspensionParametersSection } from "@/features/suspension/components/suspension-parameters-section";
 import { calculateSuspensionOutputs } from "@/features/suspension/suspension";
-import { vehicleInputs } from "@/stores/vehicle";
+import { vehicleInputs } from "@/features/suspension/store";
 import type { AeroExperimentalOutput } from "@/types";
 
 export const Route = createFileRoute("/suspension")({

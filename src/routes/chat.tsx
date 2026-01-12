@@ -16,12 +16,8 @@ import {
 	setSelectedModel,
 } from "@/features/chat/store";
 import { getSelectedCar, getSelectedEngine } from "@/features/database/store";
-import {
-	finalDrive,
-	gearRatios,
-	tireCompound,
-	vehicleInputs,
-} from "@/stores/vehicle";
+import { finalDrive, gearRatios, tireCompound } from "@/features/gearbox/store";
+import { vehicleInputs } from "@/features/suspension/store";
 import type { ChatMessage } from "@/types";
 
 export const Route = createFileRoute("/chat")({

@@ -25,13 +25,15 @@ import {
 import {
 	finalDrive,
 	gearRatios,
+	torqueRpmData,
+} from "@/features/gearbox/store";
+import {
 	setTireCompound,
 	setTractionMode,
 	tireCompound,
-	torqueRpmData,
 	tractionMode,
 	vehicleInputs,
-} from "@/stores/vehicle";
+} from "@/features/suspension/store";
 import type {
 	AeroExperimentalOutput,
 	GearboxOutputs,

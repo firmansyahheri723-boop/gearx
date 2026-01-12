@@ -7,8 +7,8 @@ import {
 	tireCompound,
 	torqueRpmData,
 	tractionMode,
-	vehicleInputs,
-} from "@/stores/vehicle";
+} from "@/features/gearbox/store";
+import { vehicleInputs } from "@/features/suspension/store";
 import type { SetupData } from "@/types";
 
 export type ShareSetupData = SetupData;

@@ -15,11 +15,13 @@ import {
 	setFinalDrive,
 	setGearRatios,
 	setTorqueRpmData,
-	tireCompound,
 	torqueRpmData,
+} from "@/features/gearbox/store";
+import {
+	tireCompound,
 	tractionMode,
 	vehicleInputs,
-} from "@/stores/vehicle";
+} from "@/features/suspension/store";
 import type { HelpLink, TorqueRpmRow } from "@/types";
 import { GEAR_LABELS } from "@/types";
 

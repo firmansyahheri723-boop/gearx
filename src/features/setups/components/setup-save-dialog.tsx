@@ -1,8 +1,17 @@
 import { createSignal, For, Show } from "solid-js";
-import { vehicleInputs } from "@/stores/vehicle";
+import { vehicleInputs } from "@/features/suspension/store";
 import type { SetupTag, SetupTagColor } from "@/types";
 import { SETUP_TAG_COLORS } from "@/types";
 import { createSetup, getAllTags, updateSetup } from "../store";
+import {
+	finalDrive,
+	gearRatios,
+	tireCompound,
+	tractionMode,
+	torqueRpmData,
+} from "@/features/gearbox/store";
+import { alignmentInputs } from "@/features/alignment/store";
+import { aeroSettings } from "@/features/aero/store";
 
 function generateId(): string {
 	return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -98,34 +107,13 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 					notes: notes().trim(),
 					carName: vehicleInputs.carSelection,
 					inputs: { ...vehicleInputs },
-					torqueRpmData: torqueRpmData as unknown[],
-					gearRatios: gearRatios as unknown[],
-					finalDrive: finalDrive as { ratio: number; min: number; max: number },
-					tireCompound: tireCompound as
-						| "street"
-						| "street+"
-						| "sport"
-						| "sport+"
-						| "racing"
-						| "racing+",
-					tractionMode: tractionMode as "launch" | "rolling",
-					aeroSettings: aeroSettings as {
-						frontAero: number;
-						rearAero: number;
-						airResistance: number;
-					},
-					alignmentInputs: alignmentInputs as
-						| {
-								frontCamber: number;
-								frontCaster: number;
-								frontToe: number;
-								frontAckermann: number;
-								frontSteeringSensitivity: number;
-								rearCamber: number;
-								rearToe: number;
-								maxSteeringAngle: number;
-						  }
-						| undefined,
+					torqueRpmData: [...torqueRpmData],
+					gearRatios: [...gearRatios],
+					finalDrive: { ...finalDrive },
+					tireCompound: tireCompound.value,
+					tractionMode: tractionMode.value,
+					aeroSettings: { ...aeroSettings },
+					alignmentInputs: { ...alignmentInputs },
 				});
 			}
 

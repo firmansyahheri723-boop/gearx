@@ -13,7 +13,7 @@ import {
 	selectedCarIndex,
 	selectedEngineIndex,
 } from "@/features/database/store";
-import { setVehicleInputs, vehicleInputs } from "@/stores/vehicle";
+import { setVehicleInputs, vehicleInputs } from "@/features/suspension/store";
 import { HELP_CONTENT } from "../suspension-constants";
 
 export function BasicVehicleSection() {

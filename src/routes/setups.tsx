@@ -4,7 +4,7 @@ import { ComparisonView } from "@/features/setups/components/comparison-view";
 import { SetupList } from "@/features/setups/components/setup-list";
 import { SetupMerger } from "@/features/setups/components/setup-merger";
 import { SetupSaveDialog } from "@/features/setups/components/setup-save-dialog";
-import { applySavedSetupToVehicle } from "@/stores/vehicle";
+import { applySavedSetupToVehicle } from "@/features/suspension/store";
 import type { SavedSetup } from "@/types";
 
 export const Route = createFileRoute("/setups")({

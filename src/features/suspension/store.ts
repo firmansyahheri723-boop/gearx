@@ -3,9 +3,18 @@ import type {
 	AccelerationMetrics,
 	AntiRollBars,
 	Dampers,
+	SavedSetup,
 	SpringsStiffness,
+	TireCompound,
+	TractionMode,
 	VehicleInputs,
-} from "/Users/elianiva/Development/personal/gearx/src/types";
+} from "@/types";
+import { setAlignmentInputs } from "@/features/alignment/store";
+import {
+	setFinalDrive,
+	setGearRatios,
+	setTorqueRpmData,
+} from "@/features/gearbox/store";
 
 export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
 	carSelection: "Dodge Challenger SRT",
@@ -35,6 +44,18 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
 	redlineRpm: 8000,
 });
 
+export const [tireCompound, setTireCompound] = createStore<{
+	value: TireCompound;
+}>({
+	value: "racing",
+});
+
+export const [tractionMode, setTractionMode] = createStore<{
+	value: TractionMode;
+}>({
+	value: "launch",
+});
+
 export const [springsStiffness] = createStore<SpringsStiffness>({
 	front: 173.441,
 	rear: 135.362,
@@ -58,3 +79,19 @@ export const [accelerationMetrics] = createStore<AccelerationMetrics>({
 	maxLongitudinalAccel: 0.6,
 	maxLateralAccel: 1.3065,
 });
+
+export function applySavedSetupToVehicle(setup: SavedSetup): void {
+	setVehicleInputs(setup.inputs);
+	setTorqueRpmData(setup.torqueRpmData);
+	setGearRatios(setup.gearRatios);
+	setFinalDrive(setup.finalDrive);
+	setTireCompound({ value: setup.tireCompound });
+	setTractionMode({ value: setup.tractionMode });
+	if (setup.alignmentInputs) {
+		setAlignmentInputs(setup.alignmentInputs);
+	}
+}
+
+export function applySharedSetup(data: SavedSetup): void {
+	applySavedSetupToVehicle(data);
+}
