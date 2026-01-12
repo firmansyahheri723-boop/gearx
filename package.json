@@ -7,7 +7,10 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui"
   },
   "license": "MIT",
   "devDependencies": {
@@ -15,11 +18,14 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/katex": "^0.16.8",
     "@types/leaflet": "^1.9.18",
+    "@vitest/ui": "^4.0.16",
+    "happy-dom": "^20.1.0",
     "solid-devtools": "^0.34.4",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-solid": "^2.11.10",
+    "vitest": "^4.0.16",
     "wrangler": "^4.58.0"
   },
   "dependencies": {
@@ -42,8 +48,5 @@
     "remark-gfm": "^4.0.1",
     "solid-js": "^1.9.10",
     "solid-markdown": "^2.1.1"
-  },
-  "overrides": {
-    "vite": "8.0.0-beta.0"
   }
 }

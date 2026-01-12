@@ -30,4 +30,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ["debug", "extend"],
   },
+  test: {
+    environment: "happy-dom",
+    include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
+    globals: false,
+  },
 });
