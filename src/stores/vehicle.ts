@@ -1,4 +1,4 @@
-import { createStore } from 'solid-js/store';
+import { createStore } from "solid-js/store";
 import type {
   VehicleInputs,
   SpringsStiffness,
@@ -14,13 +14,13 @@ import type {
   AeroSettings,
   AeroOutputs,
   AlignmentInputs,
-} from '../types';
-import type { ShareSetupData } from '../utils/share';
+} from "../types";
+import type { ShareSetupData } from "../utils/share";
 
 // Vehicle Input Parameters
 export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
-  carSelection: 'Dodge Challenger SRT',
-  engineSelection: 'Dodge Challenger SRT',
+  carSelection: "Dodge Challenger SRT",
+  engineSelection: "Dodge Challenger SRT",
   weight: 1788,
   frontWeightDistribution: 56,
   frontWheelOffset: 3,
@@ -32,7 +32,7 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   cogHeight: 20,
   acceleration0to100: 4.7,
   maxSpeed118mRadius: 140,
-  drivetrain: 'RWD' as Drivetrain,
+  drivetrain: "RWD" as Drivetrain,
   wheelbase: 2.934,
   frontTrackWidth: 1.63,
   rearTrackWidth: 1.62,
@@ -71,7 +71,7 @@ export const [antiRollBars] = createStore<AntiRollBars>({
 // Acceleration Metrics
 export const [accelerationMetrics] = createStore<AccelerationMetrics>({
   weightTransfer: 186.52,
-  frontWeightDistOnAccel: '45.57%',
+  frontWeightDistOnAccel: "45.57%",
   maxLongitudinalAccel: 0.6,
   maxLateralAccel: 1.3065,
 });
@@ -119,24 +119,28 @@ export const [finalDrive, setFinalDrive] = createStore<FinalDrive>({
 
 // Transmission - Gear Ratios (8 gears, indexed 0-7 for 1st-8th)
 export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
-  { ratio: 2.76, min: 1.5, max: 4.0 },   // 1st
-  { ratio: 2.0, min: 1.2, max: 3.0 },    // 2nd
-  { ratio: 1.5, min: 1.0, max: 2.5 },    // 3rd
-  { ratio: 1.15, min: 0.8, max: 2.0 },   // 4th
-  { ratio: 1.0, min: 0.7, max: 1.5 },    // 5th
-  { ratio: 0.9, min: 0.6, max: 1.2 },    // 6th
-  { ratio: 0, min: 0, max: 1.0 },        // 7th (unused)
-  { ratio: 0, min: 0, max: 0.9 },        // 8th (unused)
+  { ratio: 2.76, min: 1.5, max: 4.0 }, // 1st
+  { ratio: 2.0, min: 1.2, max: 3.0 }, // 2nd
+  { ratio: 1.5, min: 1.0, max: 2.5 }, // 3rd
+  { ratio: 1.15, min: 0.8, max: 2.0 }, // 4th
+  { ratio: 1.0, min: 0.7, max: 1.5 }, // 5th
+  { ratio: 0.9, min: 0.6, max: 1.2 }, // 6th
+  { ratio: 0, min: 0, max: 1.0 }, // 7th (unused)
+  { ratio: 0, min: 0, max: 0.9 }, // 8th (unused)
 ]);
 
 // Tire compound selection for traction calculations
-export const [tireCompound, setTireCompound] = createStore<{ value: TireCompound }>({
-  value: 'racing',
+export const [tireCompound, setTireCompound] = createStore<{
+  value: TireCompound;
+}>({
+  value: "racing",
 });
 
 // Traction mode selection (launch = static weight, rolling = with weight transfer)
-export const [tractionMode, setTractionMode] = createStore<{ value: TractionMode }>({
-  value: 'launch',
+export const [tractionMode, setTractionMode] = createStore<{
+  value: TractionMode;
+}>({
+  value: "launch",
 });
 
 // Aero settings (0-10 scale for game units)
@@ -147,18 +151,19 @@ export const [aeroSettings, setAeroSettings] = createStore<AeroSettings>({
 });
 
 // Experimental mode toggle for advanced physics estimates
-const AERO_EXPERIMENTAL_KEY = 'gearx-aero-experimental';
+const AERO_EXPERIMENTAL_KEY = "gearx-aero-experimental";
 const loadAeroExperimental = (): boolean => {
   try {
     const stored = localStorage.getItem(AERO_EXPERIMENTAL_KEY);
-    return stored === 'true';
+    return stored === "true";
   } catch {
     return false;
   }
 };
-export const [aeroExperimentalEnabled, setAeroExperimentalEnabled] = createStore<{ value: boolean }>({
-  value: loadAeroExperimental(),
-});
+export const [aeroExperimentalEnabled, setAeroExperimentalEnabled] =
+  createStore<{ value: boolean }>({
+    value: loadAeroExperimental(),
+  });
 
 // Persist experimental toggle
 const persistAeroExperimental = (value: boolean) => {
@@ -180,19 +185,60 @@ export function applySharedSetup(data: ShareSetupData): void {
   if (data.aeroSettings) {
     setAeroSettings(data.aeroSettings);
   }
+  if (data.alignmentInputs) {
+    setAlignmentInputs(data.alignmentInputs);
+  }
+}
+
+export function applySavedSetupToVehicle(setup: {
+  inputs: VehicleInputs;
+  torqueRpmData: unknown[];
+  gearRatios: unknown[];
+  finalDrive: { ratio: number; min: number; max: number };
+  tireCompound:
+    | "street"
+    | "street+"
+    | "sport"
+    | "sport+"
+    | "racing"
+    | "racing+";
+  tractionMode: "launch" | "rolling";
+  aeroSettings: { frontAero: number; rearAero: number; airResistance: number };
+  alignmentInputs?: {
+    frontCamber: number;
+    frontCaster: number;
+    frontToe: number;
+    frontAckermann: number;
+    frontSteeringSensitivity: number;
+    rearCamber: number;
+    rearToe: number;
+    maxSteeringAngle: number;
+  };
+}): void {
+  setVehicleInputs(setup.inputs);
+  setTorqueRpmData(setup.torqueRpmData as typeof torqueRpmData);
+  setGearRatios(setup.gearRatios as typeof gearRatios);
+  setFinalDrive(setup.finalDrive);
+  setTireCompound({ value: setup.tireCompound });
+  setTractionMode({ value: setup.tractionMode });
+  setAeroSettings(setup.aeroSettings);
+  if (setup.alignmentInputs) {
+    setAlignmentInputs(setup.alignmentInputs);
+  }
 }
 
 // Alignment Inputs
-export const [alignmentInputs, setAlignmentInputs] = createStore<AlignmentInputs>({
-  frontCamber: -3.0,
-  frontCaster: 5.0,
-  frontToe: 0,
-  frontAckermann: 0,
-  frontSteeringSensitivity: 5,
-  rearCamber: -2.0,
-  rearToe: 0,
-  maxSteeringAngle: 45,
-});
+export const [alignmentInputs, setAlignmentInputs] =
+  createStore<AlignmentInputs>({
+    frontCamber: -3.0,
+    frontCaster: 5.0,
+    frontToe: 0,
+    frontAckermann: 0,
+    frontSteeringSensitivity: 5,
+    rearCamber: -2.0,
+    rearToe: 0,
+    maxSteeringAngle: 45,
+  });
 
 const ALIGNMENT_PRESETS: Record<string, Partial<AlignmentInputs>> = {
   grip: {

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuspensionRouteImport } from './routes/suspension'
+import { Route as SetupsRouteImport } from './routes/setups'
 import { Route as GearboxRouteImport } from './routes/gearbox'
 import { Route as DatabaseRouteImport } from './routes/database'
 import { Route as ChatRouteImport } from './routes/chat'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SuspensionRoute = SuspensionRouteImport.update({
   id: '/suspension',
   path: '/suspension',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupsRoute = SetupsRouteImport.update({
+  id: '/setups',
+  path: '/setups',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GearboxRoute = GearboxRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
+  '/setups': typeof SetupsRoute
   '/suspension': typeof SuspensionRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
+  '/setups': typeof SetupsRoute
   '/suspension': typeof SuspensionRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
+  '/setups': typeof SetupsRoute
   '/suspension': typeof SuspensionRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/database'
     | '/gearbox'
+    | '/setups'
     | '/suspension'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/database'
     | '/gearbox'
+    | '/setups'
     | '/suspension'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/database'
     | '/gearbox'
+    | '/setups'
     | '/suspension'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   DatabaseRoute: typeof DatabaseRoute
   GearboxRoute: typeof GearboxRoute
+  SetupsRoute: typeof SetupsRoute
   SuspensionRoute: typeof SuspensionRoute
 }
 
@@ -128,6 +141,13 @@ declare module '@tanstack/solid-router' {
       path: '/suspension'
       fullPath: '/suspension'
       preLoaderRoute: typeof SuspensionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setups': {
+      id: '/setups'
+      path: '/setups'
+      fullPath: '/setups'
+      preLoaderRoute: typeof SetupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gearbox': {
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   DatabaseRoute: DatabaseRoute,
   GearboxRoute: GearboxRoute,
+  SetupsRoute: SetupsRoute,
   SuspensionRoute: SuspensionRoute,
 }
 export const routeTree = rootRouteImport

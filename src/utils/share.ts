@@ -1,7 +1,7 @@
 import LZString from 'lz-string';
-import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, AeroSettings } from '../types';
+import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, AeroSettings, AlignmentInputs } from '../types';
 import { vehicleInputs } from '../stores/vehicle';
-import { torqueRpmData, gearRatios, finalDrive, tireCompound, tractionMode, aeroSettings } from '../stores/vehicle';
+import { torqueRpmData, gearRatios, finalDrive, tireCompound, tractionMode, aeroSettings, alignmentInputs } from '../stores/vehicle';
 
 export interface ShareSetupData {
   version: number;
@@ -12,6 +12,7 @@ export interface ShareSetupData {
   tireCompound: TireCompound;
   tractionMode: TractionMode;
   aeroSettings: AeroSettings;
+  alignmentInputs?: AlignmentInputs;
 }
 
 export function serializeSetup(data: ShareSetupData): string {
@@ -49,6 +50,7 @@ export function generateShareUrl(): string {
     tireCompound: tireCompound.value,
     tractionMode: tractionMode.value,
     aeroSettings,
+    alignmentInputs,
   };
 
   return getShareUrl(data);

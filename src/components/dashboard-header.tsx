@@ -81,7 +81,7 @@ function ThemeIcon(props: { type: "system" | "sun" | "moon"; class?: string }) {
   );
 }
 
-export function DashboardHeader() {
+export function DashboardHeader(props: { onSaveSetup?: () => void }) {
   const now = new Date();
   const timestamp = now.toISOString().replace("T", " ").slice(0, 19) + " UTC";
   const [isOpen, setIsOpen] = createSignal(false);
@@ -96,7 +96,6 @@ export function DashboardHeader() {
     setIsOpen(false);
   };
 
-  // Close dropdown when clicking outside
   let dropdownRef: HTMLDivElement | undefined;
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -109,14 +108,34 @@ export function DashboardHeader() {
     <>
       <header class="border border-border/50 bg-surface/50 mb-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2.5 sm:py-3 gap-2 sm:gap-4">
-          {/* Logo / Title */}
           <div class="text-foreground-secondary font-bold text-base sm:text-lg tracking-widest uppercase">
             GearX Dashboard
           </div>
 
-          {/* Right side - Share Button & Theme Selector */}
           <div class="flex items-center gap-2 sm:gap-4">
-            {/* Share Button */}
+            <button
+              type="button"
+              onClick={() => props.onSaveSetup?.()}
+              class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              <span class="hidden sm:inline">Save</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setShowShareModal(true)}
@@ -140,12 +159,10 @@ export function DashboardHeader() {
               <span class="hidden sm:inline">Share</span>
             </button>
 
-            {/* Theme Dropdown */}
             <div
               ref={dropdownRef}
               class="relative"
               onFocusOut={(e) => {
-                // Close if focus leaves the dropdown entirely
                 if (!dropdownRef?.contains(e.relatedTarget as Node)) {
                   setIsOpen(false);
                 }
@@ -184,7 +201,6 @@ export function DashboardHeader() {
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
               <Show when={isOpen()}>
                 <div
                   class="absolute right-0 top-full mt-1 z-50 border border-border/50 bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/20 min-w-[100px]"
