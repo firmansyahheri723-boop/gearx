@@ -8,7 +8,7 @@ import {
 import { CurveType } from "@unovis/ts";
 import type { SpeedRpmPoint } from "../../types";
 import { GEAR_COLORS, TRACTION_LIMIT_COLOR } from "../../constants/colors";
-import { theme } from "../../stores/theme";
+import { theme } from "../../features/shared/store/theme";
 
 interface GearTorqueChartProps {
   /** Speed/RPM data for each gear: speedRpmData[gearIndex][rpmIndex] */
@@ -30,7 +30,7 @@ interface GearDataPoint {
   torque: number;
 }
 
-export const GearTorqueChart: Component<GearTorqueChartProps> = (props) => {
+export function GearTorqueChart(props: GearTorqueChartProps) {
   // Theme-reactive peak torque curve color
   const peakCurveColor = createMemo(() => {
     // Access theme() to make this reactive

@@ -22,7 +22,7 @@ interface GearDataPoint {
   rpm: number;
 }
 
-export const GearSpeedChart: Component<GearSpeedChartProps> = (props) => {
+export function GearSpeedChart(props: GearSpeedChartProps) {
   
   // Calculate max speed from all gears for the redline
   const maxSpeed = createMemo(() => {

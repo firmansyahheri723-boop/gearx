@@ -11,7 +11,7 @@ export type InputRowProps = {
   children: JSX.Element;
 }
 
-export const InputRow: Component<InputRowProps> = (props) => {
+export function InputRow(props: InputRowProps) {
   const [local, otherProps] = splitProps(props, ['label', 'description', 'articles', 'videos', 'children', 'class']);
 
   return (

@@ -1,0 +1,218 @@
+import Papa from 'papaparse';
+import type { CarData } from '../../../types';
+
+// Column mapping from CSV headers to CarData fields
+const HEADER_MAP: Record<string, keyof CarData> = {
+  // Car name variations
+  'car': 'car',
+  'car name': 'car',
+  'name': 'car',
+
+  // Wheelbase/Track width
+  'height': 'height',
+  'f axle offset': 'fAxleOffset',
+  'front axle offset': 'fAxleOffset',
+  'r axle offset': 'rAxleOffset',
+  'rear axle offset': 'rAxleOffset',
+  'wheelbase': 'wheelbase',
+  'f track width': 'fTrackWidth',
+  'front track width': 'fTrackWidth',
+  'r track width': 'rTrackWidth',
+  'rear track width': 'rTrackWidth',
+  'av track width': 'avTrackWidth',
+  'average track width': 'avTrackWidth',
+
+  // Transmission
+  'gears': 'gears',
+  'shift time': 'shiftTime',
+  'weight': 'weight',
+
+  // Body - Stock
+  'cx': 'stockCx',
+  'stock cx': 'stockCx',
+  'sx': 'stockSx',
+  'stock sx': 'stockSx',
+  'drag': 'stockDrag',
+  'stock drag': 'stockDrag',
+
+  // Body - Stage 1/2
+  'stage12 cx': 'stage12Cx',
+  'stage 1/2 cx': 'stage12Cx',
+  'stage12 sx': 'stage12Sx',
+  'stage 1/2 sx': 'stage12Sx',
+  'stage12 drag': 'stage12Drag',
+  'stage 1/2 drag': 'stage12Drag',
+
+  // Body - Stage 3/4
+  'stage34 cx': 'stage34Cx',
+  'stage 3/4 cx': 'stage34Cx',
+  'stage34 sx': 'stage34Sx',
+  'stage 3/4 sx': 'stage34Sx',
+  'stage34 drag': 'stage34Drag',
+  'stage 3/4 drag': 'stage34Drag',
+
+  // Position offsets (body)
+  'position offset x': 'bodyPosX',
+  'body position x': 'bodyPosX',
+  'position offset y': 'bodyPosY',
+  'body position y': 'bodyPosY',
+  'position offset z': 'bodyPosZ',
+  'body position z': 'bodyPosZ',
+
+  // Engine
+  'power hp': 'powerHp',
+  'power': 'powerHp',
+  'hp': 'powerHp',
+  'mass kg': 'massKg',
+  'mass': 'massKg',
+  'turbo press': 'turboPress',
+  'turbo press.': 'turboPress',
+  'turbo pressure': 'turboPress',
+  'curve fall @ rpm': 'curveFallRpm',
+  'curve fall @rpm': 'curveFallRpm',
+  'curve fall rpm': 'curveFallRpm',
+  'rev limiter': 'revLimiter',
+  'inertia ratio': 'inertiaRatio',
+  'inertia': 'inertiaRatio',
+
+  // Engine position offsets
+  'engine position x': 'enginePosX',
+  'engine pos x': 'enginePosX',
+  'engine position y': 'enginePosY',
+  'engine pos y': 'enginePosY',
+  'engine position z': 'enginePosZ',
+  'engine pos z': 'enginePosZ',
+};
+
+// CSV column order for display (matches the spreadsheet structure)
+export const CSV_COLUMNS: { key: keyof CarData; header: string }[] = [
+  { key: 'car', header: 'Car' },
+  { key: 'height', header: 'Height' },
+  { key: 'fAxleOffset', header: 'F axle offset' },
+  { key: 'rAxleOffset', header: 'R axle offset' },
+  { key: 'wheelbase', header: 'Wheelbase' },
+  { key: 'fTrackWidth', header: 'F track width' },
+  { key: 'rTrackWidth', header: 'R track width' },
+  { key: 'avTrackWidth', header: 'AV track width' },
+  { key: 'gears', header: 'Gears' },
+  { key: 'shiftTime', header: 'Shift time' },
+  { key: 'weight', header: 'Weight' },
+  { key: 'stockCx', header: 'Stock CX' },
+  { key: 'stockSx', header: 'Stock SX' },
+  { key: 'stockDrag', header: 'Stock Drag' },
+  { key: 'stage12Cx', header: 'Stage 1/2 CX' },
+  { key: 'stage12Sx', header: 'Stage 1/2 SX' },
+  { key: 'stage12Drag', header: 'Stage 1/2 Drag' },
+  { key: 'stage34Cx', header: 'Stage 3/4 CX' },
+  { key: 'stage34Sx', header: 'Stage 3/4 SX' },
+  { key: 'stage34Drag', header: 'Stage 3/4 Drag' },
+  { key: 'bodyPosX', header: 'Body Position X' },
+  { key: 'bodyPosY', header: 'Body Position Y' },
+  { key: 'bodyPosZ', header: 'Body Position Z' },
+  { key: 'powerHp', header: 'Power HP' },
+  { key: 'massKg', header: 'Mass Kg' },
+  { key: 'turboPress', header: 'Turbo Press.' },
+  { key: 'curveFallRpm', header: 'Curve fall @ RPM' },
+  { key: 'revLimiter', header: 'Rev limiter' },
+  { key: 'inertiaRatio', header: 'Inertia ratio' },
+  { key: 'enginePosX', header: 'Engine Position X' },
+  { key: 'enginePosY', header: 'Engine Position Y' },
+  { key: 'enginePosZ', header: 'Engine Position Z' },
+];
+
+/**
+ * Normalize header string for matching
+ */
+function normalizeHeader(header: string): string {
+  return header
+    .toLowerCase()
+    .trim()
+    .replace(/[_-]/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+/**
+ * Create an empty CarData object with all fields initialized
+ */
+export function createEmptyCarData(): CarData {
+  return {
+    car: '',
+    height: null,
+    fAxleOffset: null,
+    rAxleOffset: null,
+    wheelbase: null,
+    fTrackWidth: null,
+    rTrackWidth: null,
+    avTrackWidth: null,
+    gears: null,
+    shiftTime: null,
+    weight: null,
+    stockCx: null,
+    stockSx: null,
+    stockDrag: null,
+    stage12Cx: null,
+    stage12Sx: null,
+    stage12Drag: null,
+    stage34Cx: null,
+    stage34Sx: null,
+    stage34Drag: null,
+    bodyPosX: null,
+    bodyPosY: null,
+    bodyPosZ: null,
+    powerHp: null,
+    massKg: null,
+    turboPress: null,
+    curveFallRpm: null,
+    revLimiter: null,
+    inertiaRatio: null,
+    enginePosX: null,
+    enginePosY: null,
+    enginePosZ: null,
+  };
+}
+
+/**
+ * Parse CSV text into an array of CarData objects using papaparse
+ */
+export function parseCSV(csvText: string): CarData[] {
+  const result = Papa.parse<Record<string, string>>(csvText, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (header) => normalizeHeader(header),
+  });
+
+  if (result.errors.length > 0) {
+    console.warn('CSV parsing warnings:', result.errors);
+  }
+
+  const data: CarData[] = [];
+
+  for (const row of result.data) {
+    const carData = createEmptyCarData();
+    let hasCarName = false;
+
+    for (const [header, value] of Object.entries(row)) {
+      const field = HEADER_MAP[header];
+      if (!field) continue;
+
+      if (field === 'car') {
+        carData.car = value?.trim() || '';
+        hasCarName = !!carData.car;
+      } else {
+        const trimmed = value?.trim() || '';
+        if (trimmed === '' || trimmed.toLowerCase() === 'na') {
+          (carData[field] as number | null) = null;
+        } else {
+          const num = parseFloat(trimmed);
+          (carData[field] as number | null) = isNaN(num) ? null : num;
+        }
+      }
+    }
+
+    if (hasCarName) {
+      data.push(carData);
+    }
+  }
+
+  return data;
+}

@@ -1,11 +1,11 @@
 import { Component, createMemo } from "solid-js";
-import { vehicleInputs } from "../../stores/vehicle";
+import { vehicleInputs } from "../../features/shared/store/vehicle";
 
 type DrivetrainVizProps = {
   class?: string;
 };
 
-export const DrivetrainViz: Component<DrivetrainVizProps> = (props) => {
+export function DrivetrainViz(props: DrivetrainVizProps) {
   const hasFront = () =>
     vehicleInputs.drivetrain === "FWD" || vehicleInputs.drivetrain === "AWD";
   const hasRear = () =>

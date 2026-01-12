@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/solid-router';
 import { createMemo } from 'solid-js';
-import { alignmentInputs } from '../stores/vehicle';
-import { calculateAlignmentOutputs } from '../utils/alignment';
+import { alignmentInputs } from '../features/alignment/store';
+import { calculateAlignmentOutputs } from '../features/alignment/utils/alignment';
 
-import { AlignmentInputsSection } from '../components/tabs/alignment/alignment-inputs-section';
-import { AlignmentOutputsSection } from '../components/tabs/alignment/alignment-outputs-section';
-import { CamberOptimizationSection } from '../components/tabs/alignment/camber-optimization-section';
-import { AckermannVizSection } from '../components/tabs/alignment/ackermann-viz-section';
-import { AlignmentFormulaReferenceSection } from '../components/tabs/alignment/alignment-formula-reference-section';
+import { AlignmentInputsSection } from '../features/alignment/components/alignment-inputs-section';
+import { AlignmentOutputsSection } from '../features/alignment/components/alignment-outputs-section';
+import { CamberOptimizationSection } from '../features/alignment/components/camber-optimization-section';
+import { AckermannVizSection } from '../features/alignment/components/ackermann-viz-section';
+import { AlignmentFormulaReferenceSection } from '../features/alignment/components/alignment-formula-reference-section';
 
 export const Route = createFileRoute('/alignment')({
   component: Alignment,

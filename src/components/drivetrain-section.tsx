@@ -3,14 +3,14 @@ import { SectionHeader } from './ui/section-header';
 import { NumberInput } from './ui/number-input';
 import { HelpTooltip } from './ui/help-tooltip';
 import { DrivetrainViz } from './ui/drivetrain-viz';
-import { vehicleInputs, setVehicleInputs, tireCompound, setTireCompound, tractionMode, setTractionMode } from '../stores/vehicle';
+import { vehicleInputs, setVehicleInputs, tireCompound, setTireCompound, tractionMode, setTractionMode } from '../features/shared/store/vehicle';
 import {
   DRIVETRAIN_OPTIONS,
   WHEEL_DIAMETER_OPTIONS,
   HELP_CONTENT,
   type DrivetrainOption,
 } from './input-section-constants';
-import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from './tabs/gearbox/gearbox-tab-constants';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../features/gearbox/components/gearbox-tab-constants';
 import type { TireCompound, TractionMode } from '../types';
 
 function InputCell(props: { children: any }) {
@@ -32,7 +32,7 @@ function LabelCell(props: { label: string; help?: { description: string; article
   );
 }
 
-export const DrivetrainSection: Component = () => {
+export function DrivetrainSection() {
   return (
     <div class="border border-border/50 bg-background/50">
       <SectionHeader title="Drivetrain & Wheels" variant="input" />

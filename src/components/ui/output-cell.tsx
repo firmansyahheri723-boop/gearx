@@ -8,7 +8,7 @@ interface OutputCellProps {
   asContent?: boolean;
 }
 
-export const OutputCell: Component<OutputCellProps> = (props) => {
+export function OutputCell(props: OutputCellProps) {
   const isHighlight = () => props.variant === 'highlight';
 
   const content = (

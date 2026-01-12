@@ -18,16 +18,15 @@ import {
   setTireCompound,
   tractionMode,
   setTractionMode,
-  aeroSettings,
-  aeroExperimentalEnabled,
-} from '../stores/vehicle';
-import { getSelectedCar } from '../stores/car-data';
-import { calculateExperimentalAero } from '../utils/aero';
+} from '../features/shared/store/vehicle';
+import { aeroSettings, aeroExperimentalEnabled } from '../features/aero/store';
+import { getSelectedCar } from '../features/database/store';
+import { calculateExperimentalAero } from '../features/aero/utils/aero';
 import type { AeroExperimentalOutput } from '../types';
-import { calculateGearboxOutputs } from '../utils/gearbox';
+import { calculateGearboxOutputs } from '../features/gearbox/utils/gearbox';
 import type { TireCompound, TractionMode, SpeedRpmPoint } from '../types';
-import { GEAR_LABELS } from '../types';
-import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../components/tabs/gearbox/gearbox-tab-constants';
+import { GEAR_LABELS } from '../features/gearbox/types';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../features/gearbox/components/gearbox-tab-constants';
 
 const HELP_CONTENT: Record<
   string,

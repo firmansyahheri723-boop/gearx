@@ -6,7 +6,7 @@ import {
   setIsSelecting,
   setSelectionEnd,
   setSelectionStart,
-} from '../../stores/selection';
+} from "../../features/shared/store/selection";
 
 interface EditableCellProps {
   value: string | number;
@@ -21,7 +21,7 @@ interface EditableCellProps {
   asContent?: boolean;
 }
 
-export const EditableCell: Component<EditableCellProps> = (props) => {
+export function EditableCell(props: EditableCellProps) {
   const isSelected = () => isCellSelected(props.tableId, props.row, props.col);
 
   const handleMouseDown = (e: MouseEvent) => {

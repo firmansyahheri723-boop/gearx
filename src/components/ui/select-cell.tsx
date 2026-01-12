@@ -14,7 +14,7 @@ interface SelectCellProps {
   asContent?: boolean;
 }
 
-export const SelectCell: Component<SelectCellProps> = (props) => {
+export function SelectCell(props: SelectCellProps) {
   const isSelected = () => isCellSelected(props.tableId, props.row, props.col);
 
   const content = (

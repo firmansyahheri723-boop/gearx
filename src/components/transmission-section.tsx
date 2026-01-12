@@ -19,8 +19,8 @@ import {
   vehicleInputs,
   tireCompound,
   tractionMode,
-} from "../stores/vehicle";
-import { calculateGearboxOutputs } from "../utils/gearbox";
+} from "../features/shared/store/vehicle";
+import { calculateGearboxOutputs } from "../features/gearbox/utils/gearbox";
 import type { TorqueRpmRow } from "../types";
 import { GEAR_LABELS } from "../types";
 
@@ -145,7 +145,7 @@ const torqueColumns: ColumnDef<TorqueRpmRow & { index: number }>[] = [
   },
 ];
 
-export const TransmissionSection: Component = () => {
+export function TransmissionSection() {
   const [showExtractor, setShowExtractor] = createSignal(false);
   const [importedImageUrl, setImportedImageUrl] = createSignal<string | null>(
     null,

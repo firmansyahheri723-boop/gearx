@@ -4,7 +4,7 @@ import { Dropdown, type DropdownOption } from './ui/dropdown';
 import { NumberInput } from './ui/number-input';
 import { InputRow } from './ui/input-row';
 import { RangeSliderInput } from './ui/range-slider-input';
-import { vehicleInputs, setVehicleInputs } from '../stores/vehicle';
+import { vehicleInputs, setVehicleInputs } from '../features/shared/store/vehicle';
 import {
   carData,
   selectCar,
@@ -13,10 +13,10 @@ import {
   selectedEngineIndex,
   getSelectedCar,
   getSelectedEngine,
-} from '../stores/car-data';
+} from '../features/database/store';
 import { HELP_CONTENT } from './input-section-constants';
 
-export const BasicVehicleSection: Component = () => {
+export function BasicVehicleSection() {
   const carOptions = createMemo((): DropdownOption[] => {
     if (carData.length === 0) {
       return [{ value: '', label: 'No cars imported' }];

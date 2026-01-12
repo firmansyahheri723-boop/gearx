@@ -1,36 +1,24 @@
+import { createSignal, createMemo } from "solid-js";
 import { createFileRoute } from "@tanstack/solid-router";
-import { Show, createMemo } from "solid-js";
+import { createMutation } from "@tanstack/solid-query";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
 import { SectionHeader } from "../components/ui/section-header";
-import { ApiKeyInput } from "../components/ui/chat/api-key-input";
-import { InferenceSelector } from "../components/ui/chat/inference-selector";
-import { MessageList } from "../components/ui/chat/message-list";
-import { ChatInput } from "../components/ui/chat/chat-input";
-import {
-  apiKey,
-  setApiKey,
-  selectedModel,
-  setSelectedModel,
-  messages,
-  addMessage,
-  updateMessage,
-  updateMessageReasoning,
-  clearMessages,
-  isLoading,
-  setIsLoading,
-  error,
-  setError,
-} from "../stores/chat";
+import { ApiKeyInput } from "../features/chat/components/api-key-input";
+import { InferenceSelector } from "../features/chat/components/inference-selector";
+import { MessageList } from "../features/chat/components/message-list";
+import { ChatInput } from "../features/chat/components/chat-input";
+import { apiKey, setApiKey, selectedModel, setSelectedModel } from "../features/chat/store";
 import {
   vehicleInputs,
   gearRatios,
   finalDrive,
   tireCompound,
-  aeroSettings,
-} from "../stores/vehicle";
-import { getSelectedCar, getSelectedEngine } from "../stores/car-data";
+} from "../features/shared/store/vehicle";
+import { aeroSettings } from "../features/aero/store";
+import { getSelectedCar, getSelectedEngine } from "../features/database/store";
 import systemPrompt from "../constants/prompt.md?raw";
+import type { ChatMessage } from "../types";
 
 export const Route = createFileRoute("/chat")({
   component: Chat,
@@ -86,17 +74,32 @@ function buildSystemContext(): string {
 }
 
 function Chat() {
+  const [messages, setMessages] = createSignal<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [error, setError] = createSignal<string | null>(null);
+
   const hasApiKey = createMemo(() => apiKey().trim().length > 0);
 
-  const handleSend = async (userMessage: string) => {
+  const sendMessage = async (userMessage: string) => {
     if (!hasApiKey() || isLoading()) return;
 
-    setError(null);
     setIsLoading(true);
+    setError(null);
 
-    addMessage({ role: "user", content: userMessage });
+    const userMsg: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: userMessage,
+      timestamp: Date.now(),
+    };
+    const assistantMsg: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: "assistant",
+      content: "",
+      timestamp: Date.now(),
+    };
 
-    const assistantMsg = addMessage({ role: "assistant", content: "" });
+    setMessages((msgs) => [...msgs, userMsg, assistantMsg]);
 
     try {
       const openrouter = createOpenRouter({
@@ -104,7 +107,7 @@ function Chat() {
       });
 
       const systemContext = buildSystemContext();
-      const conversationHistory = messages
+      const conversationHistory = messages()
         .filter((m) => m.id !== assistantMsg.id)
         .map((m) => ({
           role: m.role as "user" | "assistant" | "system",
@@ -122,23 +125,38 @@ function Chat() {
       for await (const part of result.fullStream) {
         if (part.type === 'text' || part.type === 'text-delta') {
           fullContent += part.text;
-          updateMessage(assistantMsg.id, fullContent);
+          setMessages((msgs) =>
+            msgs.map((m) =>
+              m.id === assistantMsg.id ? { ...m, content: fullContent } : m
+            )
+          );
         } else if (part.type === 'reasoning-delta') {
           fullReasoning += part.text;
-          updateMessageReasoning(assistantMsg.id, fullReasoning);
+          setMessages((msgs) =>
+            msgs.map((m) =>
+              m.id === assistantMsg.id ? { ...m, reasoning: fullReasoning } : m
+            )
+          );
         }
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred";
       setError(errorMessage);
-      updateMessage(
-        assistantMsg.id,
-        "Sorry, an error occurred. Please check your API key and try again.",
+      setMessages((msgs) =>
+        msgs.map((m) =>
+          m.id === assistantMsg.id
+            ? { ...m, content: "Sorry, an error occurred. Please check your API key and try again." }
+            : m
+        )
       );
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const clearMessages = () => {
+    setMessages([]);
   };
 
   return (
@@ -169,7 +187,7 @@ function Chat() {
               />
             </label>
           </div>
-          <Show when={messages.length > 0}>
+          {messages().length > 0 && (
             <div class="flex items-end">
               <button
                 type="button"
@@ -179,10 +197,10 @@ function Chat() {
                 Clear Chat
               </button>
             </div>
-          </Show>
+          )}
         </div>
 
-        <Show when={!hasApiKey()}>
+        {!hasApiKey() && (
           <div class="mt-3 px-3 py-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs">
             Enter your OpenRouter API key to start chatting. Get one at{" "}
             <a
@@ -194,17 +212,17 @@ function Chat() {
               openrouter.ai/keys
             </a>
           </div>
-        </Show>
+        )}
       </div>
 
       <MessageList
-        messages={[...messages]}
+        messages={messages()}
         isLoading={isLoading()}
         class="flex-1"
       />
 
       <ChatInput
-        onSend={handleSend}
+        onSend={sendMessage}
         disabled={!hasApiKey() || isLoading()}
         error={error()}
       />

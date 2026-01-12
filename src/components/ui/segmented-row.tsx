@@ -19,7 +19,7 @@ export type SegmentedRowProps = {
   unit?: string;
 }
 
-export const SegmentedRow: Component<SegmentedRowProps> = (props) => {
+export function SegmentedRow(props: SegmentedRowProps) {
   const [local] = splitProps(props, ['label', 'description', 'articles', 'videos', 'value', 'onChange', 'options', 'unit']);
 
   return (

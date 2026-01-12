@@ -1,12 +1,12 @@
 import { createFileRoute } from '@tanstack/solid-router';
 import { createMemo, Show } from 'solid-js';
 import { SwitchRoot, SwitchControl, SwitchThumb, SwitchHiddenInput } from '@ark-ui/solid/switch';
-import { AeroInputsSection } from '../components/tabs/aero/aero-inputs-section';
-import { AeroOutputsSection } from '../components/tabs/aero/aero-outputs-section';
-import { AeroExperimentalSection } from '../components/tabs/aero/aero-experimental-section';
-import { aeroSettings, aeroExperimentalEnabled, toggleAeroExperimental } from '../stores/vehicle';
-import { getSelectedCar } from '../stores/car-data';
-import { calculateStandardAero, calculateExperimentalAero } from '../utils/aero';
+import { AeroInputsSection } from '../features/aero/components/aero-inputs-section';
+import { AeroOutputsSection } from '../features/aero/components/aero-outputs-section';
+import { AeroExperimentalSection } from '../features/aero/components/aero-experimental-section';
+import { aeroSettings, aeroExperimentalEnabled, toggleAeroExperimental } from '../features/aero/store';
+import { getSelectedCar } from '../features/database/store';
+import { calculateStandardAero, calculateExperimentalAero } from '../features/aero/utils/aero';
 
 export const Route = createFileRoute('/aero')({
   component: Aero,

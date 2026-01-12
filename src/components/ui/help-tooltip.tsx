@@ -23,7 +23,7 @@ export interface HelpTooltipProps {
   position?: TooltipPosition;
 }
 
-export const HelpTooltip: Component<HelpTooltipProps> = (props) => {
+export function HelpTooltip(props: HelpTooltipProps) {
   const position = () => props.position ?? "right";
 
   const hasLinks = () =>

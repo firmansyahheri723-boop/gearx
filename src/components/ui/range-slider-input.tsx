@@ -13,7 +13,7 @@ export type RangeSliderInputProps = {
   numberInputWidth?: string;
 }
 
-export const RangeSliderInput: Component<RangeSliderInputProps> = (props) => {
+export function RangeSliderInput(props: RangeSliderInputProps) {
   const [local] = splitProps(props, ['min', 'max', 'step', 'value', 'onChange', 'minLabel', 'maxLabel', 'showNumberInput', 'numberInputWidth']);
 
   const decimals = local.step < 1 ? (local.step < 0.1 ? 2 : 1) : 0;

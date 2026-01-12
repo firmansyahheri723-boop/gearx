@@ -18,7 +18,7 @@ export type SliderRowProps = {
   info?: string;
 }
 
-export const SliderRow: Component<SliderRowProps> = (props) => {
+export function SliderRow(props: SliderRowProps) {
   const [local] = splitProps(props, ['label', 'description', 'articles', 'videos', 'help', 'min', 'max', 'step', 'value', 'onChange', 'unit', 'info']);
 
   const decimals = local.step < 1 ? (local.step < 0.1 ? 2 : 1) : 0;

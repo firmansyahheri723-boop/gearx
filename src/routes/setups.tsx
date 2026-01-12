@@ -1,10 +1,10 @@
 import { createSignal, Show } from "solid-js";
 import { createFileRoute } from "@tanstack/solid-router";
-import { SetupList } from "../components/setups/setup-list";
-import { SetupSaveDialog } from "../components/setups/setup-save-dialog";
-import { SetupMerger } from "../components/setups/setup-merger";
-import { ComparisonView } from "../components/setups/comparison-view";
-import { applySavedSetupToVehicle } from "../stores/vehicle";
+import { SetupList } from "../features/setups/components/setup-list";
+import { SetupSaveDialog } from "../features/setups/components/setup-save-dialog";
+import { SetupMerger } from "../features/setups/components/setup-merger";
+import { ComparisonView } from "../features/setups/components/comparison-view";
+import { applySavedSetupToVehicle } from "../features/shared/store/vehicle";
 import { SavedSetup } from "../types";
 
 export const Route = createFileRoute("/setups")({

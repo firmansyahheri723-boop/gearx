@@ -4,12 +4,12 @@ import {
   createRootRoute,
   Link,
 } from "@tanstack/solid-router";
-import { DashboardHeader } from "../components/dashboard-header";
-import { initThemeListener } from "../stores/theme";
-import { clearSelection } from "../stores/selection";
+import { DashboardHeader } from "../features/shared/ui/dashboard-header";
+import { initThemeListener } from "../features/shared/store/theme";
+import { clearSelection } from "../features/shared/store/selection";
 import { onMount, onCleanup, For, createSignal, Show } from "solid-js";
-import { deserializeSetup } from "../utils/share";
-import { applySharedSetup } from "../stores/vehicle";
+import { deserializeSetup } from "../features/setups/utils/share";
+import { applySharedSetup } from "../features/shared/store/vehicle";
 
 const TABS = [
   { id: "main", label: "Input", to: "/" },

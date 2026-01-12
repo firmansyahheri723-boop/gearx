@@ -3,19 +3,19 @@ import { For, createMemo } from 'solid-js';
 import { SectionHeader } from '../components/ui/section-header';
 import { DataTable } from '../components/ui/data-table';
 import { SuspensionOutput } from '../components/suspension-output';
-import { vehicleInputs } from '../stores/vehicle';
-import { calculateSuspensionOutputs } from '../utils/suspension';
-import { aeroSettings, aeroExperimentalEnabled } from '../stores/vehicle';
-import { getSelectedCar } from '../stores/car-data';
-import { calculateExperimentalAero } from '../utils/aero';
+import { vehicleInputs } from '../features/shared/store/vehicle';
+import { aeroSettings, aeroExperimentalEnabled } from '../features/aero/store';
+import { calculateSuspensionOutputs } from '../features/suspension/utils/suspension';
+import { getSelectedCar } from '../features/database/store';
+import { calculateExperimentalAero } from '../features/aero/utils/aero';
 import type { AeroExperimentalOutput } from '../types';
 
-import { SuspensionParametersSection } from '../components/tabs/suspension/suspension-parameters-section';
-import { SpringsStiffnessSection } from '../components/tabs/suspension/springs-stiffness-section';
-import { AntiRollBarsSection } from '../components/tabs/suspension/anti-roll-bars-section';
-import { DampersSection } from '../components/tabs/suspension/dampers-section';
-import { AccelerationMetricsSection } from '../components/tabs/suspension/acceleration-metrics-section';
-import { FormulaReferenceSection } from '../components/tabs/suspension/formula-reference-section';
+import { SuspensionParametersSection } from '../features/suspension/components/suspension-parameters-section';
+import { SpringsStiffnessSection } from '../features/suspension/components/springs-stiffness-section';
+import { AntiRollBarsSection } from '../features/suspension/components/anti-roll-bars-section';
+import { DampersSection } from '../features/suspension/components/dampers-section';
+import { AccelerationMetricsSection } from '../features/suspension/components/acceleration-metrics-section';
+import { FormulaReferenceSection } from '../features/suspension/components/formula-reference-section';
 
 export const Route = createFileRoute('/suspension')({
   component: Suspension,
