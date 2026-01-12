@@ -1,4 +1,5 @@
 import { createSignal, onMount, onCleanup } from "solid-js";
+import { makePersisted } from "@solid-primitives/storage";
 
 const THEME_STORAGE_KEY = "gearx-theme";
 
@@ -9,7 +10,17 @@ const getThemeFromClass = (): ThemePreference => {
   return isLight ? "light" : "dark";
 };
 
-export const [themePreference, setThemePreference] = createSignal<ThemePreference>("dark");
+const deserializeTheme = (value: string | null): ThemePreference | null => {
+  if (value === "system" || value === "light" || value === "dark") {
+    return value;
+  }
+  return null;
+};
+
+export const [themePreference, setThemePreference] = makePersisted(
+  createSignal<ThemePreference>("dark"),
+  { name: THEME_STORAGE_KEY, deserialize: deserializeTheme }
+);
 
 export type ResolvedTheme = "dark" | "light";
 
@@ -25,30 +36,19 @@ const resolveTheme = (preference: ThemePreference): ResolvedTheme => {
   return preference === "light" ? "light" : "dark";
 };
 
-const getInitialResolvedTheme = (): ResolvedTheme => {
-  const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  if (stored === "system" || stored === "dark" || stored === "light") {
-    return resolveTheme(stored as ThemePreference);
-  }
-  return getSystemTheme();
-};
-
-export const [theme, setTheme] = createSignal<ResolvedTheme>(getInitialResolvedTheme());
+export const [theme, setTheme] = createSignal<ResolvedTheme>(resolveTheme(themePreference()));
 
 export function changeThemePreference(value: ThemePreference): void {
   setThemePreference(value);
-  localStorage.setItem(THEME_STORAGE_KEY, value);
   document.documentElement.classList.toggle("light", value === "light");
 }
 
 export function initThemeListener(): () => void {
   onMount(() => {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "light" || stored === "dark") {
-      setThemePreference(stored);
-      document.documentElement.classList.toggle("light", stored === "light");
+    const pref = themePreference();
+    if (pref === "light" || pref === "dark") {
+      document.documentElement.classList.toggle("light", pref === "light");
     } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      setThemePreference("light");
       document.documentElement.classList.add("light");
     }
   });
@@ -68,4 +68,3 @@ export function initThemeListener(): () => void {
 
   return () => {};
 }
-

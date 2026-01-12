@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store";
 import { createSignal, createMemo } from "solid-js";
+import { makePersisted } from "@solid-primitives/storage";
 import type { SavedSetup, SetupTag, SetupFilter, SetupDiff } from "../types";
 
 const STORAGE_KEY = "gearx_setups";
@@ -9,35 +10,9 @@ function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-function loadSetups(): SavedSetup[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
-function loadTags(): SetupTag[] {
-  try {
-    const stored = localStorage.getItem(TAGS_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveSetups(setups: SavedSetup[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(setups));
-}
-
-function saveTags(tags: SetupTag[]) {
-  localStorage.setItem(TAGS_STORAGE_KEY, JSON.stringify(tags));
-}
-
 export const [setupsStore, setSetupsStore] = createStore({
-  setups: loadSetups(),
-  tags: loadTags(),
+  setups: [] as SavedSetup[],
+  tags: [] as SetupTag[],
   filter: {
     search: "",
     tags: [] as string[],
@@ -48,6 +23,27 @@ export const [setupsStore, setSetupsStore] = createStore({
 });
 
 export const [editingSetup, setEditingSetup] = createSignal<SavedSetup | null>(null);
+
+const [persistedSetups, setPersistedSetups] = makePersisted(
+  createSignal<SavedSetup[]>([]),
+  { name: STORAGE_KEY }
+);
+
+const [persistedTags, setPersistedTags] = makePersisted(
+  createSignal<SetupTag[]>([]),
+  { name: TAGS_STORAGE_KEY }
+);
+
+export function initializeSetupsStore(): void {
+  const loadedSetups = persistedSetups();
+  const loadedTags = persistedTags();
+  if (loadedSetups.length > 0 || loadedTags.length > 0) {
+    setSetupsStore({
+      setups: loadedSetups,
+      tags: loadedTags,
+    });
+  }
+}
 
 export function getSetups(): SavedSetup[] {
   return setupsStore.setups;
@@ -134,20 +130,20 @@ export function saveSetup(
     updatedSetup = {
       ...setup,
       id: generateId(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     };
     setSetupsStore("setups", (s) => [...s, updatedSetup]);
   }
 
-  saveSetups(setupsStore.setups);
+  setPersistedSetups(setupsStore.setups);
   setEditingSetup(null);
   return updatedSetup;
 }
 
 export function deleteSetup(id: string) {
   setSetupsStore("setups", (s) => s.filter((item) => item.id !== id));
-  saveSetups(setupsStore.setups);
+  setPersistedSetups(setupsStore.setups);
 }
 
 export function duplicateSetup(id: string, newName?: string): SavedSetup | null {
@@ -171,7 +167,7 @@ export function createSetup(data: Omit<SavedSetup, "id" | "createdAt" | "updated
     version: 1,
   };
   setSetupsStore("setups", (s) => [...s, setup]);
-  saveSetups(setupsStore.setups);
+  setPersistedSetups(setupsStore.setups);
   return setup;
 }
 
@@ -187,7 +183,7 @@ export function updateSetup(id: string, updates: Partial<Omit<SavedSetup, "id" |
     })
   );
   if (found) {
-    saveSetups(setupsStore.setups);
+    setPersistedSetups(setupsStore.setups);
   }
   return found;
 }
@@ -199,7 +195,7 @@ export function addTag(name: string, color: string): SetupTag {
     color,
   };
   setSetupsStore("tags", (t) => [...t, tag]);
-  saveTags(setupsStore.tags);
+  setPersistedTags(setupsStore.tags);
   return tag;
 }
 
@@ -211,8 +207,8 @@ export function deleteTag(id: string) {
       tagIds: setup.tagIds.filter((tid) => tid !== id),
     }))
   );
-  saveTags(setupsStore.tags);
-  saveSetups(setupsStore.setups);
+  setPersistedTags(setupsStore.tags);
+  setPersistedSetups(setupsStore.setups);
 }
 
 export function compareTwoSetups(a: SavedSetup, b: SavedSetup): SetupDiff {

@@ -8,6 +8,7 @@
         "@ark-ui/solid": "^5.30.0",
         "@fontsource-variable/jetbrains-mono": "^5.2.8",
         "@openrouter/ai-sdk-provider": "^1.5.4",
+        "@solid-primitives/storage": "^4.3.3",
         "@tanstack/router-plugin": "^1.149.0",
         "@tanstack/solid-query": "^5.90.19",
         "@tanstack/solid-router": "^1.147.3",
@@ -337,6 +338,8 @@
     "@solid-primitives/scheduled": ["@solid-primitives/scheduled@1.5.2", "", { "peerDependencies": { "solid-js": "^1.6.12" } }, ""],
 
     "@solid-primitives/static-store": ["@solid-primitives/static-store@0.1.2", "", { "dependencies": { "@solid-primitives/utils": "^6.3.2" }, "peerDependencies": { "solid-js": "^1.6.12" } }, ""],
+
+    "@solid-primitives/storage": ["@solid-primitives/storage@4.3.3", "", { "dependencies": { "@solid-primitives/utils": "^6.3.2" }, "peerDependencies": { "@tauri-apps/plugin-store": "*", "solid-js": "^1.6.12" }, "optionalPeers": ["@tauri-apps/plugin-store"] }, "sha512-ACbNwMZ1s8VAvld6EUXkDkX/US3IhtlPLxg6+B2s9MwNUugwdd51I98LPEaHrdLpqPmyzqgoJe0TxEFlf3Dqrw=="],
 
     "@solid-primitives/styles": ["@solid-primitives/styles@0.1.2", "", { "dependencies": { "@solid-primitives/rootless": "^1.5.2", "@solid-primitives/utils": "^6.3.2" }, "peerDependencies": { "solid-js": "^1.6.12" } }, ""],
 

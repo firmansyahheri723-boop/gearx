@@ -12,6 +12,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "noEmit": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
 
     // Type Checking & Safety
     "strict": true,

@@ -1,4 +1,5 @@
 import { createSignal } from "solid-js";
+import { makePersisted } from "@solid-primitives/storage";
 import type { CarData } from "../../types";
 import { parseCSV } from "./utils/csv";
 import carDataCsv from "../../assets/car-data.csv?raw";
@@ -9,30 +10,29 @@ const SELECTED_ENGINE_KEY = "gearx-selected-engine";
 
 export const carData: CarData[] = parseCSV(carDataCsv);
 
-const loadSelectedCar = (): number | null => {
-  try {
-    const stored = localStorage.getItem(SELECTED_CAR_KEY);
-    if (stored === null) return null;
-    const idx = parseInt(stored, 10);
-    return idx >= 0 && idx < carData.length ? idx : null;
-  } catch {
-    return null;
-  }
+const validateCarIndex = (value: string | null): number | null => {
+  if (value === null) return null;
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed)) return null;
+  return parsed >= 0 && parsed < carData.length ? parsed : null;
 };
 
-const loadSelectedEngine = (): number | null => {
-  try {
-    const stored = localStorage.getItem(SELECTED_ENGINE_KEY);
-    if (stored === null) return null;
-    const idx = parseInt(stored, 10);
-    return idx >= 0 && idx < carData.length ? idx : null;
-  } catch {
-    return null;
-  }
+const validateEngineIndex = (value: string | null): number | null => {
+  if (value === null) return null;
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed)) return null;
+  return parsed >= 0 && parsed < carData.length ? parsed : null;
 };
 
-export const [selectedCarIndex, setSelectedCarIndex] = createSignal<number | null>(loadSelectedCar());
-export const [selectedEngineIndex, setSelectedEngineIndex] = createSignal<number | null>(loadSelectedEngine());
+export const [selectedCarIndex, setSelectedCarIndex] = makePersisted(
+  createSignal<number | null>(null),
+  { name: SELECTED_CAR_KEY, deserialize: validateCarIndex }
+);
+
+export const [selectedEngineIndex, setSelectedEngineIndex] = makePersisted(
+  createSignal<number | null>(null),
+  { name: SELECTED_ENGINE_KEY, deserialize: validateEngineIndex }
+);
 
 function applyCarData(car: CarData): void {
   let wheelbase = car.wheelbase ?? 0;
@@ -78,7 +78,6 @@ export function selectCar(index: number): void {
 
   const car = carData[index];
   setSelectedCarIndex(index);
-  localStorage.setItem(SELECTED_CAR_KEY, index.toString());
   applyCarData(car);
 
   clearEngineSelection();
@@ -96,19 +95,16 @@ export function selectEngine(index: number): void {
 
   const engine = carData[index];
   setSelectedEngineIndex(index);
-  localStorage.setItem(SELECTED_ENGINE_KEY, index.toString());
   applyEngineData(engine);
 }
 
 export function clearCarSelection(): void {
   setSelectedCarIndex(null);
-  localStorage.removeItem(SELECTED_CAR_KEY);
   setVehicleInputs("carSelection", "");
 }
 
 export function clearEngineSelection(): void {
   setSelectedEngineIndex(null);
-  localStorage.removeItem(SELECTED_ENGINE_KEY);
   setVehicleInputs("engineSelection", "");
 }
 

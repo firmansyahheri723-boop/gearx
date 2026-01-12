@@ -1,4 +1,6 @@
 import { createStore } from "solid-js/store";
+import { createSignal } from "solid-js";
+import { makePersisted } from "@solid-primitives/storage";
 import type { AeroSettings } from "../../types";
 
 export const [aeroSettings, setAeroSettings] = createStore<AeroSettings>({
@@ -8,21 +10,16 @@ export const [aeroSettings, setAeroSettings] = createStore<AeroSettings>({
 });
 
 const AERO_EXPERIMENTAL_KEY = "gearx-aero-experimental";
-const loadAeroExperimental = (): boolean => {
-  try {
-    const stored = localStorage.getItem(AERO_EXPERIMENTAL_KEY);
-    return stored === "true";
-  } catch {
-    return false;
-  }
+
+const deserializeAeroExperimental = (value: string | null): boolean => {
+  return value === "true";
 };
-export const [aeroExperimentalEnabled, setAeroExperimentalEnabled] =
-  createStore<{ value: boolean }>({
-    value: loadAeroExperimental(),
-  });
+
+export const [aeroExperimentalEnabled, setAeroExperimentalEnabled] = makePersisted(
+  createSignal(false),
+  { name: AERO_EXPERIMENTAL_KEY, deserialize: deserializeAeroExperimental }
+);
 
 export const toggleAeroExperimental = (): void => {
-  const newValue = !aeroExperimentalEnabled.value;
-  setAeroExperimentalEnabled({ value: newValue });
-  localStorage.setItem(AERO_EXPERIMENTAL_KEY, newValue.toString());
+  setAeroExperimentalEnabled(!aeroExperimentalEnabled());
 };
