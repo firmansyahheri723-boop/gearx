@@ -13,6 +13,7 @@ import { Route as SuspensionRouteImport } from './routes/suspension'
 import { Route as GearboxRouteImport } from './routes/gearbox'
 import { Route as DatabaseRouteImport } from './routes/database'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as AlignmentRouteImport } from './routes/alignment'
 import { Route as AeroRouteImport } from './routes/aero'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,11 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlignmentRoute = AlignmentRouteImport.update({
+  id: '/alignment',
+  path: '/alignment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AeroRoute = AeroRouteImport.update({
   id: '/aero',
   path: '/aero',
@@ -50,6 +56,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aero': typeof AeroRoute
+  '/alignment': typeof AlignmentRoute
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aero': typeof AeroRoute
+  '/alignment': typeof AlignmentRoute
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/aero': typeof AeroRoute
+  '/alignment': typeof AlignmentRoute
   '/chat': typeof ChatRoute
   '/database': typeof DatabaseRoute
   '/gearbox': typeof GearboxRoute
@@ -74,13 +83,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/aero' | '/chat' | '/database' | '/gearbox' | '/suspension'
+  fullPaths:
+    | '/'
+    | '/aero'
+    | '/alignment'
+    | '/chat'
+    | '/database'
+    | '/gearbox'
+    | '/suspension'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aero' | '/chat' | '/database' | '/gearbox' | '/suspension'
+  to:
+    | '/'
+    | '/aero'
+    | '/alignment'
+    | '/chat'
+    | '/database'
+    | '/gearbox'
+    | '/suspension'
   id:
     | '__root__'
     | '/'
     | '/aero'
+    | '/alignment'
     | '/chat'
     | '/database'
     | '/gearbox'
@@ -90,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AeroRoute: typeof AeroRoute
+  AlignmentRoute: typeof AlignmentRoute
   ChatRoute: typeof ChatRoute
   DatabaseRoute: typeof DatabaseRoute
   GearboxRoute: typeof GearboxRoute
@@ -126,6 +151,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alignment': {
+      id: '/alignment'
+      path: '/alignment'
+      fullPath: '/alignment'
+      preLoaderRoute: typeof AlignmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/aero': {
       id: '/aero'
       path: '/aero'
@@ -146,6 +178,7 @@ declare module '@tanstack/solid-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AeroRoute: AeroRoute,
+  AlignmentRoute: AlignmentRoute,
   ChatRoute: ChatRoute,
   DatabaseRoute: DatabaseRoute,
   GearboxRoute: GearboxRoute,
