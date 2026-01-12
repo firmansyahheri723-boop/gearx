@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store";
-import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode } from "../../../types";
+import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, SavedSetup, SetupData } from "../../../types";
+import { setAlignmentInputs } from "../../alignment/store";
 
 export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
   carSelection: "Dodge Challenger SRT",
@@ -87,9 +88,6 @@ export const [tractionMode, setTractionMode] = createStore<{ value: TractionMode
   value: "launch",
 });
 
-import type { SavedSetup } from "../../../types";
-import { setAlignmentInputs } from "../../alignment/store";
-
 export function applySavedSetupToVehicle(setup: SavedSetup): void {
   setVehicleInputs(setup.inputs);
   setTorqueRpmData(setup.torqueRpmData);
@@ -102,6 +100,6 @@ export function applySavedSetupToVehicle(setup: SavedSetup): void {
   }
 }
 
-export function applySharedSetup(data: SavedSetup): void {
-  applySavedSetupToVehicle(data);
+export function applySharedSetup(data: SetupData): void {
+  applySavedSetupToVehicle(data as SavedSetup);
 }

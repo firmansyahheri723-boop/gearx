@@ -335,15 +335,7 @@ export const SETUP_TAG_COLORS = [
 
 export type SetupTagColor = string;
 
-export type SavedSetup = {
-  id: string;
-  name: string;
-  description: string;
-  tags: SetupTag[];
-  notes: string;
-  carName: string;
-  createdAt: number;
-  updatedAt: number;
+export type SetupData = {
   version: number;
   inputs: VehicleInputs;
   torqueRpmData: TorqueRpmRow[];
@@ -354,6 +346,17 @@ export type SavedSetup = {
   aeroSettings: AeroSettings;
   alignmentInputs?: AlignmentInputs;
 };
+
+export type SavedSetup = {
+  id: string;
+  name: string;
+  description: string;
+  tags: SetupTag[];
+  notes: string;
+  carName: string;
+  createdAt: number;
+  updatedAt: number;
+} & SetupData;
 
 export type SetupDiffField = {
   path: string;

@@ -1,20 +1,10 @@
 import LZString from 'lz-string';
-import type { VehicleInputs, TorqueRpmRow, GearRatio, FinalDrive, TireCompound, TractionMode, AeroSettings, AlignmentInputs } from '../../../types';
+import type { SetupData } from '../../../types';
 import { vehicleInputs, torqueRpmData, gearRatios, finalDrive, tireCompound, tractionMode } from '../../shared/store/vehicle';
 import { aeroSettings } from '../../aero/store';
 import { alignmentInputs } from '../../alignment/store';
 
-export interface ShareSetupData {
-  version: number;
-  inputs: VehicleInputs;
-  torqueRpmData: TorqueRpmRow[];
-  gearRatios: GearRatio[];
-  finalDrive: FinalDrive;
-  tireCompound: TireCompound;
-  tractionMode: TractionMode;
-  aeroSettings: AeroSettings;
-  alignmentInputs?: AlignmentInputs;
-}
+export type ShareSetupData = SetupData;
 
 export function serializeSetup(data: ShareSetupData): string {
   const json = JSON.stringify(data);

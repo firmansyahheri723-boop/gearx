@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "downlevelIteration": true,
     "noEmit": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
 
