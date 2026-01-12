@@ -20,9 +20,9 @@ import {
   tireCompound,
   tractionMode,
 } from "@/stores/vehicle";
-import { calculateGearboxOutputs } from "@/features/gearbox/utils/gearbox";
 import type { TorqueRpmRow } from "@/types";
 import { GEAR_LABELS } from "@/types";
+import { calculateGearboxOutputs } from "@/features/gearbox/gearbox";
 
 // Help tooltip content for transmission sections
 const HELP_CONTENT: Record<

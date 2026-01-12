@@ -1,7 +1,22 @@
-import type { SpeedRpmPoint, GearboxOutputs } from '@/types';
-import type { GearRatio, TorqueRpmRow, WheelData, Drivetrain, TractionMode } from '@/types';
-import { GRAVITY_MS2, KPH_100_IN_MS, INCHES_PER_MILE, MM_TO_INCHES, KW_TO_HP } from '@/constants/physics';
-import { TIRE_FRICTION_COEFFICIENTS as LOCAL_FRICTION_COEFFICIENTS, AWD_TRACTION_MULTIPLIER } from './gearbox-constants';
+import type { SpeedRpmPoint, GearboxOutputs } from "@/types";
+import type {
+  GearRatio,
+  TorqueRpmRow,
+  WheelData,
+  Drivetrain,
+  TractionMode,
+} from "@/types";
+import {
+  GRAVITY_MS2,
+  KPH_100_IN_MS,
+  INCHES_PER_MILE,
+  MM_TO_INCHES,
+  KW_TO_HP,
+} from "@/constants/physics";
+import {
+  TIRE_FRICTION_COEFFICIENTS as LOCAL_FRICTION_COEFFICIENTS,
+  AWD_TRACTION_MULTIPLIER,
+} from "./gearbox-constants";
 
 type GearboxCalcInputs = {
   frontWheel: WheelData;
@@ -18,7 +33,7 @@ type GearboxCalcInputs = {
   tractionMode: TractionMode;
   acceleration0to100: number;
   aeroTractionMultiplier?: number;
-}
+};
 
 function getAverageWheel(front: WheelData, rear: WheelData): WheelData {
   return {
@@ -28,35 +43,57 @@ function getAverageWheel(front: WheelData, rear: WheelData): WheelData {
   };
 }
 
-function getWheelForTraction(drivetrain: Drivetrain, frontWheel: WheelData, rearWheel: WheelData): WheelData {
-  if (drivetrain === 'FWD') return frontWheel;
+function getWheelForTraction(
+  drivetrain: Drivetrain,
+  frontWheel: WheelData,
+  rearWheel: WheelData,
+): WheelData {
+  if (drivetrain === "FWD") return frontWheel;
   return rearWheel;
 }
 
-export function calcWheelCircumference(tireWidth: number, profile: number, wheelDiameter: number): number {
+export function calcWheelCircumference(
+  tireWidth: number,
+  profile: number,
+  wheelDiameter: number,
+): number {
   const sidewallHeightMm = tireWidth * (profile / 100);
   const sidewallHeightInches = sidewallHeightMm / MM_TO_INCHES;
   const totalDiameter = wheelDiameter + 2 * sidewallHeightInches;
   return totalDiameter * Math.PI;
 }
 
-export function calcWheelRadiusM(tireWidth: number, profile: number, wheelDiameter: number): number {
+export function calcWheelRadiusM(
+  tireWidth: number,
+  profile: number,
+  wheelDiameter: number,
+): number {
   const sidewallHeightMm = tireWidth * (profile / 100);
   const sidewallHeightInches = sidewallHeightMm / MM_TO_INCHES;
   const totalDiameterInches = wheelDiameter + 2 * sidewallHeightInches;
   return (totalDiameterInches * 2.54) / 100 / 2;
 }
 
-export function calcSpeedKph(rpm: number, circumferenceInches: number, totalRatio: number): number {
+export function calcSpeedKph(
+  rpm: number,
+  circumferenceInches: number,
+  totalRatio: number,
+): number {
   if (totalRatio === 0) return 0;
-  return (rpm * 60 * circumferenceInches) / INCHES_PER_MILE / totalRatio * 1.60934;
+  return (
+    ((rpm * 60 * circumferenceInches) / INCHES_PER_MILE / totalRatio) * 1.60934
+  );
 }
 
 export function calcHorsepower(torqueNm: number, rpm: number): number {
-  return (torqueNm * rpm) / 9549 * KW_TO_HP;
+  return ((torqueNm * rpm) / 9549) * KW_TO_HP;
 }
 
-export function calcWheelTorque(engineTorqueNm: number, gearRatio: number, finalDrive: number): number {
+export function calcWheelTorque(
+  engineTorqueNm: number,
+  gearRatio: number,
+  finalDrive: number,
+): number {
   return engineTorqueNm * gearRatio * finalDrive;
 }
 
@@ -68,7 +105,7 @@ export function calcWeightTransfer(
   cogHeightM: number,
   wheelbaseM: number,
   massKg: number,
-  longAccelG: number
+  longAccelG: number,
 ): number {
   return (cogHeightM / wheelbaseM) * massKg * longAccelG;
 }
@@ -81,32 +118,45 @@ export function calcTractionLimitTorque(
   longAccelG: number,
   frictionCoef: number,
   wheel: WheelData,
-  drivetrain: Drivetrain
+  drivetrain: Drivetrain,
 ): number {
   const frontWeight = massKg * frontWeightDist;
   const rearWeight = massKg - frontWeight;
-  const weightTransfer = calcWeightTransfer(cogHeightM, wheelbaseM, massKg, longAccelG);
-  const wheelRadiusM = calcWheelRadiusM(wheel.width, wheel.profile, wheel.diameter);
+  const weightTransfer = calcWeightTransfer(
+    cogHeightM,
+    wheelbaseM,
+    massKg,
+    longAccelG,
+  );
+  const wheelRadiusM = calcWheelRadiusM(
+    wheel.width,
+    wheel.profile,
+    wheel.diameter,
+  );
   const frontWeightDynamic = frontWeight - weightTransfer;
   const rearWeightDynamic = rearWeight + weightTransfer;
 
   switch (drivetrain) {
-    case 'AWD': {
-      const frontTraction = frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
-      const rearTraction = rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
+    case "AWD": {
+      const frontTraction =
+        frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
+      const rearTraction =
+        rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
       return (frontTraction + rearTraction) * AWD_TRACTION_MULTIPLIER;
     }
-    case 'RWD': {
+    case "RWD": {
       return rearWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
     }
-    case 'FWD':
+    case "FWD":
     default: {
       return frontWeightDynamic * GRAVITY_MS2 * frictionCoef * wheelRadiusM;
     }
   }
 }
 
-export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutputs {
+export function calculateGearboxOutputs(
+  inputs: GearboxCalcInputs,
+): GearboxOutputs {
   const {
     frontWheel,
     rearWheel,
@@ -124,7 +174,11 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
   } = inputs;
 
   const avgWheel = getAverageWheel(frontWheel, rearWheel);
-  const wheelCircumference = calcWheelCircumference(avgWheel.width, avgWheel.profile, avgWheel.diameter);
+  const wheelCircumference = calcWheelCircumference(
+    avgWheel.width,
+    avgWheel.profile,
+    avgWheel.diameter,
+  );
 
   const tractionWheel = getWheelForTraction(drivetrain, frontWheel, rearWheel);
 
@@ -145,9 +199,13 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
     }
   }
 
-  const cogHeightM = cogHeight * 2.54 / 100;
-  const longAccelG = tractionMode === 'launch' ? 0 : calcLongitudinalAccelG(acceleration0to100);
-  const frictionCoef = LOCAL_FRICTION_COEFFICIENTS[tireCompound as keyof typeof LOCAL_FRICTION_COEFFICIENTS] ?? 1.4;
+  const cogHeightM = (cogHeight * 2.54) / 100;
+  const longAccelG =
+    tractionMode === "launch" ? 0 : calcLongitudinalAccelG(acceleration0to100);
+  const frictionCoef =
+    LOCAL_FRICTION_COEFFICIENTS[
+      tireCompound as keyof typeof LOCAL_FRICTION_COEFFICIENTS
+    ] ?? 1.4;
   const aeroMultiplier = inputs.aeroTractionMultiplier ?? 1.0;
   const adjustedFrictionCoef = frictionCoef * aeroMultiplier;
   const tractionLimitTorque = calcTractionLimitTorque(
@@ -158,7 +216,7 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
     longAccelG,
     adjustedFrictionCoef,
     tractionWheel,
-    drivetrain
+    drivetrain,
   );
 
   const speedRpmData: SpeedRpmPoint[][] = [];
@@ -203,7 +261,11 @@ export function calculateGearboxOutputs(inputs: GearboxCalcInputs): GearboxOutpu
 
   return {
     wheelCircumference,
-    wheelRadiusM: calcWheelRadiusM(tractionWheel.width, tractionWheel.profile, tractionWheel.diameter),
+    wheelRadiusM: calcWheelRadiusM(
+      tractionWheel.width,
+      tractionWheel.profile,
+      tractionWheel.diameter,
+    ),
     effectiveRatios,
     peakHp,
     peakHpRpm,
