@@ -3,7 +3,7 @@ import { For, createMemo, createSignal } from 'solid-js';
 import type { ColumnDef, SortingState } from '@tanstack/solid-table';
 import { DataTable } from '@/components/ui/data-table';
 import { carData, selectedCarIndex, selectedEngineIndex, getSelectedCar, getSelectedEngine } from '@/features/database/store';
-import { CSV_COLUMNS } from '@/features/database/utils/csv';
+import { CSV_COLUMNS } from '@/features/database/database-constants';
 import type { CarData } from '@/types';
 
 // Sort car data: regular cars first, then engines, then transmissions

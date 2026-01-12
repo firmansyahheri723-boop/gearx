@@ -3,9 +3,9 @@ import { For, createMemo } from "solid-js";
 import { SuspensionOutput } from "@/features/suspension/components/suspension-output";
 import { vehicleInputs } from "@/stores/vehicle";
 import { aeroSettings, aeroExperimentalEnabled } from "@/features/aero/store";
-import { calculateSuspensionOutputs } from "@/features/suspension/utils/suspension";
+import { calculateSuspensionOutputs } from "@/features/suspension/suspension";
 import { getSelectedCar } from "@/features/database/store";
-import { calculateExperimentalAero } from "@/features/aero/utils/aero";
+import { calculateExperimentalAero } from "@/features/aero/aero";
 import type { AeroExperimentalOutput } from "@/types";
 
 import { SuspensionParametersSection } from "@/features/suspension/components/suspension-parameters-section";

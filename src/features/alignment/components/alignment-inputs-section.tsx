@@ -10,7 +10,7 @@ import {
 import {
   ALIGNMENT_SLIDERS,
   ALIGNMENT_PRESETS,
-} from "./alignment-tab-constants";
+} from "../alignment-constants";
 
 export function AlignmentInputsSection() {
   return (

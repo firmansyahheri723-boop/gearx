@@ -2,7 +2,7 @@ import { SectionHeader } from '@/components/ui/section-header';
 import { DataTable } from '@/components/ui/data-table';
 import { HelpTooltip } from '@/components/ui/help-tooltip';
 import type { HelpLink } from '@/types';
-import type { SuspensionOutputs } from '@/features/suspension/utils/suspension';
+import type { SuspensionOutputs } from '@/features/suspension/suspension';
 import type { ColumnDef } from '@tanstack/solid-table';
 
 const HELP_CONTENT: Record<

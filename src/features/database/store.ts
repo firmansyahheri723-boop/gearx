@@ -1,7 +1,7 @@
 import { createSignal } from "solid-js";
 import { makePersisted } from "@solid-primitives/storage";
 import type { CarData } from "@/types";
-import { parseCSV } from "./utils/csv";
+import { parseCSV } from "./csv";
 import carDataCsv from "@/assets/car-data.csv?raw";
 import { setVehicleInputs } from "@/stores/vehicle";
 

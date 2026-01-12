@@ -2,7 +2,7 @@ import { For } from "solid-js";
 import { SectionHeader } from "@/components/ui/section-header";
 import { SliderRow } from "@/components/ui/slider-row";
 import { vehicleInputs, setVehicleInputs } from "../store";
-import { SUSPENSION_SLIDERS } from "./suspension-tab-constants";
+import { SUSPENSION_SLIDERS } from "../suspension-constants";
 
 export function SuspensionParametersSection() {
   return (

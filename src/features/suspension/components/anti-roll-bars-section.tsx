@@ -1,8 +1,8 @@
 import { SectionHeader } from "@/components/ui/section-header";
 import { MetricCardWithHelp } from "@/components/ui/metric-card";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
-import type { SuspensionOutputs } from "../utils/suspension";
-import { ARB_STIFFNESS_HELP } from "./suspension-tab-constants";
+import type { SuspensionOutputs } from "../suspension";
+import { ARB_STIFFNESS_HELP } from "../suspension-constants";
 
 type Props = {
   outputs: SuspensionOutputs;

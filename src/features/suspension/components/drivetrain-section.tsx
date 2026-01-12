@@ -7,11 +7,11 @@ import {
   DRIVETRAIN_OPTIONS,
   WHEEL_DIAMETER_OPTIONS,
   HELP_CONTENT,
-} from "./input-section-constants";
+} from "../suspension-constants";
 import {
   TIRE_OPTIONS,
   TRACTION_MODE_OPTIONS,
-} from "@/features/gearbox/components/gearbox-tab-constants";
+} from "@/features/gearbox/gearbox-constants";
 import { setVehicleInputs } from "../store";
 import { setTireCompound, vehicleInputs } from "@/stores/vehicle";
 import { setTractionMode, tireCompound, tractionMode } from "@/features/gearbox/store";

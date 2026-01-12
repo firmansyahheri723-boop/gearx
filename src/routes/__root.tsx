@@ -9,7 +9,7 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { initThemeListener } from "@/stores/theme";
 import { clearSelection } from "@/stores/selection";
 import { applySharedSetup } from "@/stores/vehicle";
-import { deserializeSetup } from "@/features/setups/utils/share";
+import { deserializeSetup } from "@/features/setups/sharing";
 
 const TABS = [
   { id: "main", label: "Input", to: "/" },

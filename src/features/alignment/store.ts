@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
 import type { AlignmentInputs } from "@/types";
-import { ALIGNMENT_PRESETS } from "./types";
+import { ALIGNMENT_PRESETS_MAP } from "../alignment-constants";
 
 export const [alignmentInputs, setAlignmentInputs] =
   createStore<AlignmentInputs>({
@@ -15,7 +15,7 @@ export const [alignmentInputs, setAlignmentInputs] =
   });
 
 export function applyAlignmentPreset(preset: string): void {
-  const presetValues = ALIGNMENT_PRESETS[preset];
+  const presetValues = ALIGNMENT_PRESETS_MAP[preset];
   if (presetValues) {
     setAlignmentInputs(presetValues);
   }

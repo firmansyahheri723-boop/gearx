@@ -26,15 +26,15 @@ import {
 } from "@/stores/vehicle";
 import { aeroSettings, aeroExperimentalEnabled } from "@/features/aero/store";
 import { getSelectedCar } from "@/features/database/store";
-import { calculateExperimentalAero } from "@/features/aero/utils/aero";
+import { calculateExperimentalAero } from "@/features/aero/aero";
 import type { AeroExperimentalOutput } from "@/types";
-import { calculateGearboxOutputs } from "@/features/gearbox/utils/gearbox";
+import { calculateGearboxOutputs } from "@/features/gearbox/gearbox";
 import type { TireCompound } from "@/types";
-import { GEAR_LABELS } from "@/features/gearbox/types";
+import { GEAR_LABELS } from "@/features/gearbox/gearbox-constants";
 import {
   TIRE_OPTIONS,
   TRACTION_MODE_OPTIONS,
-} from "@/features/gearbox/components/gearbox-tab-constants";
+} from "@/features/gearbox/gearbox-constants";
 
 const HELP_CONTENT: Record<
   string,

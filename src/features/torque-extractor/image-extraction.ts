@@ -1,4 +1,4 @@
-import type { TorqueExtractorPoint, TorqueExtractorCalibration, ExtractedDataPoint } from '@/types/extraction';
+import type { TorqueExtractorPoint, TorqueExtractorCalibration, ExtractedDataPoint } from './types';
 
 function rgbToHsv(r: number, g: number, b: number): [number, number, number] {
   r /= 255;
@@ -33,14 +33,10 @@ function rgbToHsv(r: number, g: number, b: number): [number, number, number] {
 
 function isCyanPixel(r: number, g: number, b: number): boolean {
   const [h, s, v] = rgbToHsv(r, g, b);
-  // OpenCV uses H: 0-180 (half of 360), S: 0-255, V: 0-255
-  // Python code: lower_blue = [85, 100, 150], upper_blue = [105, 255, 255]
-  // Converting to 360 degree scale: 85*2 = 170, 105*2 = 210
-  // This targets cyan/turquoise colors
   const hueMin = 170;
   const hueMax = 210;
-  const satMin = 100;  // 100/255 = ~39% saturation minimum
-  const valMin = 150;  // 150/255 = ~59% value minimum
+  const satMin = 100;
+  const valMin = 150;
   return h >= hueMin && h <= hueMax && s >= satMin && v >= valMin;
 }
 

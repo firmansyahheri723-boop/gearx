@@ -15,7 +15,7 @@ import {
   exportToJSON,
   downloadJSON,
   importFromFile,
-} from "../utils/setup-import";
+} from "../import-export/handlers";
 
 interface SetupListProps {
   onApplySetup: (setup: SavedSetup) => void;

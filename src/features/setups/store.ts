@@ -1,14 +1,10 @@
 import { createStore } from "solid-js/store";
 import { createSignal } from "solid-js";
 import { makePersisted } from "@solid-primitives/storage";
-import type { SavedSetup, SetupTag, SetupFilter, SetupDiff } from "@/types";
+import type { SavedSetup, SetupTag, SetupFilter } from "@/types";
 
 const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
-
-function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
 
 export const [setupsStore, setSetupsStore] = createStore({
   setups: [] as SavedSetup[],
@@ -22,10 +18,6 @@ export const [setupsStore, setSetupsStore] = createStore({
   },
 });
 
-export const [editingSetup, setEditingSetup] = createSignal<SavedSetup | null>(
-  null,
-);
-
 const [persistedSetups, setPersistedSetups] = makePersisted(
   createSignal<SavedSetup[]>([]),
   { name: STORAGE_KEY },
@@ -35,6 +27,10 @@ const [persistedTags, setPersistedTags] = makePersisted(
   createSignal<SetupTag[]>([]),
   { name: TAGS_STORAGE_KEY },
 );
+
+function generateId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
+}
 
 export function initializeSetupsStore(): void {
   const loadedSetups = persistedSetups();
@@ -119,8 +115,9 @@ export function clearFilter() {
 
 export function saveSetup(
   setup: Omit<SavedSetup, "id" | "createdAt" | "updatedAt">,
-) {
-  const existing = editingSetup();
+  editingId?: string,
+): SavedSetup {
+  const existing = editingId ? getSetupById(editingId) : null;
   let updatedSetup: SavedSetup;
 
   if (existing) {
@@ -130,7 +127,7 @@ export function saveSetup(
       updatedAt: Date.now(),
     };
     setSetupsStore("setups", (s) =>
-      s.map((setup) => (setup.id === existing.id ? updatedSetup : setup)),
+      s.map((s) => (s.id === existing.id ? updatedSetup : s)),
     );
   } else {
     updatedSetup = {
@@ -143,7 +140,6 @@ export function saveSetup(
   }
 
   setPersistedSetups(setupsStore.setups);
-  setEditingSetup(null);
   return updatedSetup;
 }
 
@@ -159,11 +155,12 @@ export function duplicateSetup(
   const original = getSetupById(id);
   if (!original) return null;
 
-  return createSetup({
+  const newSetup = saveSetup({
     ...original,
     name: newName ?? `${original.name} (Copy)`,
     tags: [...original.tags],
   });
+  return newSetup;
 }
 
 export function createSetup(
@@ -218,109 +215,9 @@ export function deleteTag(id: string) {
   setSetupsStore("setups", (s) =>
     s.map((setup) => ({
       ...setup,
-      tagIds: setup.tags.filter((t) => t.id !== id),
+      tags: setup.tags.filter((t) => t.id !== id),
     })),
   );
   setPersistedTags(setupsStore.tags);
   setPersistedSetups(setupsStore.setups);
-}
-
-export function compareTwoSetups(a: SavedSetup, b: SavedSetup): SetupDiff {
-  const categories = [
-    {
-      name: "Vehicle",
-      fields: ["carName", "weight", "frontWeightDistribution"],
-    },
-    {
-      name: "Suspension",
-      fields: [
-        "frontSuspension",
-        "rearSuspension",
-        "frontRideHeight",
-        "rearRideHeight",
-        "frontCamber",
-        "rearCamber",
-        "frontToe",
-        "rearToe",
-        "frontCaster",
-        "rearCaster",
-        "frontSpringRate",
-        "rearSpringRate",
-        "frontPreload",
-        "rearPreload",
-        "frontBumpStopRate",
-        "rearBumpStopRate",
-        "frontBumpStopRange",
-        "rearBumpStopRange",
-        "frontReboundStopRange",
-        "rearReboundStopRange",
-      ],
-    },
-    {
-      name: "Alignment",
-      fields: [
-        "frontCamberRange",
-        "rearCamberRange",
-        "frontToeRange",
-        "rearToeRange",
-        "frontCaster",
-        "rearCaster",
-        "frontCasterRange",
-        "rearCasterRange",
-      ],
-    },
-    { name: "Aero", fields: ["frontDownforce", "rearDownforce", "brakeBias"] },
-    {
-      name: "Transmission",
-      fields: ["gearRatios", "finalDrive", "torqueRpmData"],
-    },
-  ];
-
-  const diff: SetupDiff = {
-    setupAId: a.id,
-    setupBId: b.id,
-    summary: { totalDiffs: 0, highImpact: 0, mediumImpact: 0, lowImpact: 0 },
-    categories: categories.map((cat) => ({
-      ...cat,
-      fields: cat.fields
-        .filter((field) => {
-          const valA = (a as Record<string, unknown>)[field];
-          const valB = (b as Record<string, unknown>)[field];
-          if (typeof valA === "object" && typeof valB === "object") {
-            return JSON.stringify(valA) !== JSON.stringify(valB);
-          }
-          return valA !== valB;
-        })
-        .map((field) => {
-          const valA = (a as Record<string, unknown>)[field];
-          const valB = (b as Record<string, unknown>)[field];
-          return { path: field, valueA: valA, valueB: valB };
-        }),
-    })),
-  };
-
-  const impactFields = [
-    "weight",
-    "frontWeightDistribution",
-    "frontSuspension",
-    "rearSuspension",
-    "gearRatios",
-    "finalDrive",
-    "torqueRpmData",
-  ];
-
-  diff.categories.forEach((cat) => {
-    cat.fields.forEach((field) => {
-      diff.summary.totalDiffs++;
-      if (impactFields.includes(field.path)) {
-        diff.summary.highImpact++;
-      } else if (cat.name === "Aero" || cat.name === "Transmission") {
-        diff.summary.mediumImpact++;
-      } else {
-        diff.summary.lowImpact++;
-      }
-    });
-  });
-
-  return diff;
 }

@@ -18,7 +18,7 @@ import { getSelectedCar } from "@/features/database/store";
 import {
   calculateStandardAero,
   calculateExperimentalAero,
-} from "@/features/aero/utils/aero";
+} from "@/features/aero/aero";
 
 export const Route = createFileRoute("/aero")({
   component: Aero,

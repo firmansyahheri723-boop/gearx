@@ -1,4 +1,4 @@
-import type { SavedSetup, SetupDiff, SetupDiffField, SetupDiffCategory } from '@/types';
+import type { SavedSetup, SetupDiff, SetupDiffField, SetupDiffCategory } from "@/types";
 
 const CATEGORY_CONFIG: Record<string, { name: string; label: string; impactThreshold: number }> = {
   general: { name: 'general', label: 'General', impactThreshold: 10 },
@@ -14,56 +14,6 @@ function isDifferent(a: unknown, b: unknown): boolean {
     return Math.abs(a - b) > 0.001;
   }
   return true;
-}
-
-function formatFieldValue(value: unknown, path: string): string {
-  if (value === null || value === undefined) return '-';
-
-  if (typeof value === 'object') {
-    if (Array.isArray(value)) {
-      if (path.includes('gearRatios')) {
-        return value.map((v, i) => v && typeof v === 'object' && 'ratio' in v ? `G${i + 1}: ${(v as { ratio: number }).ratio.toFixed(2)}` : '-').join(', ');
-      }
-      return `[${value.length} items]`;
-    }
-
-    const obj = value as Record<string, unknown>;
-
-    if ('front' in obj && 'rear' in obj) {
-      return `F: ${(obj.front as number)?.toFixed(1) ?? '-'}, R: ${(obj.rear as number)?.toFixed(1) ?? '-'}`;
-    }
-    if ('bump' in obj && 'rebound' in obj) {
-      const bump = obj.bump as { front?: number; rear?: number };
-      const rebound = obj.rebound as { front?: number; rear?: number };
-      return `Bump F: ${bump.front?.toFixed(0) ?? '-'}, R: ${bump.rear?.toFixed(0) ?? '-'} | Rebound F: ${rebound.front?.toFixed(0) ?? '-'}, R: ${rebound.rear?.toFixed(0) ?? '-'}`;
-    }
-    return JSON.stringify(value);
-  }
-
-  if (typeof value === 'number') {
-    if (path.includes('Frequency') || path.includes('Gradient')) {
-      return value.toFixed(3);
-    }
-    if (path.includes('Weight') || path.includes('Distribution')) {
-      return `${value.toFixed(1)}%`;
-    }
-    if (path.includes('Ratio') && !path.includes('gearRatios')) {
-      return value.toFixed(2);
-    }
-    if (path.includes('offset') || path.includes('Height') || path.includes('width') || path.includes('diameter')) {
-      return `${value.toFixed(2)}`;
-    }
-    if (path.includes('Rpm') || path.includes('rpm')) {
-      return `${value.toFixed(0)}`;
-    }
-    return value.toFixed(2);
-  }
-
-  if (typeof value === 'boolean') {
-    return value ? 'Yes' : 'No';
-  }
-
-  return String(value);
 }
 
 function determineImpact(path: string, oldValue: unknown, newValue: unknown): 'high' | 'medium' | 'low' {
@@ -255,73 +205,54 @@ function compareArrays(arrA: unknown[], arrB: unknown[], path: string): SetupDif
   return diffs;
 }
 
-function compareSetups(setupA: SavedSetup, setupB: SavedSetup): SetupDiffField[] {
-  const diffs: SetupDiffField[] = [];
+export function formatFieldValue(value: unknown, path: string): string {
+  if (value === null || value === undefined) return '-';
 
-  diffs.push(...compareObjects(setupA.inputs as unknown as Record<string, unknown>, setupB.inputs as unknown as Record<string, unknown>, 'inputs'));
-  diffs.push(...compareArrays(setupA.torqueRpmData, setupB.torqueRpmData, 'torqueRpmData'));
-  diffs.push(...compareArrays(setupA.gearRatios, setupB.gearRatios, 'gearRatios'));
-  diffs.push(...compareObjects(setupA.finalDrive as unknown as Record<string, unknown>, setupB.finalDrive as unknown as Record<string, unknown>, 'finalDrive'));
+  if (typeof value === 'object') {
+    if (Array.isArray(value)) {
+      if (path.includes('gearRatios')) {
+        return value.map((v, i) => v && typeof v === 'object' && 'ratio' in v ? `G${i + 1}: ${(v as { ratio: number }).ratio.toFixed(2)}` : '-').join(', ');
+      }
+      return `[${value.length} items]`;
+    }
 
-  const tireCompoundDiff = setupA.tireCompound !== setupB.tireCompound;
-  diffs.push({
-    path: 'tireCompound',
-    label: 'Tire Compound',
-    category: 'suspension',
-    impact: tireCompoundDiff ? 'medium' : 'low',
-    hasDifference: tireCompoundDiff,
-    oldValue: setupA.tireCompound,
-    newValue: setupB.tireCompound,
-    formattedOld: setupA.tireCompound,
-    formattedNew: setupB.tireCompound,
-  });
+    const obj = value as Record<string, unknown>;
 
-  const tractionModeDiff = setupA.tractionMode !== setupB.tractionMode;
-  diffs.push({
-    path: 'tractionMode',
-    label: 'Traction Mode',
-    category: 'gearbox',
-    impact: tractionModeDiff ? 'low' : 'low',
-    hasDifference: tractionModeDiff,
-    oldValue: setupA.tractionMode,
-    newValue: setupB.tractionMode,
-    formattedOld: setupA.tractionMode,
-    formattedNew: setupB.tractionMode,
-  });
-
-  diffs.push(...compareObjects(setupA.aeroSettings as unknown as Record<string, unknown>, setupB.aeroSettings as unknown as Record<string, unknown>, 'aeroSettings'));
-
-  if (setupA.alignmentInputs || setupB.alignmentInputs) {
-    diffs.push(...compareObjects(
-      (setupA.alignmentInputs ?? {}) as Record<string, unknown>,
-      (setupB.alignmentInputs ?? {}) as Record<string, unknown>,
-      'alignmentInputs'
-    ));
+    if ('front' in obj && 'rear' in obj) {
+      return `F: ${(obj.front as number)?.toFixed(1) ?? '-'}, R: ${(obj.rear as number)?.toFixed(1) ?? '-'}`;
+    }
+    if ('bump' in obj && 'rebound' in obj) {
+      const bump = obj.bump as { front?: number; rear?: number };
+      const rebound = obj.rebound as { front?: number; rear?: number };
+      return `Bump F: ${bump.front?.toFixed(0) ?? '-'}, R: ${bump.rear?.toFixed(0) ?? '-'} | Rebound F: ${rebound.front?.toFixed(0) ?? '-'}, R: ${rebound.rear?.toFixed(0) ?? '-'}`;
+    }
+    return JSON.stringify(value);
   }
 
-  return diffs;
-}
+  if (typeof value === 'number') {
+    if (path.includes('Frequency') || path.includes('Gradient')) {
+      return value.toFixed(3);
+    }
+    if (path.includes('Weight') || path.includes('Distribution')) {
+      return `${value.toFixed(1)}%`;
+    }
+    if (path.includes('Ratio') && !path.includes('gearRatios')) {
+      return value.toFixed(2);
+    }
+    if (path.includes('offset') || path.includes('Height') || path.includes('width') || path.includes('diameter')) {
+      return `${value.toFixed(2)}`;
+    }
+    if (path.includes('Rpm') || path.includes('rpm')) {
+      return `${value.toFixed(0)}`;
+    }
+    return value.toFixed(2);
+  }
 
-export function compareTwoSetups(setupA: SavedSetup, setupB: SavedSetup): SetupDiff {
-  const allDiffs = compareSetups(setupA, setupB);
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
+  }
 
-  const categories: SetupDiffCategory[] = Object.values(CATEGORY_CONFIG).map((config) => ({
-    name: config.name,
-    label: config.label,
-    fields: allDiffs.filter((d) => d.category === config.name),
-  }));
-
-  return {
-    setupA,
-    setupB,
-    categories,
-    summary: {
-      totalDiffs: allDiffs.length,
-      highImpact: allDiffs.filter((d) => d.impact === 'high').length,
-      mediumImpact: allDiffs.filter((d) => d.impact === 'medium').length,
-      lowImpact: allDiffs.filter((d) => d.impact === 'low').length,
-    },
-  };
+  return String(value);
 }
 
 export function getImpactColor(impact: 'high' | 'medium' | 'low'): string {
@@ -341,4 +272,67 @@ export function getCategoryIcon(category: string): string {
     case 'alignment': return '📐';
     default: return '•';
   }
+}
+
+export function compareTwoSetups(setupA: SavedSetup, setupB: SavedSetup): SetupDiff {
+  const allDiffs: SetupDiffField[] = [];
+
+  allDiffs.push(...compareObjects(setupA.inputs as unknown as Record<string, unknown>, setupB.inputs as unknown as Record<string, unknown>, 'inputs'));
+  allDiffs.push(...compareArrays(setupA.torqueRpmData, setupB.torqueRpmData, 'torqueRpmData'));
+  allDiffs.push(...compareArrays(setupA.gearRatios, setupB.gearRatios, 'gearRatios'));
+  allDiffs.push(...compareObjects(setupA.finalDrive as unknown as Record<string, unknown>, setupB.finalDrive as unknown as Record<string, unknown>, 'finalDrive'));
+
+  const tireCompoundDiff = setupA.tireCompound !== setupB.tireCompound;
+  allDiffs.push({
+    path: 'tireCompound',
+    label: 'Tire Compound',
+    category: 'suspension',
+    impact: tireCompoundDiff ? 'medium' : 'low',
+    hasDifference: tireCompoundDiff,
+    oldValue: setupA.tireCompound,
+    newValue: setupB.tireCompound,
+    formattedOld: setupA.tireCompound,
+    formattedNew: setupB.tireCompound,
+  });
+
+  const tractionModeDiff = setupA.tractionMode !== setupB.tractionMode;
+  allDiffs.push({
+    path: 'tractionMode',
+    label: 'Traction Mode',
+    category: 'gearbox',
+    impact: tractionModeDiff ? 'low' : 'low',
+    hasDifference: tractionModeDiff,
+    oldValue: setupA.tractionMode,
+    newValue: setupB.tractionMode,
+    formattedOld: setupA.tractionMode,
+    formattedNew: setupB.tractionMode,
+  });
+
+  allDiffs.push(...compareObjects(setupA.aeroSettings as unknown as Record<string, unknown>, setupB.aeroSettings as unknown as Record<string, unknown>, 'aeroSettings'));
+
+  if (setupA.alignmentInputs || setupB.alignmentInputs) {
+    allDiffs.push(...compareObjects(
+      (setupA.alignmentInputs ?? {}) as Record<string, unknown>,
+      (setupB.alignmentInputs ?? {}) as Record<string, unknown>,
+      'alignmentInputs'
+    ));
+  }
+
+  const categories: SetupDiffCategory[] = Object.values(CATEGORY_CONFIG).map((config) => ({
+    name: config.name,
+    label: config.label,
+    fields: allDiffs.filter((d) => d.category === config.name),
+  }));
+
+  return {
+    setupA,
+    setupB,
+    categories,
+    summary: {
+      totalDiffs: allDiffs.length,
+      highImpact: allDiffs.filter((d) => d.impact === 'high').length,
+      mediumImpact: allDiffs.filter((d) => d.impact === 'medium').length,
+      lowImpact: allDiffs.filter((d) => d.impact === 'low').length,
+    },
+  };
 }

@@ -1,5 +1,6 @@
-import type { AlignmentInputs, HelpContent } from "@/types";
-import { SegmentedRowOption } from "@/components/ui/segmented-row";
+import type { AlignmentInputs } from '@/types';
+import type { HelpContent } from '@/types';
+import { SegmentedRowOption } from '@/components/ui/segmented-row';
 
 export type SliderConfig = {
   key: keyof AlignmentInputs;
@@ -104,4 +105,41 @@ export const ACKERMANN_HELP: HelpContent = {
     "Ackermann geometry ensures inner and outer wheels trace different radius circles during turns.",
   formula: "\\cot(\\alpha_{outer}) - \\cot(\\alpha_{inner}) = \\frac{L}{E}",
   variables: ["α = steering angle", "L = wheelbase", "E = kingpin offset"],
+};
+
+export type AlignmentPresetType = "grip" | "drift" | "street" | "drag";
+
+export const ALIGNMENT_PRESETS_MAP: Record<string, Partial<AlignmentInputs>> = {
+  grip: {
+    frontCamber: -3.5,
+    frontCaster: 6,
+    frontToe: -0.3,
+    frontAckermann: 20,
+    rearCamber: -2.5,
+    rearToe: -0.5,
+  },
+  drift: {
+    frontCamber: -4.0,
+    frontCaster: 4,
+    frontToe: 0,
+    frontAckermann: -10,
+    rearCamber: -3.0,
+    rearToe: -1.0,
+  },
+  street: {
+    frontCamber: -1.5,
+    frontCaster: 3,
+    frontToe: 0,
+    frontAckermann: 0,
+    rearCamber: -1.5,
+    rearToe: 0,
+  },
+  drag: {
+    frontCamber: -2.0,
+    frontCaster: 8,
+    frontToe: 0,
+    frontAckermann: 50,
+    rearCamber: -1.0,
+    rearToe: 0.5,
+  },
 };

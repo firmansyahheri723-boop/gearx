@@ -14,7 +14,7 @@ import {
   getSelectedCar,
   getSelectedEngine,
 } from '@/features/database/store';
-import { HELP_CONTENT } from './input-section-constants';
+import { HELP_CONTENT } from '../suspension-constants';
 
 export function BasicVehicleSection() {
   const carOptions = createMemo((): DropdownOption[] => {

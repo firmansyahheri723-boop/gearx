@@ -1,5 +1,4 @@
-import type { AlignmentInputs } from '@/types';
-import type { AlignmentOutputs } from '@/types';
+import type { AlignmentInputs, AlignmentOutputs } from '@/types';
 
 export function calculateAlignmentOutputs(inputs: AlignmentInputs): AlignmentOutputs {
   const {

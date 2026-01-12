@@ -1,6 +1,6 @@
 import { createSignal, For, Show, createMemo } from "solid-js";
 import { getSetups, getSetupById, createSetup } from "../store";
-import { compareTwoSetups } from "../utils/setup-compare";
+import { compareTwoSetups } from "../comparison/core";
 
 interface SetupMergerProps {
   onClose: () => void;

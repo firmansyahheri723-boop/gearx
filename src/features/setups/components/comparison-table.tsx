@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 import type { SetupDiff, SetupDiffField, SetupDiffCategory } from "@/types";
-import { getImpactColor } from "../utils/setup-compare";
+import { getImpactColor } from "../comparison/core";
 
 interface ComparisonTableProps {
   diff: SetupDiff;

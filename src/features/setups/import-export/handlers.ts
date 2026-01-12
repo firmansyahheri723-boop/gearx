@@ -1,5 +1,4 @@
-import type { SavedSetup } from "@/types";
-import type { ShareSetupData } from "../utils/share";
+import type { SavedSetup, SetupData } from "@/types";
 
 export interface ImportOptions {
   replaceExisting?: boolean;
@@ -60,8 +59,8 @@ function validateSetup(data: Record<string, unknown>): {
     errors.push("Invalid version");
   }
   if (
-    obj.version !== undefined &&
-    (obj.version ?? Number.MAX_SAFE_INTEGER) < MIN_VERSION
+    typeof obj.version === "number" &&
+    obj.version < MIN_VERSION
   ) {
     errors.push(
       `Version ${obj.version} is not supported. Minimum required: ${MIN_VERSION}`,
@@ -215,20 +214,6 @@ export function importFromFile(
   });
 }
 
-export function createShareDataFromSetup(setup: SavedSetup): ShareSetupData {
-  return {
-    version: 1,
-    inputs: setup.inputs,
-    torqueRpmData: setup.torqueRpmData,
-    gearRatios: setup.gearRatios,
-    finalDrive: setup.finalDrive,
-    tireCompound: setup.tireCompound,
-    tractionMode: setup.tractionMode,
-    aeroSettings: setup.aeroSettings,
-    alignmentInputs: setup.alignmentInputs,
-  };
-}
-
 export function validateImportVersion(version: number): {
   valid: boolean;
   message: string;
@@ -266,4 +251,18 @@ export function generateSetupSummary(setup: SavedSetup): string {
   }
 
   return lines.join("\n");
+}
+
+export function createShareDataFromSetup(setup: SavedSetup): SetupData {
+  return {
+    version: 1,
+    inputs: setup.inputs,
+    torqueRpmData: setup.torqueRpmData,
+    gearRatios: setup.gearRatios,
+    finalDrive: setup.finalDrive,
+    tireCompound: setup.tireCompound,
+    tractionMode: setup.tractionMode,
+    aeroSettings: setup.aeroSettings,
+    alignmentInputs: setup.alignmentInputs,
+  };
 }

@@ -1,14 +1,6 @@
 import type { AeroSettings, AeroStandardOutput, AeroExperimentalOutput, AeroSpeedDataPoint } from '@/types';
 import type { CarData } from '@/types';
-
-const AIR_DENSITY = 1.225;
-
-const GAME_CL_FACTOR = 0.08;
-const GAME_CD_FACTOR = 0.02;
-const REFERENCE_POWER_KW = 300;
-
-const SPEED_STEP = 10;
-const MAX_SPEED_PLOT_KMH = 350;
+import { AIR_DENSITY, GAME_CL_FACTOR, GAME_CD_FACTOR, REFERENCE_POWER_KW, SPEED_STEP, MAX_SPEED_PLOT_KMH } from './aero-constants';
 
 export function calculateStandardAero(settings: AeroSettings): AeroStandardOutput {
   const frontRel = settings.frontAero * 10;

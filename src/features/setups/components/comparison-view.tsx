@@ -1,7 +1,7 @@
 import { createSignal, For, Show, createMemo } from "solid-js";
 import { getSetups, getSetupById } from "../store";
 import type { SetupDiff } from "@/types";
-import { compareTwoSetups } from "../utils/setup-compare";
+import { compareTwoSetups } from "../comparison/core";
 import { ComparisonTable } from "./comparison-table";
 
 interface ComparisonViewProps {

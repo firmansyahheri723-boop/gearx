@@ -1,6 +1,6 @@
 import { createMemo } from "solid-js";
 import { useQuery } from "@tanstack/solid-query";
-import { fetchOpenRouterModels } from "../utils/openrouter";
+import { fetchOpenRouterModels } from "../openrouter";
 import type { OpenRouterModel } from "@/types";
 import { Dropdown, type DropdownOption } from "@/components/ui/dropdown";
 
