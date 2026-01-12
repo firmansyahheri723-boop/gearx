@@ -1,10 +1,10 @@
 import { Component, createMemo, Show, For } from 'solid-js';
-import { SectionHeader } from './ui/section-header';
-import { Dropdown, type DropdownOption } from './ui/dropdown';
-import { NumberInput } from './ui/number-input';
-import { InputRow } from './ui/input-row';
-import { RangeSliderInput } from './ui/range-slider-input';
-import { vehicleInputs, setVehicleInputs } from '../features/shared/store/vehicle';
+import { SectionHeader } from '../../../components/ui/section-header';
+import { Dropdown, type DropdownOption } from '../../../components/ui/dropdown';
+import { NumberInput } from '../../../components/ui/number-input';
+import { InputRow } from '../../../components/ui/input-row';
+import { RangeSliderInput } from '../../../components/ui/range-slider-input';
+import { vehicleInputs, setVehicleInputs } from '../../../stores/vehicle';
 import {
   carData,
   selectCar,
@@ -13,7 +13,7 @@ import {
   selectedEngineIndex,
   getSelectedCar,
   getSelectedEngine,
-} from '../features/database/store';
+} from '../../../features/database/store';
 import { HELP_CONTENT } from './input-section-constants';
 
 export function BasicVehicleSection() {

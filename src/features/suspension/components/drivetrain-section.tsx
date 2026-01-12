@@ -1,17 +1,16 @@
 import { Component, For } from 'solid-js';
-import { SectionHeader } from './ui/section-header';
-import { NumberInput } from './ui/number-input';
-import { HelpTooltip } from './ui/help-tooltip';
-import { DrivetrainViz } from './ui/drivetrain-viz';
-import { vehicleInputs, setVehicleInputs, tireCompound, setTireCompound, tractionMode, setTractionMode } from '../features/shared/store/vehicle';
+import { SectionHeader } from '../../../components/ui/section-header';
+import { NumberInput } from '../../../components/ui/number-input';
+import { HelpTooltip } from '../../../components/ui/help-tooltip';
+import { DrivetrainViz } from '../../../components/ui/drivetrain-viz';
 import {
   DRIVETRAIN_OPTIONS,
   WHEEL_DIAMETER_OPTIONS,
   HELP_CONTENT,
   type DrivetrainOption,
 } from './input-section-constants';
-import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../features/gearbox/components/gearbox-tab-constants';
-import type { TireCompound, TractionMode } from '../types';
+import { TIRE_OPTIONS, TRACTION_MODE_OPTIONS } from '../../../features/gearbox/components/gearbox-tab-constants';
+import type { TireCompound, TractionMode } from '../../../types';
 
 function InputCell(props: { children: any }) {
   return (

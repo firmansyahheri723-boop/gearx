@@ -3,7 +3,7 @@ import { makePersisted } from "@solid-primitives/storage";
 import type { CarData } from "../../types";
 import { parseCSV } from "./utils/csv";
 import carDataCsv from "../../assets/car-data.csv?raw";
-import { setVehicleInputs } from "../shared/store/vehicle";
+import { setVehicleInputs } from "../../stores/vehicle";
 
 const SELECTED_CAR_KEY = "gearx-selected-car";
 const SELECTED_ENGINE_KEY = "gearx-selected-engine";

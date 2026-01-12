@@ -1,9 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
-import {
-  themePreference,
-  changeThemePreference,
-  type ThemePreference,
-} from "../stores/theme";
+import { themePreference, changeThemePreference, type ThemePreference } from "../../stores/theme";
 import { ShareModal } from "./share-modal";
 
 const THEME_OPTIONS: {

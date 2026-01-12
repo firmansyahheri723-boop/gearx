@@ -1,5 +1,5 @@
 import { Component, createMemo } from "solid-js";
-import { vehicleInputs } from "../../features/shared/store/vehicle";
+import { vehicleInputs } from "../../stores/vehicle";
 
 type DrivetrainVizProps = {
   class?: string;

@@ -18,7 +18,7 @@ import {
   setTireCompound,
   tractionMode,
   setTractionMode,
-} from '../features/shared/store/vehicle';
+} from '../stores/vehicle';
 import { aeroSettings, aeroExperimentalEnabled } from '../features/aero/store';
 import { getSelectedCar } from '../features/database/store';
 import { calculateExperimentalAero } from '../features/aero/utils/aero';

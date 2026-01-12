@@ -8,7 +8,7 @@ import {
 import { CurveType } from "@unovis/ts";
 import type { SpeedRpmPoint } from "../../types";
 import { GEAR_COLORS, TRACTION_LIMIT_COLOR } from "../../constants/colors";
-import { theme } from "../../features/shared/store/theme";
+import { theme } from "../../stores/theme";
 
 interface GearTorqueChartProps {
   /** Speed/RPM data for each gear: speedRpmData[gearIndex][rpmIndex] */

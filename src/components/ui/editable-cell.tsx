@@ -6,7 +6,7 @@ import {
   setIsSelecting,
   setSelectionEnd,
   setSelectionStart,
-} from "../../features/shared/store/selection";
+} from "../../stores/selection";
 
 interface EditableCellProps {
   value: string | number;

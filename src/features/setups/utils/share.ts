@@ -1,6 +1,6 @@
 import LZString from 'lz-string';
 import type { SetupData } from '../../../types';
-import { vehicleInputs, torqueRpmData, gearRatios, finalDrive, tireCompound, tractionMode } from '../../shared/store/vehicle';
+import { vehicleInputs, torqueRpmData, gearRatios, finalDrive, tireCompound, tractionMode } from '../../../stores/vehicle';
 import { aeroSettings } from '../../aero/store';
 import { alignmentInputs } from '../../alignment/store';
 

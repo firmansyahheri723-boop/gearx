@@ -1,14 +1,14 @@
 import { Component, For, createMemo, createSignal, Show } from "solid-js";
 import type { ColumnDef } from "@tanstack/solid-table";
-import { SectionHeader } from "./ui/section-header";
-import { EditableCell } from "./ui/editable-cell";
-import { GearSlider } from "./ui/gear-slider";
-import { DataTable } from "./ui/data-table";
-import { GearSpeedChart } from "./ui/gear-speed-chart";
-import { GearTorqueChart } from "./ui/gear-torque-chart";
-import { HelpTooltip } from "./ui/help-tooltip";
-import type { HelpLink } from "../types";
-import { TorqueExtractor } from "./ui/torque-extractor";
+import { SectionHeader } from "../../../components/ui/section-header";
+import { EditableCell } from "../../../components/ui/editable-cell";
+import { GearSlider } from "../../../components/ui/gear-slider";
+import { DataTable } from "../../../components/ui/data-table";
+import { GearSpeedChart } from "../../../components/ui/gear-speed-chart";
+import { GearTorqueChart } from "../../../components/ui/gear-torque-chart";
+import { HelpTooltip } from "../../../components/ui/help-tooltip";
+import type { HelpLink } from "../../../types";
+import { TorqueExtractor } from "../../torque-extractor/components";
 import {
   torqueRpmData,
   setTorqueRpmData,
@@ -19,10 +19,10 @@ import {
   vehicleInputs,
   tireCompound,
   tractionMode,
-} from "../features/shared/store/vehicle";
-import { calculateGearboxOutputs } from "../features/gearbox/utils/gearbox";
-import type { TorqueRpmRow } from "../types";
-import { GEAR_LABELS } from "../types";
+} from "../../../stores/vehicle";
+import { calculateGearboxOutputs } from "../../../features/gearbox/utils/gearbox";
+import type { TorqueRpmRow } from "../../../types";
+import { GEAR_LABELS } from "../../../types";
 
 // Help tooltip content for transmission sections
 const HELP_CONTENT: Record<

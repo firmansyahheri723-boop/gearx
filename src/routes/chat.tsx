@@ -14,7 +14,7 @@ import {
   gearRatios,
   finalDrive,
   tireCompound,
-} from "../features/shared/store/vehicle";
+} from "../stores/vehicle";
 import { aeroSettings } from "../features/aero/store";
 import { getSelectedCar, getSelectedEngine } from "../features/database/store";
 import systemPrompt from "../constants/prompt.md?raw";

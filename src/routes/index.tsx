@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/solid-router';
-import { InputSection } from '../components/input-section';
-import { TransmissionSection } from '../components/transmission-section';
+import { TransmissionSection } from '../features/suspension/components/transmission-section';
+import { BasicVehicleSection } from '../features/suspension/components/basic-vehicle-section';
+import { DrivetrainSection } from '../features/suspension/components/drivetrain-section';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -9,7 +10,8 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <div class="space-y-4">
-      <InputSection />
+      <BasicVehicleSection />
+      <DrivetrainSection />
       <TransmissionSection />
     </div>
   );

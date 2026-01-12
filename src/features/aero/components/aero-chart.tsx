@@ -2,7 +2,7 @@ import { Component, createMemo } from 'solid-js';
 import { VisXYContainer, VisLine, VisAxis, VisArea, VisCrosshair, VisTooltip } from '@unovis/solid';
 import { CurveType } from '@unovis/ts';
 import type { AeroSpeedDataPoint } from '../../../types';
-import { theme } from "../../shared/store/theme";
+import { theme } from "../../../stores/theme";
 
 interface AeroChartProps {
   speedData: AeroSpeedDataPoint[];

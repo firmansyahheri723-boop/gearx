@@ -2,7 +2,7 @@ import { createSignal, For, Show } from 'solid-js';
 import type { SetupTag, SetupTagColor } from '../../../types';
 import { SETUP_TAG_COLORS } from '../../../types';
 import { createSetup, updateSetup, getAllTags } from '../store';
-import { vehicleInputs } from '../../shared/store/vehicle';
+import { vehicleInputs } from "../../../stores/vehicle";
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
