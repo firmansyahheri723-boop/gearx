@@ -1,4 +1,5 @@
-import { For } from "solid-js";
+import { For, type JSX } from "solid-js";
+import type { HelpLink } from "@/types";
 import { DrivetrainViz } from "@/components/ui/drivetrain-viz";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { NumberInput } from "@/components/ui/number-input";
@@ -20,13 +21,13 @@ import {
 	WHEEL_DIAMETER_OPTIONS,
 } from "../suspension-constants";
 
-function InputCell(props: { children: any }) {
+function InputCell(props: { children: JSX.Element }) {
 	return <td class="border-b border-border/50 p-0">{props.children}</td>;
 }
 
 function LabelCell(props: {
 	label: string;
-	help?: { description: string; articles?: any[] };
+	help?: { description: string; articles?: HelpLink[] };
 }) {
 	return (
 		<td class="border-r border-b border-border/50 px-3 py-2 text-xs uppercase tracking-wide text-foreground-secondary bg-surface/50">

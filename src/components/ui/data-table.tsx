@@ -23,7 +23,7 @@ export { createColumnHelper } from "@tanstack/solid-table";
 
 export type DataTableProps<TData> = {
 	data: TData[];
-	columns: ColumnDef<TData, any>[];
+	columns: ColumnDef<TData, unknown>[];
 	enableSorting?: boolean;
 	initialSorting?: SortingState;
 	onSortingChange?: (sorting: SortingState) => void;

@@ -1,7 +1,8 @@
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable, type ColumnDef } from "@/components/ui/data-table";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { SuspensionOutputs } from "../utils/suspension";
+import type { CellContext } from "@tanstack/solid-table";
+import type { SuspensionOutputs } from "@/features/suspension/suspension";
 
 type DamperTableRow = {
 	label: string;
@@ -10,6 +11,8 @@ type DamperTableRow = {
 	rear: number;
 	highlight?: boolean;
 };
+
+type DamperCellInfo = CellContext<DamperTableRow, unknown>;
 
 type Props = {
 	outputs: SuspensionOutputs;
@@ -44,11 +47,11 @@ export function DampersSection(props: Props) {
 		},
 	];
 
-	const damperColumns = [
+	const damperColumns: ColumnDef<DamperTableRow, unknown>[] = [
 		{
 			accessorKey: "label",
 			header: "Damper Type",
-			cell: (info: any) => {
+			cell: (info: CellContext<DamperTableRow, unknown>) => {
 				const row = info.row.original;
 				return (
 					<div
@@ -68,7 +71,7 @@ export function DampersSection(props: Props) {
 		{
 			accessorKey: "front",
 			header: "Front",
-			cell: (info: any) => {
+			cell: (info: CellContext<DamperTableRow, unknown>) => {
 				const row = info.row.original;
 				return (
 					<span
@@ -78,7 +81,7 @@ export function DampersSection(props: Props) {
 							"bg-surface/30 text-foreground": !row.highlight,
 						}}
 					>
-						{info.getValue().toFixed(0)}
+						{(info.getValue() as number).toFixed(0)}
 					</span>
 				);
 			},
@@ -86,7 +89,7 @@ export function DampersSection(props: Props) {
 		{
 			accessorKey: "rear",
 			header: "Rear",
-			cell: (info: any) => {
+			cell: (info: CellContext<DamperTableRow, unknown>) => {
 				const row = info.row.original;
 				return (
 					<span
@@ -96,7 +99,7 @@ export function DampersSection(props: Props) {
 							"bg-surface/30 text-foreground": !row.highlight,
 						}}
 					>
-						{info.getValue().toFixed(0)}
+						{(info.getValue() as number).toFixed(0)}
 					</span>
 				);
 			},

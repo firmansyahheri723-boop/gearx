@@ -32,7 +32,13 @@ import {
 	tractionMode,
 	vehicleInputs,
 } from "@/stores/vehicle";
-import type { AeroExperimentalOutput, HelpLink, TireCompound } from "@/types";
+import type {
+	AeroExperimentalOutput,
+	GearboxOutputs,
+	HelpLink,
+	SpeedRpmPoint,
+	TireCompound,
+} from "@/types";
 
 const HELP_CONTENT: Record<
 	string,
@@ -451,7 +457,7 @@ type GearInfo = {
 
 type TractionProps = {
 	activeGears: GearInfo[];
-	outputs: any;
+	outputs: GearboxOutputs;
 };
 
 function TractionAnalysisSection(props: TractionProps) {
@@ -472,9 +478,9 @@ function TractionAnalysisSection(props: TractionProps) {
 							const gearData = () =>
 								props.outputs.speedRpmData[gear.index] ?? [];
 							const tractionExceededPoints = () =>
-								gearData().filter((p: any) => p.exceedsTraction);
+								gearData().filter((p: SpeedRpmPoint) => p.exceedsTraction);
 							const tractionOkPoints = () =>
-								gearData().filter((p: any) => !p.exceedsTraction);
+								gearData().filter((p: SpeedRpmPoint) => !p.exceedsTraction);
 							const percentExceeded = () =>
 								gearData().length > 0
 									? (tractionExceededPoints().length / gearData().length) * 100
