@@ -5,9 +5,17 @@ import {
 	DialogPositioner,
 	DialogRoot,
 	DialogTitle,
-	useDialogContext,
 } from "@ark-ui/solid";
-import { createMemo, createSignal, For, Show } from "solid-js";
+import { FileUpload, useFileUpload } from "@ark-ui/solid/file-upload";
+import {
+	onCleanup,
+	onMount,
+	createMemo,
+	createSignal,
+	createEffect,
+	For,
+	Show,
+} from "solid-js";
 import { Portal } from "solid-js/web";
 import { extractTorqueCurve } from "@/features/torque-extractor/image-extraction";
 import type {
@@ -53,23 +61,26 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 		ExtractedDataPoint[]
 	>([]);
 
-	const isCalibrationValid = createMemo(() => {
-		const c = calibration();
-		return (
-			c.minRpm < c.maxRpm &&
-			c.minTorque < c.maxTorque &&
-			c.maxRpm > 0 &&
-			c.maxTorque > 0
-		);
+	const fileUpload = useFileUpload({
+		accept: ["image/*"],
+		maxFiles: 1,
 	});
 
-	const currentStepIndex = createMemo(() => {
-		return STEPS.findIndex((s) => s.id === step());
+	const handlePaste = (event: ClipboardEvent) => {
+		if (step() !== "upload") return;
+		fileUpload().setClipboardFiles(event.clipboardData);
+	};
+
+	onMount(() => {
+		document.addEventListener("paste", handlePaste);
 	});
 
-	const handleFileSelect = (e: Event) => {
-		const target = e.target as HTMLInputElement;
-		const file = target.files?.[0];
+	onCleanup(() => {
+		document.removeEventListener("paste", handlePaste);
+	});
+
+	const handleFileChange = (details: { acceptedFiles: File[] }) => {
+		const file = details.acceptedFiles[0];
 		if (!file) return;
 
 		const reader = new FileReader();
@@ -110,6 +121,27 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 		};
 		reader.readAsDataURL(file);
 	};
+
+	const isCalibrationValid = createMemo(() => {
+		const c = calibration();
+		return (
+			c.minRpm < c.maxRpm &&
+			c.minTorque < c.maxTorque &&
+			c.maxRpm > 0 &&
+			c.maxTorque > 0
+		);
+	});
+
+	const currentStepIndex = createMemo(() => {
+		return STEPS.findIndex((s) => s.id === step());
+	});
+
+	createEffect(() => {
+		const files = fileUpload().acceptedFiles;
+		if (files.length > 0 && step() === "upload") {
+			handleFileChange({ acceptedFiles: files });
+		}
+	});
 
 	const handleExtract = () => {
 		const data = imageData();
@@ -258,44 +290,41 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 						<div class="flex-1 overflow-y-auto p-4">
 							{/* Upload Step */}
 							<Show when={step() === "upload"}>
-								<div class="flex flex-col items-center justify-center gap-4 py-8">
-									<div class="text-center mb-2">
-										<span class="text-[10px] uppercase tracking-wider text-muted block mb-1">
-											Step 1
-										</span>
-										<span class="text-sm text-foreground-secondary">
-											Select torque curve screenshot
+								<FileUpload.RootProvider value={fileUpload}>
+									<div class="flex flex-col items-center justify-center gap-4 py-8">
+										<div class="text-center mb-2">
+											<span class="text-[10px] uppercase tracking-wider text-muted block mb-1">
+												Step 1
+											</span>
+											<span class="text-sm text-foreground-secondary">
+												Select torque curve screenshot
+											</span>
+										</div>
+										<FileUpload.Trigger class="cursor-pointer border border-border hover:border-border bg-surface hover:bg-surface-elevated px-6 py-3 flex items-center gap-3 transition-colors">
+											<svg
+												class="w-4 h-4 text-muted"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+												aria-hidden="true"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="1.5"
+													d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+												/>
+											</svg>
+											<span class="text-xs uppercase tracking-wider text-foreground-secondary">
+												Select Image
+											</span>
+										</FileUpload.Trigger>
+										<span class="text-[10px] text-muted uppercase tracking-wider">
+											PNG, JPG, WebP or paste from clipboard
 										</span>
 									</div>
-									<label class="cursor-pointer border border-border hover:border-border bg-surface hover:bg-surface-elevated px-6 py-3 flex items-center gap-3 transition-colors">
-										<svg
-											class="w-4 h-4 text-muted"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-											aria-hidden="true"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="1.5"
-												d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-											/>
-										</svg>
-										<span class="text-xs uppercase tracking-wider text-foreground-secondary">
-											Select Image
-										</span>
-										<input
-											type="file"
-											accept="image/*"
-											onChange={handleFileSelect}
-											class="hidden"
-										/>
-									</label>
-									<span class="text-[10px] text-muted uppercase tracking-wider">
-										PNG, JPG, WebP
-									</span>
-								</div>
+									<FileUpload.HiddenInput />
+								</FileUpload.RootProvider>
 							</Show>
 
 							{/* Calibrate Step */}
