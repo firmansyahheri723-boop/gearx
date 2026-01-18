@@ -7,7 +7,7 @@ export const [alignmentInputs, setAlignmentInputs] =
 		frontCamber: -3.0,
 		frontCaster: 5.0,
 		frontToe: 0,
-		frontAckermann: 0,
+		frontAckermann: 5,
 		frontSteeringSensitivity: 5,
 		rearCamber: -2.0,
 		rearToe: 0,

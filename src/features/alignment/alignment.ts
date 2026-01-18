@@ -46,14 +46,14 @@ export function calculateAlignmentOutputs(
 	);
 
 	const ackermannType =
-		frontAckermann < -10
+		frontAckermann < -2
 			? "reverse"
-			: frontAckermann > 10
+			: frontAckermann > 2
 				? "positive"
 				: "parallel";
 
 	const innerWheelAngle = maxSteeringAngle;
-	const outerWheelAngle = maxSteeringAngle * (1 - frontAckermann / 100);
+	const outerWheelAngle = maxSteeringAngle * (1 - frontAckermann / 30);
 
 	const scrubRadiusEstimate = Math.tan((frontCaster * Math.PI) / 180) * 5;
 
