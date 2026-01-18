@@ -5,8 +5,8 @@ import { setVehicleInputs } from "@/features/suspension/store";
 import type { CarData } from "@/types";
 import { parseCSV } from "./csv";
 
-const SELECTED_CAR_KEY = "gearx-selected-car";
-const SELECTED_ENGINE_KEY = "gearx-selected-engine";
+const SELECTED_CAR_KEY = "gearx_selected_car";
+const SELECTED_ENGINE_KEY = "gearx_selected_engine";
 
 export const carData: CarData[] = parseCSV(carDataCsv);
 

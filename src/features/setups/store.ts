@@ -5,6 +5,7 @@ import type { SavedSetup, SetupFilter, SetupTag } from "@/types";
 
 const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
+const FILTER_STORAGE_KEY = "gearx_setup_filter";
 
 export const [setupsStore, setSetupsStore] = createStore({
 	setups: [] as SavedSetup[],
@@ -28,6 +29,28 @@ const [persistedTags, setPersistedTags] = makePersisted(
 	{ name: TAGS_STORAGE_KEY },
 );
 
+const defaultFilter: SetupFilter = {
+	search: "",
+	tags: [],
+	carFilter: null,
+	sortBy: "updatedAt",
+	sortOrder: "desc",
+};
+
+const deserializeFilter = (value: string | null): SetupFilter => {
+	if (!value) return defaultFilter;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return defaultFilter;
+	}
+};
+
+const [persistedFilter, setPersistedFilter] = makePersisted(
+	createSignal<SetupFilter>(defaultFilter),
+	{ name: FILTER_STORAGE_KEY, deserialize: deserializeFilter },
+);
+
 function generateId(): string {
 	return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
@@ -35,10 +58,12 @@ function generateId(): string {
 export function initializeSetupsStore(): void {
 	const loadedSetups = persistedSetups();
 	const loadedTags = persistedTags();
+	const loadedFilter = persistedFilter();
 	if (loadedSetups.length > 0 || loadedTags.length > 0) {
 		setSetupsStore({
 			setups: loadedSetups,
 			tags: loadedTags,
+			filter: loadedFilter,
 		});
 	}
 }
@@ -101,16 +126,19 @@ export function getAllCarNames(): string[] {
 
 export function setFilter(newFilter: Partial<SetupFilter>) {
 	setSetupsStore("filter", (f) => ({ ...f, ...newFilter }));
+	setPersistedFilter(setupsStore.filter);
 }
 
 export function clearFilter() {
-	setSetupsStore("filter", {
+	const newFilter: SetupFilter = {
 		search: "",
 		tags: [],
 		carFilter: null,
 		sortBy: "updatedAt",
 		sortOrder: "desc",
-	});
+	};
+	setSetupsStore("filter", newFilter);
+	setPersistedFilter(newFilter);
 }
 
 export function saveSetup(

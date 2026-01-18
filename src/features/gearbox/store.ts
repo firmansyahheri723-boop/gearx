@@ -1,14 +1,19 @@
+import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
+import { tireCompound, tractionMode } from "@/features/suspension/store";
 import type {
 	FinalDrive,
 	GearRatio,
 	TireCompound,
-	TractionMode,
 	TorqueRpmRow,
+	TractionMode,
 } from "@/types";
-import { tireCompound, tractionMode } from "@/features/suspension/store";
 
-export const [torqueRpmData, setTorqueRpmData] = createStore<TorqueRpmRow[]>([
+const TORQUE_RPM_KEY = "gearx_torque_rpm";
+const GEAR_RATIOS_KEY = "gearx_gear_ratios";
+const FINAL_DRIVE_KEY = "gearx_final_drive";
+
+const defaultTorqueRpmData: TorqueRpmRow[] = [
 	{ torque: 411, rpm: 358 },
 	{ torque: 434, rpm: 626 },
 	{ torque: 465, rpm: 893 },
@@ -39,9 +44,9 @@ export const [torqueRpmData, setTorqueRpmData] = createStore<TorqueRpmRow[]>([
 	{ torque: 945, rpm: 7581 },
 	{ torque: 895, rpm: 7849 },
 	{ torque: 840, rpm: 8116 },
-]);
+];
 
-export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
+const defaultGearRatios: GearRatio[] = [
 	{ ratio: 2.76, min: 1.5, max: 4.0 },
 	{ ratio: 2.0, min: 1.2, max: 3.0 },
 	{ ratio: 1.5, min: 1.0, max: 2.5 },
@@ -50,12 +55,54 @@ export const [gearRatios, setGearRatios] = createStore<GearRatio[]>([
 	{ ratio: 0.9, min: 0.6, max: 1.2 },
 	{ ratio: 0, min: 0, max: 1.0 },
 	{ ratio: 0, min: 0, max: 0.9 },
-]);
+];
 
-export const [finalDrive, setFinalDrive] = createStore<FinalDrive>({
+const defaultFinalDrive: FinalDrive = {
 	ratio: 3.0,
 	min: 2.0,
 	max: 5.0,
-});
+};
+
+const deserializeTorqueRpm = (value: string | null): TorqueRpmRow[] => {
+	if (!value) return defaultTorqueRpmData;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return defaultTorqueRpmData;
+	}
+};
+
+const deserializeGearRatios = (value: string | null): GearRatio[] => {
+	if (!value) return defaultGearRatios;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return defaultGearRatios;
+	}
+};
+
+const deserializeFinalDrive = (value: string | null): FinalDrive => {
+	if (!value) return defaultFinalDrive;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return defaultFinalDrive;
+	}
+};
+
+export const [torqueRpmData, setTorqueRpmData] = makePersisted(
+	createStore<TorqueRpmRow[]>(defaultTorqueRpmData),
+	{ name: TORQUE_RPM_KEY, deserialize: deserializeTorqueRpm },
+);
+
+export const [gearRatios, setGearRatios] = makePersisted(
+	createStore<GearRatio[]>(defaultGearRatios),
+	{ name: GEAR_RATIOS_KEY, deserialize: deserializeGearRatios },
+);
+
+export const [finalDrive, setFinalDrive] = makePersisted(
+	createStore<FinalDrive>(defaultFinalDrive),
+	{ name: FINAL_DRIVE_KEY, deserialize: deserializeFinalDrive },
+);
 
 export { tireCompound, tractionMode };

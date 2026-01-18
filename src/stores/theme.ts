@@ -1,7 +1,7 @@
 import { makePersisted } from "@solid-primitives/storage";
-import { createSignal, createEffect, onCleanup, onMount } from "solid-js";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
-const THEME_STORAGE_KEY = "gearx-theme";
+const THEME_STORAGE_KEY = "gearx_theme";
 
 export type ThemePreference = "system" | "light" | "dark";
 

@@ -1,4 +1,11 @@
+import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
+import { setAlignmentInputs } from "@/features/alignment/store";
+import {
+	setFinalDrive,
+	setGearRatios,
+	setTorqueRpmData,
+} from "@/features/gearbox/store";
 import type {
 	AccelerationMetrics,
 	AntiRollBars,
@@ -9,14 +16,12 @@ import type {
 	TractionMode,
 	VehicleInputs,
 } from "@/types";
-import { setAlignmentInputs } from "@/features/alignment/store";
-import {
-	setFinalDrive,
-	setGearRatios,
-	setTorqueRpmData,
-} from "@/features/gearbox/store";
 
-export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
+const VEHICLE_INPUTS_KEY = "gearx_vehicle_inputs";
+const TIRE_COMPOUND_KEY = "gearx_tire_compound";
+const TRACTION_MODE_KEY = "gearx_traction_mode";
+
+const defaultVehicleInputs: VehicleInputs = {
 	carSelection: "Dodge Challenger SRT",
 	engineSelection: "Dodge Challenger SRT",
 	weight: 1788,
@@ -42,19 +47,55 @@ export const [vehicleInputs, setVehicleInputs] = createStore<VehicleInputs>({
 	magicNumber: 58.8,
 	rollCenterHeight: 0.208,
 	redlineRpm: 8000,
-});
+};
 
-export const [tireCompound, setTireCompound] = createStore<{
-	value: TireCompound;
-}>({
-	value: "racing",
-});
+const deserializeVehicleInputs = (value: string | null): VehicleInputs => {
+	if (!value) return defaultVehicleInputs;
+	try {
+		return JSON.parse(value);
+	} catch {
+		return defaultVehicleInputs;
+	}
+};
 
-export const [tractionMode, setTractionMode] = createStore<{
-	value: TractionMode;
-}>({
-	value: "launch",
-});
+const deserializeTireCompound = (
+	value: string | null,
+): { value: TireCompound } => {
+	if (
+		!value ||
+		!["street", "street+", "racing", "semi-slick", "slick"].includes(value)
+	) {
+		return { value: "racing" };
+	}
+	return { value: value as TireCompound };
+};
+
+const deserializeTractionMode = (
+	value: string | null,
+): { value: TractionMode } => {
+	if (
+		!value ||
+		!["street", "street+", "track", "launch", "drag"].includes(value)
+	) {
+		return { value: "launch" };
+	}
+	return { value: value as TractionMode };
+};
+
+export const [vehicleInputs, setVehicleInputs] = makePersisted(
+	createStore<VehicleInputs>(defaultVehicleInputs),
+	{ name: VEHICLE_INPUTS_KEY, deserialize: deserializeVehicleInputs },
+);
+
+export const [tireCompound, setTireCompound] = makePersisted(
+	createStore<{ value: TireCompound }>({ value: "racing" }),
+	{ name: TIRE_COMPOUND_KEY, deserialize: deserializeTireCompound },
+);
+
+export const [tractionMode, setTractionMode] = makePersisted(
+	createStore<{ value: TractionMode }>({ value: "launch" }),
+	{ name: TRACTION_MODE_KEY, deserialize: deserializeTractionMode },
+);
 
 export const [springsStiffness] = createStore<SpringsStiffness>({
 	front: 173.441,
