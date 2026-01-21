@@ -1,4 +1,5 @@
 import { makePersisted } from "@solid-primitives/storage";
+import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { setAlignmentInputs } from "@/features/alignment/store";
 import {
@@ -52,29 +53,9 @@ const defaultVehicleInputs: VehicleInputs = {
 
 const deserializeVehicleInputs = createDeserializer(defaultVehicleInputs);
 
-const deserializeTireCompound = (
-	value: string | null,
-): { value: TireCompound } => {
-	if (
-		!value ||
-		!["street", "street+", "racing", "semi-slick", "slick"].includes(value)
-	) {
-		return { value: "racing" };
-	}
-	return { value: value as TireCompound };
-};
+const deserializeTireCompound = createDeserializer<TireCompound>("racing");
 
-const deserializeTractionMode = (
-	value: string | null,
-): { value: TractionMode } => {
-	if (
-		!value ||
-		!["street", "street+", "track", "launch", "drag"].includes(value)
-	) {
-		return { value: "launch" };
-	}
-	return { value: value as TractionMode };
-};
+const deserializeTractionMode = createDeserializer<TractionMode>("launch");
 
 export const [vehicleInputs, setVehicleInputs] = makePersisted(
 	createStore<VehicleInputs>(defaultVehicleInputs),
@@ -82,12 +63,12 @@ export const [vehicleInputs, setVehicleInputs] = makePersisted(
 );
 
 export const [tireCompound, setTireCompound] = makePersisted(
-	createStore<{ value: TireCompound }>({ value: "racing" }),
+	createSignal<TireCompound>("racing"),
 	{ name: TIRE_COMPOUND_KEY, deserialize: deserializeTireCompound },
 );
 
 export const [tractionMode, setTractionMode] = makePersisted(
-	createStore<{ value: TractionMode }>({ value: "launch" }),
+	createSignal<TractionMode>("launch"),
 	{ name: TRACTION_MODE_KEY, deserialize: deserializeTractionMode },
 );
 
@@ -120,8 +101,8 @@ export function applySavedSetupToVehicle(setup: SavedSetup): void {
 	setTorqueRpmData(setup.torqueRpmData);
 	setGearRatios(setup.gearRatios);
 	setFinalDrive(setup.finalDrive);
-	setTireCompound({ value: setup.tireCompound });
-	setTractionMode({ value: setup.tractionMode });
+	setTireCompound(setup.tireCompound);
+	setTractionMode(setup.tractionMode);
 	if (setup.alignmentInputs) {
 		setAlignmentInputs(setup.alignmentInputs);
 	}

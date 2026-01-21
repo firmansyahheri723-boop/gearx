@@ -197,8 +197,8 @@ function Gearbox() {
 			cogHeight: vehicleInputs.cogHeight,
 			wheelbase: vehicleInputs.wheelbase,
 			drivetrain: vehicleInputs.drivetrain,
-			tireCompound: tireCompound.value,
-			tractionMode: tractionMode.value,
+			tireCompound: tireCompound(),
+			tractionMode: tractionMode(),
 			acceleration0to100: vehicleInputs.acceleration0to100,
 			...(aeroData() && {
 				aeroTractionMultiplier: 1 + aeroData()!.tractionLimitIncreasePct / 100,
@@ -299,9 +299,9 @@ function Gearbox() {
 					/>
 					<div class="p-4 space-y-4">
 						<RadioGroupRoot
-							value={tireCompound.value}
+							value={tireCompound()}
 							onValueChange={(details: RadioGroupValueChangeDetails) =>
-								setTireCompound("value", details.value as TireCompound)
+								setTireCompound(details.value as TireCompound)
 							}
 							class="space-y-2"
 						>
@@ -312,9 +312,9 @@ function Gearbox() {
 										class="w-full flex items-center justify-between px-3 py-2 border transition-colors cursor-pointer"
 										classList={{
 											"border-border/50 bg-foreground/10 text-foreground-secondary":
-												tireCompound.value === option.value,
+												tireCompound() === option.value,
 											"border-border/50 bg-surface/30 text-foreground-secondary hover:border-border/50 hover:bg-surface-elevated/30":
-												tireCompound.value !== option.value,
+												tireCompound() !== option.value,
 										}}
 									>
 										<RadioGroupItemControl />
@@ -339,13 +339,13 @@ function Gearbox() {
 									{(option) => (
 										<button
 											type="button"
-											onClick={() => setTractionMode("value", option.value)}
+											onClick={() => setTractionMode(option.value)}
 											class="flex-1 px-3 py-2 border text-sm font-medium transition-colors"
 											classList={{
 												"border-border/50 bg-foreground/10 text-foreground":
-													tractionMode.value === option.value,
+													tractionMode() === option.value,
 												"border-border/50 bg-surface/30 text-muted hover:border-border/50 hover:bg-surface-elevated/30":
-													tractionMode.value !== option.value,
+													tractionMode() !== option.value,
 											}}
 										>
 											{option.label}

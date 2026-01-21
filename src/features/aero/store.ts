@@ -15,9 +15,7 @@ const defaultAeroSettings: AeroSettings = {
 
 const deserializeAeroSettings = createDeserializer(defaultAeroSettings);
 
-const deserializeAeroExperimental = (value: string | null): boolean => {
-	return value === "true";
-};
+const deserializeAeroExperimental = createDeserializer(false);
 
 export const [aeroSettings, setAeroSettings] = makePersisted(
 	createStore<AeroSettings>(defaultAeroSettings),

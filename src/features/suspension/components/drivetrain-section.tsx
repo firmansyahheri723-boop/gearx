@@ -297,13 +297,13 @@ export function DrivetrainSection() {
 										{(option) => (
 											<button
 												type="button"
-												onClick={() => setTireCompound("value", option.value)}
+												onClick={() => setTireCompound(option.value)}
 												class="px-2 py-1.5 border text-xs font-medium transition-colors"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
-														tireCompound.value === option.value,
+														tireCompound() === option.value,
 													"border-border/50 bg-transparent text-muted hover:border-border/50":
-														tireCompound.value !== option.value,
+														tireCompound() !== option.value,
 												}}
 											>
 												{option.label}
@@ -323,13 +323,13 @@ export function DrivetrainSection() {
 										{(option) => (
 											<button
 												type="button"
-												onClick={() => setTractionMode("value", option.value)}
+												onClick={() => setTractionMode(option.value)}
 												class="px-3 py-1.5 border text-xs font-medium transition-colors"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
-														tractionMode.value === option.value,
+														tractionMode() === option.value,
 													"border-border/50 bg-transparent text-muted hover:border-border/50":
-														tractionMode.value !== option.value,
+														tractionMode() !== option.value,
 												}}
 											>
 												{option.label}
@@ -579,13 +579,13 @@ export function DrivetrainSection() {
 							{(option) => (
 								<button
 									type="button"
-									onClick={() => setTireCompound("value", option.value)}
+									onClick={() => setTireCompound(option.value)}
 									class="px-2 py-2 border text-[10px] font-medium transition-colors"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
-											tireCompound.value === option.value,
+											tireCompound() === option.value,
 										"border-border/50 bg-surface/30 text-foreground-secondary hover:border-border/50":
-											tireCompound.value !== option.value,
+											tireCompound() !== option.value,
 									}}
 								>
 									{option.label}
@@ -604,13 +604,13 @@ export function DrivetrainSection() {
 							{(option) => (
 								<button
 									type="button"
-									onClick={() => setTractionMode("value", option.value)}
+									onClick={() => setTractionMode(option.value)}
 									class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
-											tractionMode.value === option.value,
+											tractionMode() === option.value,
 										"border-border/50 bg-surface/30 text-foreground-secondary hover:border-border/50":
-											tractionMode.value !== option.value,
+											tractionMode() !== option.value,
 									}}
 								>
 									{option.label}

@@ -13,6 +13,18 @@ const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
 const FILTER_STORAGE_KEY = "gearx_setup_filter";
 
+const defaultFilter: SetupFilter = {
+	search: "",
+	tags: [],
+	carFilter: null,
+	sortBy: "updatedAt",
+	sortOrder: "desc",
+};
+
+const deserializeFilter = createDeserializer(defaultFilter);
+const deserializeSetups = createDeserializer<SavedSetup[]>([]);
+const deserializeTags = createDeserializer<SetupTag[]>([]);
+
 export const [setupsStore, setSetupsStore] = createStore({
 	setups: [] as SavedSetup[],
 	tags: [] as SetupTag[],
@@ -27,23 +39,13 @@ export const [setupsStore, setSetupsStore] = createStore({
 
 const [persistedSetups, setPersistedSetups] = makePersisted(
 	createSignal<SavedSetup[]>([]),
-	{ name: STORAGE_KEY },
+	{ name: STORAGE_KEY, deserialize: deserializeSetups },
 );
 
 const [persistedTags, setPersistedTags] = makePersisted(
 	createSignal<SetupTag[]>([]),
-	{ name: TAGS_STORAGE_KEY },
+	{ name: TAGS_STORAGE_KEY, deserialize: deserializeTags },
 );
-
-const defaultFilter: SetupFilter = {
-	search: "",
-	tags: [],
-	carFilter: null,
-	sortBy: "updatedAt",
-	sortOrder: "desc",
-};
-
-const deserializeFilter = createDeserializer(defaultFilter);
 
 const [persistedFilter, setPersistedFilter] = makePersisted(
 	createSignal<SetupFilter>(defaultFilter),
