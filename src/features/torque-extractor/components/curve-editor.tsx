@@ -1,4 +1,10 @@
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import {
+	createEffect,
+	createSignal,
+	onCleanup,
+	onMount,
+	splitProps,
+} from "solid-js";
 import { pixelToValues } from "@/features/torque-extractor/image-extraction";
 import type {
 	ExtractedDataPoint,
@@ -17,6 +23,8 @@ type CurveEditorProps = {
 };
 
 export function CurveEditor(props: CurveEditorProps) {
+	const [localProps] = splitProps(props, ["imageData"]);
+
 	let canvasRef: HTMLCanvasElement | undefined;
 
 	const [dragIndex, setDragIndex] = createSignal<number | null>(null);
@@ -29,7 +37,7 @@ export function CurveEditor(props: CurveEditorProps) {
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
-		const { width, height } = props.imageData;
+		const { width, height } = localProps.imageData;
 
 		canvas.width = props.canvasWidth;
 		canvas.height = props.canvasHeight;
