@@ -1,7 +1,7 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import type { AeroSettings } from "@/types";
+import type { AeroSettings } from "@/features/aero/types";
 
 const AERO_SETTINGS_KEY = "gearx_aero_settings";
 const AERO_EXPERIMENTAL_KEY = "gearx_aero_experimental";

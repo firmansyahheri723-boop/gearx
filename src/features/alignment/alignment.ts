@@ -1,4 +1,7 @@
-import type { AlignmentInputs, AlignmentOutputs } from "@/types";
+import type {
+	AlignmentInputs,
+	AlignmentOutputs,
+} from "@/features/alignment/types";
 
 export function calculateAlignmentOutputs(
 	inputs: AlignmentInputs,

@@ -1,4 +1,4 @@
-import type { SetupTag as SetupTagType } from "@/types";
+import type { SetupTag as SetupTagType } from "@/features/setups/types";
 
 interface SetupTagDisplayProps {
 	tag: SetupTagType;

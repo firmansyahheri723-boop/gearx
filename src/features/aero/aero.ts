@@ -3,8 +3,8 @@ import type {
 	AeroSettings,
 	AeroSpeedDataPoint,
 	AeroStandardOutput,
-	CarData,
-} from "@/types";
+} from "@/features/aero/types";
+import type { CarData } from "@/features/database/types";
 import {
 	AIR_DENSITY,
 	GAME_CD_FACTOR,

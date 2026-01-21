@@ -2,7 +2,7 @@ import type {
 	ChatProvider,
 	OpenRouterModel,
 	OpenRouterModelsResponse,
-} from "@/types";
+} from "@/features/chat/types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/models";
 

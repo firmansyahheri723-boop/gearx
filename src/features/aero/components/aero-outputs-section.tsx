@@ -1,6 +1,6 @@
 import { Component, For } from "solid-js";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { AeroStandardOutput } from "@/types";
+import type { AeroStandardOutput } from "@/features/aero/types";
 import { getAeroBalanceDescription } from "../aero";
 
 interface AeroOutputsSectionProps {

@@ -6,16 +6,16 @@ import {
 	setGearRatios,
 	setTorqueRpmData,
 } from "@/features/gearbox/store";
+import type { SavedSetup } from "@/features/setups/types";
 import type {
 	AccelerationMetrics,
 	AntiRollBars,
 	Dampers,
-	SavedSetup,
 	SpringsStiffness,
 	TireCompound,
 	TractionMode,
 	VehicleInputs,
-} from "@/types";
+} from "@/features/suspension/types";
 
 const VEHICLE_INPUTS_KEY = "gearx_vehicle_inputs";
 const TIRE_COMPOUND_KEY = "gearx_tire_compound";

@@ -7,7 +7,7 @@ import {
 	type RadioGroupValueChangeDetails,
 } from "@ark-ui/solid/radio-group";
 import { Component, For, splitProps } from "solid-js";
-import type { HelpLink } from "@/types";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "./help-tooltip";
 
 export type SegmentedRowOption = {

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/solid-query";
 import { createMemo } from "solid-js";
 import { Dropdown, type DropdownOption } from "@/components/ui/dropdown";
-import type { OpenRouterModel } from "@/types";
+import type { OpenRouterModel } from "@/features/chat/types";
 import { fetchOpenRouterModels } from "../openrouter";
 
 type InferenceSelectorProps = {

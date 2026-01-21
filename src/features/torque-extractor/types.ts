@@ -1,3 +1,8 @@
+export type TorqueRpmRow = {
+	torque: number;
+	rpm: number;
+};
+
 export type TorqueExtractorPoint = {
 	x: number;
 	y: number;

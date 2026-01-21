@@ -1,6 +1,6 @@
 import { For, type JSX } from "solid-js";
-import type { HelpLink } from "@/types";
 import { DrivetrainViz } from "@/components/ui/drivetrain-viz";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { NumberInput } from "@/components/ui/number-input";
 import { SectionHeader } from "@/components/ui/section-header";

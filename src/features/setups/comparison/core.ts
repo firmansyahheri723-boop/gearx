@@ -3,7 +3,7 @@ import type {
 	SetupDiff,
 	SetupDiffCategory,
 	SetupDiffField,
-} from "@/types";
+} from "@/features/setups/types";
 
 const CATEGORY_CONFIG: Record<
 	string,

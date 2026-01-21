@@ -8,8 +8,8 @@ import {
 	torqueRpmData,
 	tractionMode,
 } from "@/features/gearbox/store";
+import type { SetupData } from "@/features/setups/types";
 import { vehicleInputs } from "@/features/suspension/store";
-import type { SetupData } from "@/types";
 
 export type ShareSetupData = SetupData;
 

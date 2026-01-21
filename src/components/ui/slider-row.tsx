@@ -7,7 +7,7 @@ import {
 	type SliderValueChangeDetails,
 } from "@ark-ui/solid/slider";
 import { Component, splitProps } from "solid-js";
-import type { HelpLink } from "@/types";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "./help-tooltip";
 
 export type SliderRowProps = {

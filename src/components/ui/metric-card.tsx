@@ -1,5 +1,5 @@
 import { For, Show } from "solid-js";
-import type { HelpContent } from "@/types";
+import type { HelpContent } from "@/components/ui/help-tooltip";
 import { Formula } from "./formula";
 import { HelpTooltip } from "./help-tooltip";
 

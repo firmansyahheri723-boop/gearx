@@ -15,10 +15,10 @@ import {
 	setApiKey,
 	setSelectedModel,
 } from "@/features/chat/store";
+import type { ChatMessage } from "@/features/chat/types";
 import { getSelectedCar, getSelectedEngine } from "@/features/database/store";
 import { finalDrive, gearRatios, tireCompound } from "@/features/gearbox/store";
 import { vehicleInputs } from "@/features/suspension/store";
-import type { ChatMessage } from "@/types";
 
 export const Route = createFileRoute("/chat")({
 	component: Chat,

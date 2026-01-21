@@ -1,5 +1,5 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
-import type { SetupDiff } from "@/types";
+import type { SetupDiff } from "@/features/setups/types";
 import { compareTwoSetups } from "../comparison/core";
 import { getSetupById, getSetups } from "../store";
 import { ComparisonTable } from "./comparison-table";

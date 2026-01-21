@@ -1,9 +1,9 @@
 import type { ColumnDef } from "@tanstack/solid-table";
 import { DataTable } from "@/components/ui/data-table";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { SectionHeader } from "@/components/ui/section-header";
 import type { SuspensionOutputs } from "@/features/suspension/suspension";
-import type { HelpLink } from "@/types";
 
 const HELP_CONTENT: Record<
 	string,

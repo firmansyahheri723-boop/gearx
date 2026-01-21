@@ -10,7 +10,7 @@ import {
 	selectedCarIndex,
 	selectedEngineIndex,
 } from "@/features/database/store";
-import type { CarData } from "@/types";
+import type { CarData } from "@/features/database/types";
 
 // Sort car data: regular cars first, then engines, then transmissions
 // Within each group, items are sorted alphabetically

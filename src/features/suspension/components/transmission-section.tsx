@@ -5,10 +5,10 @@ import { EditableCell } from "@/components/ui/editable-cell";
 import { GearSlider } from "@/components/ui/gear-slider";
 import { GearSpeedChart } from "@/components/ui/gear-speed-chart";
 import { GearTorqueChart } from "@/components/ui/gear-torque-chart";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { SectionHeader } from "@/components/ui/section-header";
 import { calculateGearboxOutputs } from "@/features/gearbox/gearbox";
-import { TorqueExtractor } from "@/features/torque-extractor/components";
 import {
 	finalDrive,
 	gearRatios,
@@ -17,13 +17,14 @@ import {
 	setTorqueRpmData,
 	torqueRpmData,
 } from "@/features/gearbox/store";
+import { GEAR_LABELS } from "@/features/gearbox/types";
 import {
 	tireCompound,
 	tractionMode,
 	vehicleInputs,
 } from "@/features/suspension/store";
-import type { HelpLink, TorqueRpmRow } from "@/types";
-import { GEAR_LABELS } from "@/types";
+import { TorqueExtractor } from "@/features/torque-extractor/components";
+import type { TorqueRpmRow } from "@/features/torque-extractor/types";
 
 // Help tooltip content for transmission sections
 const HELP_CONTENT: Record<

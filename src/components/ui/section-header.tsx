@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import type { HelpLink } from "@/types";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip, type TooltipPosition } from "./help-tooltip";
 
 type SectionHeaderProps = {

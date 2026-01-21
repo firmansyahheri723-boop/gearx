@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import type { CarData } from "@/types";
+import type { CarData } from "@/features/database/types";
 import { CSV_COLUMNS, HEADER_MAP } from "./database-constants";
 
 function normalizeHeader(header: string): string {

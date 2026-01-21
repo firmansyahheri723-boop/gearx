@@ -2,7 +2,7 @@ import { For } from "solid-js";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { MetricCard } from "@/components/ui/metric-card";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { AlignmentOutputs } from "@/types";
+import type { AlignmentOutputs } from "@/features/alignment/types";
 
 type Props = { outputs: AlignmentOutputs };
 

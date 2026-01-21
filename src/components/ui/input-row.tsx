@@ -1,5 +1,5 @@
 import { Component, type JSX, splitProps } from "solid-js";
-import type { HelpLink } from "@/types";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { HelpTooltip } from "./help-tooltip";
 
 export type InputRowProps = {

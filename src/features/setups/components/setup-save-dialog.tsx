@@ -1,17 +1,17 @@
 import { createSignal, For, Show } from "solid-js";
-import { vehicleInputs } from "@/features/suspension/store";
-import type { SetupTag, SetupTagColor } from "@/types";
-import { SETUP_TAG_COLORS } from "@/types";
-import { createSetup, getAllTags, updateSetup } from "../store";
+import { aeroSettings } from "@/features/aero/store";
+import { alignmentInputs } from "@/features/alignment/store";
 import {
 	finalDrive,
 	gearRatios,
 	tireCompound,
-	tractionMode,
 	torqueRpmData,
+	tractionMode,
 } from "@/features/gearbox/store";
-import { alignmentInputs } from "@/features/alignment/store";
-import { aeroSettings } from "@/features/aero/store";
+import type { SetupTag, SetupTagColor } from "@/features/setups/types";
+import { SETUP_TAG_COLORS } from "@/features/setups/types";
+import { vehicleInputs } from "@/features/suspension/store";
+import { createSetup, getAllTags, updateSetup } from "../store";
 
 function generateId(): string {
 	return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;

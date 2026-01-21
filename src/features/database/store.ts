@@ -1,8 +1,8 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createSignal } from "solid-js";
 import carDataCsv from "@/assets/car-data.csv?raw";
+import type { CarData } from "@/features/database/types";
 import { setVehicleInputs } from "@/features/suspension/store";
-import type { CarData } from "@/types";
 import { parseCSV } from "./csv";
 
 const SELECTED_CAR_KEY = "gearx_selected_car";

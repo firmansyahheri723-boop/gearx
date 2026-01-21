@@ -1,5 +1,6 @@
+import type { HelpContent, HelpLink } from "@/components/ui/help-tooltip";
 import type { SegmentedRowOption } from "@/components/ui/segmented-row";
-import type { AlignmentInputs, HelpContent } from "@/types";
+import type { AlignmentInputs } from "@/features/alignment/types";
 
 export type SliderConfig = {
 	key: keyof AlignmentInputs;

@@ -8,8 +8,8 @@ import {
 } from "@unovis/solid";
 import { CurveType } from "@unovis/ts";
 import { Component, createMemo } from "solid-js";
+import type { AeroSpeedDataPoint } from "@/features/aero/types";
 import { theme } from "@/stores/theme";
-import type { AeroSpeedDataPoint } from "@/types";
 
 interface AeroChartProps {
 	speedData: AeroSpeedDataPoint[];

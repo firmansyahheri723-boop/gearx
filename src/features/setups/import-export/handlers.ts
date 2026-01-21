@@ -1,4 +1,4 @@
-import type { SavedSetup, SetupData } from "@/types";
+import type { SavedSetup, SetupData } from "@/features/setups/types";
 
 export interface ImportOptions {
 	replaceExisting?: boolean;

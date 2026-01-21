@@ -1,5 +1,10 @@
 import { createSignal } from "solid-js";
-import type { CellRef } from "@/types";
+
+export type CellRef = {
+	tableId: string;
+	row: number;
+	col: number;
+};
 
 export const [selectionStart, setSelectionStart] = createSignal<CellRef | null>(
 	null,

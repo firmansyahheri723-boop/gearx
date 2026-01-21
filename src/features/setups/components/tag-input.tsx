@@ -1,4 +1,4 @@
-import type { SetupTag, SetupTagColor } from "@/types";
+import type { SetupTag, SetupTagColor } from "@/features/setups/types";
 
 interface TagInputStandaloneProps {
 	value: string;

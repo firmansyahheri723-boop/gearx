@@ -1,6 +1,6 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
-import type { AlignmentInputs } from "@/types";
+import type { AlignmentInputs } from "@/features/alignment/types";
 import { ALIGNMENT_PRESETS_MAP } from "./alignment-constants";
 
 const ALIGNMENT_INPUTS_KEY = "gearx_alignment_inputs";

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/solid-router";
 import { createMemo, For } from "solid-js";
 import { calculateExperimentalAero } from "@/features/aero/aero";
 import { aeroExperimentalEnabled, aeroSettings } from "@/features/aero/store";
+import type { AeroExperimentalOutput } from "@/features/aero/types";
 import { getSelectedCar } from "@/features/database/store";
 import { AccelerationMetricsSection } from "@/features/suspension/components/acceleration-metrics-section";
 import { AntiRollBarsSection } from "@/features/suspension/components/anti-roll-bars-section";
@@ -10,9 +11,8 @@ import { FormulaReferenceSection } from "@/features/suspension/components/formul
 import { SpringsStiffnessSection } from "@/features/suspension/components/springs-stiffness-section";
 import { SuspensionOutput } from "@/features/suspension/components/suspension-output";
 import { SuspensionParametersSection } from "@/features/suspension/components/suspension-parameters-section";
-import { calculateSuspensionOutputs } from "@/features/suspension/suspension";
 import { vehicleInputs } from "@/features/suspension/store";
-import type { AeroExperimentalOutput } from "@/types";
+import { calculateSuspensionOutputs } from "@/features/suspension/suspension";
 
 export const Route = createFileRoute("/suspension")({
 	component: Suspension,

@@ -8,7 +8,7 @@ import {
 } from "@ark-ui/solid/slider";
 import { createSignal, Show } from "solid-js";
 import { FINAL_DRIVE_COLOR, GEAR_COLORS } from "@/constants/colors";
-import type { GearRatio } from "@/types";
+import type { GearRatio } from "@/features/gearbox/types";
 import { NumberInput } from "./number-input";
 
 type GearSliderProps = {

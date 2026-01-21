@@ -7,8 +7,20 @@ import {
 	PopoverTrigger,
 } from "@ark-ui/solid/popover";
 import { Component, For, Show } from "solid-js";
-import type { HelpLink } from "@/types";
 import { Formula } from "./formula";
+
+export type HelpLink = {
+	label: string;
+	url: string;
+};
+
+export type HelpContent = {
+	description: string;
+	formula?: string;
+	variables?: string[];
+	articles?: HelpLink[];
+	videos?: HelpLink[];
+};
 
 export type TooltipPosition = "right" | "bottom" | "left" | "top";
 

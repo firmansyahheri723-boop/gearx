@@ -1,5 +1,5 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
-import type { SavedSetup, SetupTag } from "@/types";
+import type { SavedSetup, SetupTag } from "@/features/setups/types";
 import {
 	downloadJSON,
 	exportToJSON,

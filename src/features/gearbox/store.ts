@@ -1,13 +1,9 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
+import type { FinalDrive, GearRatio } from "@/features/gearbox/types";
 import { tireCompound, tractionMode } from "@/features/suspension/store";
-import type {
-	FinalDrive,
-	GearRatio,
-	TireCompound,
-	TorqueRpmRow,
-	TractionMode,
-} from "@/types";
+import type { TireCompound, TractionMode } from "@/features/suspension/types";
+import type { TorqueRpmRow } from "@/features/torque-extractor/types";
 
 const TORQUE_RPM_KEY = "gearx_torque_rpm";
 const GEAR_RATIOS_KEY = "gearx_gear_ratios";

@@ -1,7 +1,7 @@
 import { Component, Show } from "solid-js";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { AeroExperimentalOutput } from "@/types";
+import type { AeroExperimentalOutput } from "@/features/aero/types";
 import { AeroChart } from "./aero-chart";
 
 interface AeroExperimentalSectionProps {

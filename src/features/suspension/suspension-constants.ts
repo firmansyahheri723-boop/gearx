@@ -1,4 +1,5 @@
-import type { HelpContent, HelpLink, VehicleInputs } from "@/types";
+import type { HelpContent, HelpLink } from "@/components/ui/help-tooltip";
+import type { VehicleInputs } from "@/features/suspension/types";
 
 export type SliderConfig = {
 	key: keyof VehicleInputs;

@@ -10,11 +10,13 @@ import { createFileRoute } from "@tanstack/solid-router";
 import { createMemo, For } from "solid-js";
 import { GearSpeedChart } from "@/components/ui/gear-speed-chart";
 import { GearTorqueChart } from "@/components/ui/gear-torque-chart";
+import type { HelpLink } from "@/components/ui/help-tooltip";
 import { MetricCard } from "@/components/ui/metric-card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { GEAR_COLORS } from "@/constants/colors";
 import { calculateExperimentalAero } from "@/features/aero/aero";
 import { aeroExperimentalEnabled, aeroSettings } from "@/features/aero/store";
+import type { AeroExperimentalOutput } from "@/features/aero/types";
 import { getSelectedCar } from "@/features/database/store";
 import { calculateGearboxOutputs } from "@/features/gearbox/gearbox";
 import {
@@ -27,6 +29,7 @@ import {
 	gearRatios,
 	torqueRpmData,
 } from "@/features/gearbox/store";
+import type { GearboxOutputs, SpeedRpmPoint } from "@/features/gearbox/types";
 import {
 	setTireCompound,
 	setTractionMode,
@@ -34,13 +37,7 @@ import {
 	tractionMode,
 	vehicleInputs,
 } from "@/features/suspension/store";
-import type {
-	AeroExperimentalOutput,
-	GearboxOutputs,
-	HelpLink,
-	SpeedRpmPoint,
-	TireCompound,
-} from "@/types";
+import type { TireCompound } from "@/features/suspension/types";
 
 const HELP_CONTENT: Record<
 	string,

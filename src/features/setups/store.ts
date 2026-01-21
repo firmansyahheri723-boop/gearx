@@ -1,7 +1,11 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import type { SavedSetup, SetupFilter, SetupTag } from "@/types";
+import type {
+	SavedSetup,
+	SetupFilter,
+	SetupTag,
+} from "@/features/setups/types";
 
 const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
