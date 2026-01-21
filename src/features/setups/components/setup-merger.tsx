@@ -232,7 +232,7 @@ export function SetupMerger(props: SetupMergerProps) {
 													<button
 														type="button"
 														onClick={() => selectAllInCategory(category.name)}
-														class="text-[10px] text-muted hover:text-foreground uppercase"
+														class="text-[10px] text-muted hover:text-foreground uppercase cursor-pointer"
 													>
 														Select All
 													</button>
@@ -240,7 +240,7 @@ export function SetupMerger(props: SetupMergerProps) {
 													<button
 														type="button"
 														onClick={() => deselectAllInCategory(category.name)}
-														class="text-[10px] text-muted hover:text-foreground uppercase"
+														class="text-[10px] text-muted hover:text-foreground uppercase cursor-pointer"
 													>
 														Deselect All
 													</button>
@@ -300,7 +300,7 @@ export function SetupMerger(props: SetupMergerProps) {
 							<button
 								type="button"
 								onClick={props.onClose}
-								class="flex-1 px-4 py-2 border border-border/50 text-muted hover:text-foreground text-xs uppercase tracking-wider transition-colors"
+								class="flex-1 px-4 py-2 border border-border/50 text-muted hover:text-foreground text-xs uppercase tracking-wider transition-colors cursor-pointer"
 							>
 								Cancel
 							</button>
@@ -308,7 +308,7 @@ export function SetupMerger(props: SetupMergerProps) {
 								type="button"
 								onClick={handleMerge}
 								disabled={selectedFields().size === 0}
-								class="flex-1 px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50"
+								class="flex-1 px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50 cursor-pointer"
 							>
 								Create Merged Setup
 							</button>

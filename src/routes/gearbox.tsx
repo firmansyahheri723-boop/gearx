@@ -340,7 +340,7 @@ function Gearbox() {
 										<button
 											type="button"
 											onClick={() => setTractionMode(option.value)}
-											class="flex-1 px-3 py-2 border text-sm font-medium transition-colors"
+											class="flex-1 px-3 py-2 border text-sm font-medium transition-colors cursor-pointer"
 											classList={{
 												"border-border/50 bg-foreground/10 text-foreground":
 													tractionMode() === option.value,

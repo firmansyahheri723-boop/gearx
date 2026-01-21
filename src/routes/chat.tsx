@@ -203,7 +203,7 @@ function Chat() {
 							<button
 								type="button"
 								onClick={clearMessages}
-								class="px-3 py-2 text-xs text-muted hover:text-foreground border border-border/50 transition-colors"
+								class="px-3 py-2 text-xs text-muted hover:text-foreground border border-border/50 transition-colors cursor-pointer"
 							>
 								Clear Chat
 							</button>

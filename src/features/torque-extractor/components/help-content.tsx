@@ -148,7 +148,7 @@ export const HelpContent: Component<HelpContentProps> = (props) => {
 							setCurrentStep(0);
 							props.onClose();
 						}}
-						class="border border-border hover:border-border bg-surface hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+						class="border border-border hover:border-border bg-surface hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 					>
 						← Close
 					</button>
@@ -157,7 +157,7 @@ export const HelpContent: Component<HelpContentProps> = (props) => {
 					<button
 						type="button"
 						onClick={props.onClose}
-						class="border border-border hover:border-border bg-surface hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+						class="border border-border hover:border-border bg-surface hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 					>
 						Close
 					</button>
@@ -176,7 +176,7 @@ export const HelpContent: Component<HelpContentProps> = (props) => {
 							<button
 								type="button"
 								onClick={props.onTryIt}
-								class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+								class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 							>
 								Try it →
 							</button>
@@ -186,7 +186,7 @@ export const HelpContent: Component<HelpContentProps> = (props) => {
 					<button
 						type="button"
 						onClick={handleNext}
-						class="border border-emerald-600 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 hover:text-emerald-300 px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+						class="border border-emerald-600 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 hover:text-emerald-300 px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 					>
 						Next →
 					</button>
@@ -196,7 +196,7 @@ export const HelpContent: Component<HelpContentProps> = (props) => {
 					<button
 						type="button"
 						onClick={props.onShowGuide}
-						class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+						class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 					>
 						How to use this? →
 					</button>

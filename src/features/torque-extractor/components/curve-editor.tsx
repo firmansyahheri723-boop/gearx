@@ -199,17 +199,14 @@ export function CurveEditor(props: CurveEditorProps) {
 				<button
 					type="button"
 					onClick={props.onBack}
-					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 				>
 					Back
 				</button>
-				<span class="text-[10px] text-muted uppercase tracking-wider">
-					{props.extractedPoints.length} points
-				</span>
 				<button
 					type="button"
 					onClick={props.onNext}
-					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-foreground-secondary hover:text-foreground px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-foreground-secondary hover:text-foreground px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 				>
 					Preview
 				</button>

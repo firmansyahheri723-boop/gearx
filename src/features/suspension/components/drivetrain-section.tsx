@@ -72,7 +72,7 @@ export function DrivetrainSection() {
 											<button
 												type="button"
 												onClick={() => setVehicleInputs("drivetrain", opt)}
-												class="px-3 py-1.5 border text-xs font-medium transition-colors"
+												class="px-3 py-1.5 border text-xs font-medium transition-colors cursor-pointer"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
 														vehicleInputs.drivetrain === opt,
@@ -106,7 +106,7 @@ export function DrivetrainSection() {
 														diameter: size,
 													})
 												}
-												class="px-2.5 py-1.5 border text-xs font-medium transition-colors"
+												class="px-2.5 py-1.5 border text-xs font-medium transition-colors cursor-pointer"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
 														vehicleInputs.frontWheel.diameter === size,
@@ -207,7 +207,7 @@ export function DrivetrainSection() {
 														diameter: size,
 													})
 												}
-												class="px-2.5 py-1.5 border text-xs font-medium transition-colors"
+												class="px-2.5 py-1.5 border text-xs font-medium transition-colors cursor-pointer"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
 														vehicleInputs.rearWheel.diameter === size,
@@ -298,7 +298,7 @@ export function DrivetrainSection() {
 											<button
 												type="button"
 												onClick={() => setTireCompound(option.value)}
-												class="px-2 py-1.5 border text-xs font-medium transition-colors"
+												class="px-2 py-1.5 border text-xs font-medium transition-colors cursor-pointer"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
 														tireCompound() === option.value,
@@ -324,7 +324,7 @@ export function DrivetrainSection() {
 											<button
 												type="button"
 												onClick={() => setTractionMode(option.value)}
-												class="px-3 py-1.5 border text-xs font-medium transition-colors"
+												class="px-3 py-1.5 border text-xs font-medium transition-colors cursor-pointer"
 												classList={{
 													"border-border/50 bg-foreground/10 text-foreground":
 														tractionMode() === option.value,
@@ -359,7 +359,7 @@ export function DrivetrainSection() {
 								<button
 									type="button"
 									onClick={() => setVehicleInputs("drivetrain", option)}
-									class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors"
+									class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors cursor-pointer"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
 											vehicleInputs.drivetrain === option,
@@ -389,7 +389,7 @@ export function DrivetrainSection() {
 											diameter: size,
 										})
 									}
-									class="flex-1 px-3 py-2 border text-xs font-medium transition-colors"
+									class="flex-1 px-3 py-2 border text-xs font-medium transition-colors cursor-pointer"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
 											vehicleInputs.frontWheel.diameter === size,
@@ -487,7 +487,7 @@ export function DrivetrainSection() {
 											diameter: size,
 										})
 									}
-									class="flex-1 px-3 py-2 border text-xs font-medium transition-colors"
+									class="flex-1 px-3 py-2 border text-xs font-medium transition-colors cursor-pointer"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
 											vehicleInputs.rearWheel.diameter === size,
@@ -580,7 +580,7 @@ export function DrivetrainSection() {
 								<button
 									type="button"
 									onClick={() => setTireCompound(option.value)}
-									class="px-2 py-2 border text-[10px] font-medium transition-colors"
+									class="px-2 py-2 border text-[10px] font-medium transition-colors cursor-pointer"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
 											tireCompound() === option.value,
@@ -605,7 +605,7 @@ export function DrivetrainSection() {
 								<button
 									type="button"
 									onClick={() => setTractionMode(option.value)}
-									class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors"
+									class="flex-1 px-2 py-2 border text-[10px] font-medium uppercase tracking-wider transition-colors cursor-pointer"
 									classList={{
 										"border-border/50 bg-foreground/10 text-foreground-secondary":
 											tractionMode() === option.value,

@@ -76,7 +76,7 @@ export function SliderRow(props: SliderRowProps) {
 					</SliderTrack>
 					<SliderThumb
 						index={0}
-						class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-foreground-secondary rounded-full shadow-lg shadow-foreground/30 border border-foreground"
+						class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-foreground-secondary rounded-full shadow-lg shadow-foreground/30 border border-foreground cursor-pointer"
 					/>
 				</SliderControl>
 			</SliderRoot>

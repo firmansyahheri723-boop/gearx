@@ -215,7 +215,7 @@ function ComparisonRow(props: ComparisonRowProps) {
 					<Show when={props.onApply && props.field.hasDifference}>
 						<button
 							type="button"
-							class="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground hover:bg-foreground/20 transition-colors"
+							class="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground hover:bg-foreground/20 transition-colors cursor-pointer"
 							onClick={() => props.onApply?.(props.field, props.field.newValue)}
 						>
 							Apply

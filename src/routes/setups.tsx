@@ -43,7 +43,7 @@ function SetupsPage() {
 					<button
 						type="button"
 						onClick={() => setViewMode("list")}
-						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
+						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors cursor-pointer ${
 							viewMode() === "list"
 								? "bg-foreground text-background border-foreground"
 								: "border-border/50 text-muted hover:text-foreground"
@@ -54,7 +54,7 @@ function SetupsPage() {
 					<button
 						type="button"
 						onClick={() => setViewMode("compare")}
-						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
+						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors cursor-pointer ${
 							viewMode() === "compare"
 								? "bg-foreground text-background border-foreground"
 								: "border-border/50 text-muted hover:text-foreground"
@@ -65,7 +65,7 @@ function SetupsPage() {
 					<button
 						type="button"
 						onClick={() => setViewMode("merge")}
-						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors ${
+						class={`px-3 py-1.5 text-xs uppercase tracking-wider border transition-colors cursor-pointer ${
 							viewMode() === "merge"
 								? "bg-foreground text-background border-foreground"
 								: "border-border/50 text-muted hover:text-foreground"
@@ -78,14 +78,14 @@ function SetupsPage() {
 					<button
 						type="button"
 						onClick={() => setShowMerger(true)}
-						class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider"
+						class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer"
 					>
 						New from Merge
 					</button>
 					<button
 						type="button"
 						onClick={() => setShowSaveDialog(true)}
-						class="px-3 py-1.5 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary"
+						class="px-3 py-1.5 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary cursor-pointer"
 					>
 						Save Current
 					</button>
@@ -111,7 +111,7 @@ function SetupsPage() {
 					<button
 						type="button"
 						onClick={() => setShowMerger(true)}
-						class="px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary"
+						class="px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary cursor-pointer"
 					>
 						Open Merger
 					</button>

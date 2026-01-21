@@ -24,7 +24,7 @@ export function ApiKeyInput(props: ApiKeyInputProps) {
 			<button
 				type="button"
 				onClick={() => setShowKey(!showKey())}
-				class="absolute right-2 p-1 text-muted hover:text-foreground transition-colors"
+				class="absolute right-2 p-1 text-muted hover:text-foreground transition-colors cursor-pointer"
 				title={showKey() ? "Hide API key" : "Show API key"}
 			>
 				<Show

@@ -332,7 +332,7 @@ export function TransmissionSection() {
 								<button
 									type="button"
 									onClick={() => setShowExtractor(true)}
-									class="w-full border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+									class="w-full border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 								>
 									Replace Torque Curve Image
 								</button>

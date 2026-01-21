@@ -355,14 +355,14 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 													<button
 														type="button"
 														onClick={() => setHelpView("what")}
-														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors"
+														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors cursor-pointer"
 													>
 														What is this?
 													</button>
 													<button
 														type="button"
 														onClick={() => setHelpView("how")}
-														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors"
+														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors cursor-pointer"
 													>
 														How to use this?
 													</button>
@@ -427,7 +427,7 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 							<button
 								type="button"
 								onClick={props.onClose}
-								class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+								class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 							>
 								Cancel
 							</button>

@@ -41,7 +41,7 @@ export function TagInput(props: TagInputStandaloneProps) {
 					{props.colors.slice(0, 8).map((color) => (
 						<button
 							type="button"
-							class={`w-5 h-5 border ${
+							class={`w-5 h-5 border cursor-pointer ${
 								props.selectedColor === color
 									? "border-foreground"
 									: "border-transparent"
@@ -54,7 +54,7 @@ export function TagInput(props: TagInputStandaloneProps) {
 				<button
 					type="button"
 					onClick={props.onSubmit}
-					class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider"
+					class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer"
 				>
 					Add
 				</button>
@@ -67,7 +67,7 @@ export function TagInput(props: TagInputStandaloneProps) {
 						.map((tag) => (
 							<button
 								type="button"
-								class="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-surface-elevated/50 border border-border/30 text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
+								class="px-2 py-0.5 text-[10px] uppercase tracking-wider bg-surface-elevated/50 border border-border/30 text-muted hover:text-foreground hover:border-foreground/30 transition-colors cursor-pointer"
 								onClick={() => props.onChange(tag)}
 							>
 								{tag}

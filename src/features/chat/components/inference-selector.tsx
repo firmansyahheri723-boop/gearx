@@ -48,7 +48,7 @@ export function InferenceSelector(props: InferenceSelectorProps) {
 				<button
 					type="button"
 					onClick={() => modelsQuery.refetch()}
-					class="absolute right-0 top-0 -translate-y-full mt-1 px-2 py-1 text-xs text-red-400 hover:text-red-300 transition-colors"
+					class="absolute right-0 top-0 -translate-y-full mt-1 px-2 py-1 text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer"
 					title={modelsQuery.error?.message ?? "Failed to load models"}
 				>
 					Retry

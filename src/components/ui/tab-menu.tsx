@@ -37,7 +37,7 @@ export function TabMenu(props: TabMenuProps) {
 							return (
 								<TabTrigger
 									value={tab.id}
-									class="relative flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] sm:text-xs uppercase tracking-wider transition-colors focus:outline-none shrink-0 whitespace-nowrap border-b-2"
+									class="relative flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] sm:text-xs uppercase tracking-wider transition-colors focus:outline-none shrink-0 whitespace-nowrap border-b-2 cursor-pointer"
 									classList={{
 										"bg-surface/80 text-foreground border-border": isActive(),
 										"bg-transparent text-muted hover:text-foreground-secondary hover:bg-surface/30 border-transparent":

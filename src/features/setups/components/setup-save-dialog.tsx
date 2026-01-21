@@ -206,7 +206,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 										{tag.name}
 										<button
 											type="button"
-											class="ml-1 hover:text-foreground"
+											class="ml-1 hover:text-foreground cursor-pointer"
 											onClick={() => handleRemoveTag(tag.id)}
 										>
 											×
@@ -233,7 +233,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 									{(color) => (
 										<button
 											type="button"
-											class={`w-5 h-5 border ${
+											class={`w-5 h-5 border cursor-pointer ${
 												selectedColor() === color
 													? "border-foreground"
 													: "border-transparent"
@@ -247,7 +247,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 							<button
 								type="button"
 								onClick={handleAddTag}
-								class="px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider"
+								class="px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer"
 							>
 								Add
 							</button>
@@ -271,7 +271,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 						<button
 							type="button"
 							onClick={props.onClose}
-							class="flex-1 px-4 py-2 border border-border/50 text-muted hover:text-foreground text-xs uppercase tracking-wider transition-colors"
+							class="flex-1 px-4 py-2 border border-border/50 text-muted hover:text-foreground text-xs uppercase tracking-wider transition-colors cursor-pointer"
 						>
 							Cancel
 						</button>
@@ -279,7 +279,7 @@ export function SetupSaveDialog(props: SetupSaveDialogProps) {
 							type="button"
 							onClick={handleSubmit}
 							disabled={saving() || !name().trim()}
-							class="flex-1 px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50"
+							class="flex-1 px-4 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50 cursor-pointer"
 						>
 							{saving() ? "Saving..." : "Save"}
 						</button>

@@ -116,7 +116,7 @@ export function DashboardHeader(props: { onSaveSetup?: () => void }) {
 						<button
 							type="button"
 							onClick={() => props.onSaveSetup?.()}
-							class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider"
+							class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider cursor-pointer"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ export function DashboardHeader(props: { onSaveSetup?: () => void }) {
 						<button
 							type="button"
 							onClick={() => setShowShareModal(true)}
-							class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider"
+							class="flex items-center gap-1.5 px-2 py-1 bg-foreground/10 border border-foreground/20 hover:bg-foreground/20 text-foreground-secondary hover:text-foreground transition-colors text-[10px] uppercase tracking-wider cursor-pointer"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +178,7 @@ export function DashboardHeader(props: { onSaveSetup?: () => void }) {
 										});
 									}
 								}}
-								class="flex items-center gap-1.5 px-2 py-1 border border-border/50 bg-surface/50 hover:bg-surface-elevated/50 text-muted hover:text-foreground-secondary transition-colors text-[10px] uppercase tracking-wider"
+								class="flex items-center gap-1.5 px-2 py-1 border border-border/50 bg-surface/50 hover:bg-surface-elevated/50 text-muted hover:text-foreground-secondary transition-colors text-[10px] uppercase tracking-wider cursor-pointer"
 								aria-haspopup="listbox"
 								aria-expanded={isOpen()}
 							>
@@ -213,7 +213,7 @@ export function DashboardHeader(props: { onSaveSetup?: () => void }) {
 												role="option"
 												aria-selected={themePreference() === option.value}
 												onClick={() => handleSelect(option.value)}
-												class="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider transition-colors"
+												class="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider transition-colors cursor-pointer"
 												classList={{
 													"bg-foreground/10 text-foreground":
 														themePreference() === option.value,

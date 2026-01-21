@@ -98,7 +98,7 @@ export function ChatInput(props: ChatInputProps) {
 						type="button"
 						onClick={handleSubmit}
 						disabled={props.disabled || !input().trim()}
-						class="px-4 py-2 bg-foreground/10 text-foreground text-sm font-medium transition-colors hover:bg-foreground/20 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-foreground/50 disabled:opacity-50 disabled:cursor-not-allowed"
+						class="px-4 py-2 bg-foreground/10 text-foreground text-sm font-medium transition-colors hover:bg-foreground/20 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-foreground/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
 					>
 						Send
 					</button>
@@ -112,7 +112,7 @@ export function ChatInput(props: ChatInputProps) {
 								type="button"
 								onClick={() => handleQuickPrompt(prompt.prompt)}
 								disabled={props.disabled}
-								class="px-2 py-1 text-xs bg-surface/50 text-muted border border-border/30 transition-colors hover:bg-surface-elevated/50 hover:text-foreground-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+								class="px-2 py-1 text-xs bg-surface/50 text-muted border border-border/30 transition-colors hover:bg-surface-elevated/50 hover:text-foreground-secondary disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
 							>
 								{prompt.label}
 							</button>

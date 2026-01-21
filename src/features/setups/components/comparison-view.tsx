@@ -57,7 +57,7 @@ export function ComparisonView(props: ComparisonViewProps) {
 								{(setup) => (
 									<button
 										type="button"
-										class={`w-full text-left p-2 border transition-colors ${
+										class={`w-full text-left p-2 border transition-colors cursor-pointer ${
 											setupAId() === setup.id
 												? "border-foreground bg-foreground/10"
 												: "border-border/30 hover:border-foreground/30"
@@ -86,7 +86,7 @@ export function ComparisonView(props: ComparisonViewProps) {
 								{(setup) => (
 									<button
 										type="button"
-										class={`w-full text-left p-2 border transition-colors ${
+										class={`w-full text-left p-2 border transition-colors cursor-pointer ${
 											setupBId() === setup.id
 												? "border-foreground bg-foreground/10"
 												: "border-border/30 hover:border-foreground/30"
@@ -112,7 +112,7 @@ export function ComparisonView(props: ComparisonViewProps) {
 						type="button"
 						onClick={handleStartComparison}
 						disabled={!setupAId() || !setupBId() || setupAId() === setupBId()}
-						class="px-6 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						class="px-6 py-2 bg-foreground text-background font-bold text-xs uppercase tracking-wider hover:bg-foreground-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
 					>
 						Compare Setups
 					</button>
@@ -124,7 +124,7 @@ export function ComparisonView(props: ComparisonViewProps) {
 					<button
 						type="button"
 						onClick={handleReset}
-						class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider"
+						class="px-3 py-1.5 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer"
 					>
 						← Back to Selection
 					</button>

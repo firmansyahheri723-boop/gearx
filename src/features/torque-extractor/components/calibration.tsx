@@ -243,7 +243,7 @@ export function CalibrationOverlay(props: CalibrationOverlayProps) {
 				<button
 					type="button"
 					onClick={props.onBack}
-					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+					class="border border-border hover:border-border bg-surface-elevated hover:bg-surface-elevated text-muted hover:text-foreground-secondary px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 				>
 					Back
 				</button>
@@ -257,7 +257,7 @@ export function CalibrationOverlay(props: CalibrationOverlayProps) {
 						"border-border bg-surface text-muted cursor-not-allowed":
 							!props.isValid,
 					}}
-					class="border px-4 py-2 text-xs uppercase tracking-wider transition-colors"
+					class="border px-4 py-2 text-xs uppercase tracking-wider transition-colors cursor-pointer"
 				>
 					Extract Curve
 				</button>

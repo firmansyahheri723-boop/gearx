@@ -72,7 +72,7 @@ function RootComponent() {
 						<button
 							type="button"
 							onClick={() => setShowLoadedBanner(false)}
-							class="hover:text-foreground"
+							class="hover:text-foreground cursor-pointer"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

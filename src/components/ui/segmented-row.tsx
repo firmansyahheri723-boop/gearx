@@ -70,7 +70,7 @@ export function SegmentedRow(props: SegmentedRowProps) {
 							{(option) => (
 								<RadioGroupItem
 									value={String(option.value)}
-									class="px-3 py-1 text-xs transition-all duration-100"
+									class="px-3 py-1 text-xs transition-all duration-100 cursor-pointer"
 									classList={{
 										"bg-foreground/20 text-foreground-secondary border border-border/50":
 											String(local.value) === String(option.value),

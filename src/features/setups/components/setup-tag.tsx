@@ -32,7 +32,7 @@ export function SetupTag(props: SetupTagDisplayProps) {
 			{props.removable && (
 				<button
 					type="button"
-					class="flex items-center justify-center w-3 h-3 hover:bg-black/10 transition-colors"
+					class="flex items-center justify-center w-3 h-3 hover:bg-black/10 transition-colors cursor-pointer"
 					onClick={(e) => {
 						e.stopPropagation();
 						props.onRemove?.();

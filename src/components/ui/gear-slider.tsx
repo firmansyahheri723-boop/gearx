@@ -99,7 +99,7 @@ export function GearSlider(props: GearSliderProps) {
 								</SliderTrack>
 								<SliderThumb
 									index={0}
-									class="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2"
+									class="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 cursor-pointer"
 									style={{
 										background: gearColor(),
 										"border-color": `${gearColor()}cc`,

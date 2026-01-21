@@ -52,7 +52,7 @@ export function HelpTooltip(props: HelpTooltipProps) {
 		>
 			<PopoverTrigger
 				type="button"
-				class="w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full border transition-all duration-100 data-[state=open]:bg-foreground/20 data-[state=open]:text-foreground-secondary data-[state=open]:border-border/50 bg-surface-elevated/50 text-muted border-border/50 hover:text-foreground-secondary hover:border-border/50"
+				class="w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full border transition-all duration-100 cursor-pointer data-[state=open]:bg-foreground/20 data-[state=open]:text-foreground-secondary data-[state=open]:border-border/50 bg-surface-elevated/50 text-muted border-border/50 hover:text-foreground-secondary hover:border-border/50"
 				aria-label="Show help information"
 			>
 				?

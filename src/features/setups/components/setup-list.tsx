@@ -142,7 +142,7 @@ export function SetupList(props: SetupListProps) {
 					<button
 						type="button"
 						onClick={handleExport}
-						class="px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider"
+						class="px-3 py-2 bg-foreground/10 border border-foreground/20 text-foreground-secondary hover:text-foreground text-xs uppercase tracking-wider cursor-pointer"
 					>
 						Export
 					</button>
@@ -163,7 +163,7 @@ export function SetupList(props: SetupListProps) {
 					{(tag) => (
 						<button
 							type="button"
-							class={`px-2 py-0.5 text-[10px] uppercase tracking-wider border transition-colors ${
+							class={`px-2 py-0.5 text-[10px] uppercase tracking-wider border transition-colors cursor-pointer ${
 								selectedTagIds().includes(tag.id)
 									? "border-foreground bg-foreground/10"
 									: "border-border/30 bg-surface/50 text-muted hover:border-foreground/30"
@@ -190,7 +190,7 @@ export function SetupList(props: SetupListProps) {
 					<button
 						type="button"
 						onClick={handleClearFilters}
-						class="px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted hover:text-foreground"
+						class="px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted hover:text-foreground cursor-pointer"
 					>
 						Clear
 					</button>
@@ -201,7 +201,7 @@ export function SetupList(props: SetupListProps) {
 				<button
 					type="button"
 					onClick={() => handleSort("updatedAt")}
-					class={`hover:text-foreground ${sortBy() === "updatedAt" ? "text-foreground" : ""}`}
+					class={`hover:text-foreground cursor-pointer ${sortBy() === "updatedAt" ? "text-foreground" : ""}`}
 				>
 					Updated{" "}
 					{sortBy() === "updatedAt" && (sortOrder() === "desc" ? "↓" : "↑")}
@@ -210,7 +210,7 @@ export function SetupList(props: SetupListProps) {
 				<button
 					type="button"
 					onClick={() => handleSort("createdAt")}
-					class={`hover:text-foreground ${sortBy() === "createdAt" ? "text-foreground" : ""}`}
+					class={`hover:text-foreground cursor-pointer ${sortBy() === "createdAt" ? "text-foreground" : ""}`}
 				>
 					Created{" "}
 					{sortBy() === "createdAt" && (sortOrder() === "desc" ? "↓" : "↑")}
@@ -219,7 +219,7 @@ export function SetupList(props: SetupListProps) {
 				<button
 					type="button"
 					onClick={() => handleSort("name")}
-					class={`hover:text-foreground ${sortBy() === "name" ? "text-foreground" : ""}`}
+					class={`hover:text-foreground cursor-pointer ${sortBy() === "name" ? "text-foreground" : ""}`}
 				>
 					Name {sortBy() === "name" && (sortOrder() === "desc" ? "↓" : "↑")}
 				</button>

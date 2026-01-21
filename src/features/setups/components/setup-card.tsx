@@ -66,7 +66,7 @@ export function SetupCard(props: SetupCardProps) {
 						</button>
 						<button
 							type="button"
-							class="p-1.5 text-muted hover:text-foreground hover:bg-foreground/10 transition-colors"
+							class="p-1.5 text-muted hover:text-foreground hover:bg-foreground/10 transition-colors cursor-pointer"
 							onClick={(e) => {
 								e.stopPropagation();
 								props.onEdit();
@@ -114,7 +114,7 @@ export function SetupCard(props: SetupCardProps) {
 					<div class="flex items-center gap-1">
 						<button
 							type="button"
-							class="hover:text-foreground transition-colors"
+							class="hover:text-foreground transition-colors cursor-pointer"
 							onClick={(e) => {
 								e.stopPropagation();
 								props.onDuplicate();
@@ -138,7 +138,7 @@ export function SetupCard(props: SetupCardProps) {
 						</button>
 						<button
 							type="button"
-							class="hover:text-red-500 transition-colors"
+							class="hover:text-red-500 transition-colors cursor-pointer"
 							onClick={(e) => {
 								e.stopPropagation();
 								props.onDelete();
