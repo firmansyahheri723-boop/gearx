@@ -114,16 +114,18 @@ export function clearEngineSelection(): void {
 	setVehicleInputs("engineSelection", "");
 }
 
-const initCarIdx = selectedCarIndex();
-if (initCarIdx !== null && initCarIdx >= 0 && initCarIdx < carData.length) {
-	applyCarData(carData[initCarIdx]);
-}
+export function initDatabase(): void {
+	const initCarIdx = selectedCarIndex();
+	if (initCarIdx !== null && initCarIdx >= 0 && initCarIdx < carData.length) {
+		applyCarData(carData[initCarIdx]);
+	}
 
-const initEngineIdx = selectedEngineIndex();
-if (
-	initEngineIdx !== null &&
-	initEngineIdx >= 0 &&
-	initEngineIdx < carData.length
-) {
-	applyEngineData(carData[initEngineIdx]);
+	const initEngineIdx = selectedEngineIndex();
+	if (
+		initEngineIdx !== null &&
+		initEngineIdx >= 0 &&
+		initEngineIdx < carData.length
+	) {
+		applyEngineData(carData[initEngineIdx]);
+	}
 }

@@ -6,10 +6,11 @@ import {
 } from "@tanstack/solid-router";
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
+import { initDatabase } from "@/features/database/store";
 import { deserializeSetup } from "@/features/setups/sharing";
+import { applySharedSetup } from "@/features/suspension/store";
 import { clearSelection } from "@/stores/selection";
 import { initThemeListener } from "@/stores/theme";
-import { applySharedSetup } from "@/features/suspension/store";
 
 const TABS = [
 	{ id: "main", label: "Input", to: "/" },
@@ -32,6 +33,7 @@ function RootComponent() {
 
 	onMount(() => {
 		const cleanupThemeListener = initThemeListener();
+		initDatabase();
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {

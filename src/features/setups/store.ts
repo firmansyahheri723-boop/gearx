@@ -1,5 +1,4 @@
 import { makePersisted } from "@solid-primitives/storage";
-import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import type {
 	SavedSetup,
@@ -7,11 +6,8 @@ import type {
 	SetupTag,
 } from "@/features/setups/types";
 import { generateId } from "@/utils/id";
-import { createDeserializer } from "@/utils/storage";
 
 const STORAGE_KEY = "gearx_setups";
-const TAGS_STORAGE_KEY = "gearx_setup_tags";
-const FILTER_STORAGE_KEY = "gearx_setup_filter";
 
 const defaultFilter: SetupFilter = {
 	search: "",
@@ -21,49 +17,37 @@ const defaultFilter: SetupFilter = {
 	sortOrder: "desc",
 };
 
-const deserializeFilter = createDeserializer(defaultFilter);
-const deserializeSetups = createDeserializer<SavedSetup[]>([]);
-const deserializeTags = createDeserializer<SetupTag[]>([]);
-
-export const [setupsStore, setSetupsStore] = createStore({
-	setups: [] as SavedSetup[],
-	tags: [] as SetupTag[],
-	filter: {
-		search: "",
-		tags: [] as string[],
-		carFilter: null as string | null,
-		sortBy: "updatedAt" as "name" | "createdAt" | "updatedAt",
-		sortOrder: "desc" as "asc" | "desc",
-	},
-});
-
-const [savedSetups, setSavedSetups] = makePersisted(
-	createSignal<SavedSetup[]>([]),
-	{ name: STORAGE_KEY, deserialize: deserializeSetups },
-);
-
-const [savedTags, setSavedTags] = makePersisted(createSignal<SetupTag[]>([]), {
-	name: TAGS_STORAGE_KEY,
-	deserialize: deserializeTags,
-});
-
-const [savedFilter, setSavedFilter] = makePersisted(
-	createSignal<SetupFilter>(defaultFilter),
-	{ name: FILTER_STORAGE_KEY, deserialize: deserializeFilter },
-);
-
-export function initializeSetupsStore(): void {
-	const loadedSetups = savedSetups();
-	const loadedTags = savedTags();
-	const loadedFilter = savedFilter();
-	if (loadedSetups.length > 0 || loadedTags.length > 0) {
-		setSetupsStore({
-			setups: loadedSetups,
-			tags: loadedTags,
-			filter: loadedFilter,
-		});
+const deserialize = (value: string | null) => {
+	try {
+		const parsed = JSON.parse(value || "{}");
+		return {
+			setups: (parsed?.setups || []) as SavedSetup[],
+			tags: (parsed?.tags || []) as SetupTag[],
+			filter: (parsed?.filter || defaultFilter) as SetupFilter,
+		};
+	} catch {
+		return {
+			setups: [],
+			tags: [],
+			filter: defaultFilter,
+		};
 	}
-}
+};
+
+export const [setupsStore, setSetupsStore] = makePersisted(
+	createStore({
+		setups: [] as SavedSetup[],
+		tags: [] as SetupTag[],
+		filter: {
+			search: "",
+			tags: [] as string[],
+			carFilter: null as string | null,
+			sortBy: "updatedAt" as "name" | "createdAt" | "updatedAt",
+			sortOrder: "desc" as "asc" | "desc",
+		},
+	}),
+	{ name: STORAGE_KEY, deserialize },
+);
 
 export function getSetups(): SavedSetup[] {
 	return setupsStore.setups;
@@ -123,7 +107,6 @@ export function getAllCarNames(): string[] {
 
 export function setFilter(newFilter: Partial<SetupFilter>) {
 	setSetupsStore("filter", (f) => ({ ...f, ...newFilter }));
-	setSavedFilter(setupsStore.filter);
 }
 
 export function clearFilter() {
@@ -135,7 +118,6 @@ export function clearFilter() {
 		sortOrder: "desc",
 	};
 	setSetupsStore("filter", newFilter);
-	setSavedFilter(newFilter);
 }
 
 export function saveSetup(
@@ -164,13 +146,11 @@ export function saveSetup(
 		setSetupsStore("setups", (s) => [...s, updatedSetup]);
 	}
 
-	setSavedSetups(setupsStore.setups);
 	return updatedSetup;
 }
 
 export function deleteSetup(id: string) {
 	setSetupsStore("setups", (s) => s.filter((item) => item.id !== id));
-	setSavedSetups(setupsStore.setups);
 }
 
 export function duplicateSetup(
@@ -200,7 +180,6 @@ export function createSetup(
 		version: 1,
 	};
 	setSetupsStore("setups", (s) => [...s, setup]);
-	setSavedSetups(setupsStore.setups);
 	return setup;
 }
 
@@ -218,9 +197,6 @@ export function updateSetup(
 			return setup;
 		}),
 	);
-	if (found) {
-		setSavedSetups(setupsStore.setups);
-	}
 	return found;
 }
 
@@ -231,7 +207,6 @@ export function addTag(name: string, color: string): SetupTag {
 		color,
 	};
 	setSetupsStore("tags", (t) => [...t, tag]);
-	setSavedTags(setupsStore.tags);
 	return tag;
 }
 
@@ -243,6 +218,4 @@ export function deleteTag(id: string) {
 			tags: setup.tags.filter((t) => t.id !== id),
 		})),
 	);
-	setSavedTags(setupsStore.tags);
-	setSavedSetups(setupsStore.setups);
 }
