@@ -14,6 +14,7 @@ import type {
 	TractionMode,
 	WheelData,
 } from "@/types";
+import { calcLongitudinalAccelG, calcWeightTransfer } from "@/utils/physics";
 import {
 	AWD_TRACTION_MULTIPLIER,
 	TIRE_FRICTION_COEFFICIENTS as LOCAL_FRICTION_COEFFICIENTS,
@@ -96,19 +97,6 @@ export function calcWheelTorque(
 	finalDrive: number,
 ): number {
 	return engineTorqueNm * gearRatio * finalDrive;
-}
-
-export function calcLongitudinalAccelG(acceleration0to100: number): number {
-	return KPH_100_IN_MS / acceleration0to100 / GRAVITY_MS2;
-}
-
-export function calcWeightTransfer(
-	cogHeightM: number,
-	wheelbaseM: number,
-	massKg: number,
-	longAccelG: number,
-): number {
-	return (cogHeightM / wheelbaseM) * massKg * longAccelG;
 }
 
 export function calcTractionLimitTorque(

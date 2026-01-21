@@ -1,5 +1,5 @@
 import { GRAVITY_MS2 } from "@/constants/physics";
-import { calcLongitudinalAccelG } from "@/features/gearbox/gearbox";
+import { calcLongitudinalAccelG, calcWeightTransfer } from "@/utils/physics";
 
 export type SuspensionInputs = {
 	weight: number;
@@ -133,15 +133,6 @@ function calcDampingForces(
 function calcLateralAccelG(speedKph: number, radiusM: number): number {
 	const speedMs = speedKph * 0.277778;
 	return (speedMs * speedMs) / (radiusM * GRAVITY_MS2);
-}
-
-function calcWeightTransfer(
-	cogHeightM: number,
-	wheelbaseM: number,
-	massKg: number,
-	longAccelG: number,
-): number {
-	return (cogHeightM / wheelbaseM) * massKg * longAccelG;
 }
 
 function calcAntiRollBars(

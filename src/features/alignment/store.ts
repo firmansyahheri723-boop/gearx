@@ -1,6 +1,7 @@
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
 import type { AlignmentInputs } from "@/features/alignment/types";
+import { createDeserializer } from "@/utils/storage";
 import { ALIGNMENT_PRESETS_MAP } from "./alignment-constants";
 
 const ALIGNMENT_INPUTS_KEY = "gearx_alignment_inputs";
@@ -16,14 +17,7 @@ const defaultAlignmentInputs: AlignmentInputs = {
 	maxSteeringAngle: 45,
 };
 
-const deserializeAlignmentInputs = (value: string | null): AlignmentInputs => {
-	if (!value) return defaultAlignmentInputs;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultAlignmentInputs;
-	}
-};
+const deserializeAlignmentInputs = createDeserializer(defaultAlignmentInputs);
 
 export const [alignmentInputs, setAlignmentInputs] = makePersisted(
 	createStore<AlignmentInputs>(defaultAlignmentInputs),

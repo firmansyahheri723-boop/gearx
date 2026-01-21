@@ -4,6 +4,7 @@ import type { FinalDrive, GearRatio } from "@/features/gearbox/types";
 import { tireCompound, tractionMode } from "@/features/suspension/store";
 import type { TireCompound, TractionMode } from "@/features/suspension/types";
 import type { TorqueRpmRow } from "@/features/torque-extractor/types";
+import { createDeserializer } from "@/utils/storage";
 
 const TORQUE_RPM_KEY = "gearx_torque_rpm";
 const GEAR_RATIOS_KEY = "gearx_gear_ratios";
@@ -59,32 +60,11 @@ const defaultFinalDrive: FinalDrive = {
 	max: 5.0,
 };
 
-const deserializeTorqueRpm = (value: string | null): TorqueRpmRow[] => {
-	if (!value) return defaultTorqueRpmData;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultTorqueRpmData;
-	}
-};
+const deserializeTorqueRpm = createDeserializer(defaultTorqueRpmData);
 
-const deserializeGearRatios = (value: string | null): GearRatio[] => {
-	if (!value) return defaultGearRatios;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultGearRatios;
-	}
-};
+const deserializeGearRatios = createDeserializer(defaultGearRatios);
 
-const deserializeFinalDrive = (value: string | null): FinalDrive => {
-	if (!value) return defaultFinalDrive;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultFinalDrive;
-	}
-};
+const deserializeFinalDrive = createDeserializer(defaultFinalDrive);
 
 export const [torqueRpmData, setTorqueRpmData] = makePersisted(
 	createStore<TorqueRpmRow[]>(defaultTorqueRpmData),

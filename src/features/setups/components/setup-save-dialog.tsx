@@ -11,11 +11,8 @@ import {
 import type { SetupTag, SetupTagColor } from "@/features/setups/types";
 import { SETUP_TAG_COLORS } from "@/features/setups/types";
 import { vehicleInputs } from "@/features/suspension/store";
+import { generateId } from "@/utils/id";
 import { createSetup, getAllTags, updateSetup } from "../store";
-
-function generateId(): string {
-	return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-}
 
 interface SetupSaveDialogProps {
 	setup?: {

@@ -6,6 +6,8 @@ import type {
 	SetupFilter,
 	SetupTag,
 } from "@/features/setups/types";
+import { generateId } from "@/utils/id";
+import { createDeserializer } from "@/utils/storage";
 
 const STORAGE_KEY = "gearx_setups";
 const TAGS_STORAGE_KEY = "gearx_setup_tags";
@@ -41,23 +43,12 @@ const defaultFilter: SetupFilter = {
 	sortOrder: "desc",
 };
 
-const deserializeFilter = (value: string | null): SetupFilter => {
-	if (!value) return defaultFilter;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultFilter;
-	}
-};
+const deserializeFilter = createDeserializer(defaultFilter);
 
 const [persistedFilter, setPersistedFilter] = makePersisted(
 	createSignal<SetupFilter>(defaultFilter),
 	{ name: FILTER_STORAGE_KEY, deserialize: deserializeFilter },
 );
-
-function generateId(): string {
-	return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
 
 export function initializeSetupsStore(): void {
 	const loadedSetups = persistedSetups();

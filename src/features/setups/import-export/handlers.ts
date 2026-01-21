@@ -1,4 +1,5 @@
 import type { SavedSetup, SetupData } from "@/features/setups/types";
+import { generateId } from "@/utils/id";
 
 export interface ImportOptions {
 	replaceExisting?: boolean;
@@ -29,10 +30,6 @@ export interface ExportResult {
 
 const MIN_VERSION = 1;
 const CURRENT_DATA_VERSION = 1;
-
-function generateId(): string {
-	return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-}
 
 function validateSetup(data: Record<string, unknown>): {
 	valid: boolean;

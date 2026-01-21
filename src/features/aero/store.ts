@@ -2,6 +2,7 @@ import { makePersisted } from "@solid-primitives/storage";
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import type { AeroSettings } from "@/features/aero/types";
+import { createDeserializer } from "@/utils/storage";
 
 const AERO_SETTINGS_KEY = "gearx_aero_settings";
 const AERO_EXPERIMENTAL_KEY = "gearx_aero_experimental";
@@ -12,14 +13,7 @@ const defaultAeroSettings: AeroSettings = {
 	airResistance: 0,
 };
 
-const deserializeAeroSettings = (value: string | null): AeroSettings => {
-	if (!value) return defaultAeroSettings;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultAeroSettings;
-	}
-};
+const deserializeAeroSettings = createDeserializer(defaultAeroSettings);
 
 const deserializeAeroExperimental = (value: string | null): boolean => {
 	return value === "true";

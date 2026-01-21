@@ -16,6 +16,7 @@ import type {
 	TractionMode,
 	VehicleInputs,
 } from "@/features/suspension/types";
+import { createDeserializer } from "@/utils/storage";
 
 const VEHICLE_INPUTS_KEY = "gearx_vehicle_inputs";
 const TIRE_COMPOUND_KEY = "gearx_tire_compound";
@@ -49,14 +50,7 @@ const defaultVehicleInputs: VehicleInputs = {
 	redlineRpm: 8000,
 };
 
-const deserializeVehicleInputs = (value: string | null): VehicleInputs => {
-	if (!value) return defaultVehicleInputs;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return defaultVehicleInputs;
-	}
-};
+const deserializeVehicleInputs = createDeserializer(defaultVehicleInputs);
 
 const deserializeTireCompound = (
 	value: string | null,
