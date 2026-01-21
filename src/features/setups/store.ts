@@ -37,25 +37,25 @@ export const [setupsStore, setSetupsStore] = createStore({
 	},
 });
 
-const [persistedSetups, setPersistedSetups] = makePersisted(
+const [savedSetups, setSavedSetups] = makePersisted(
 	createSignal<SavedSetup[]>([]),
 	{ name: STORAGE_KEY, deserialize: deserializeSetups },
 );
 
-const [persistedTags, setPersistedTags] = makePersisted(
-	createSignal<SetupTag[]>([]),
-	{ name: TAGS_STORAGE_KEY, deserialize: deserializeTags },
-);
+const [savedTags, setSavedTags] = makePersisted(createSignal<SetupTag[]>([]), {
+	name: TAGS_STORAGE_KEY,
+	deserialize: deserializeTags,
+});
 
-const [persistedFilter, setPersistedFilter] = makePersisted(
+const [savedFilter, setSavedFilter] = makePersisted(
 	createSignal<SetupFilter>(defaultFilter),
 	{ name: FILTER_STORAGE_KEY, deserialize: deserializeFilter },
 );
 
 export function initializeSetupsStore(): void {
-	const loadedSetups = persistedSetups();
-	const loadedTags = persistedTags();
-	const loadedFilter = persistedFilter();
+	const loadedSetups = savedSetups();
+	const loadedTags = savedTags();
+	const loadedFilter = savedFilter();
 	if (loadedSetups.length > 0 || loadedTags.length > 0) {
 		setSetupsStore({
 			setups: loadedSetups,
@@ -123,7 +123,7 @@ export function getAllCarNames(): string[] {
 
 export function setFilter(newFilter: Partial<SetupFilter>) {
 	setSetupsStore("filter", (f) => ({ ...f, ...newFilter }));
-	setPersistedFilter(setupsStore.filter);
+	setSavedFilter(setupsStore.filter);
 }
 
 export function clearFilter() {
@@ -135,7 +135,7 @@ export function clearFilter() {
 		sortOrder: "desc",
 	};
 	setSetupsStore("filter", newFilter);
-	setPersistedFilter(newFilter);
+	setSavedFilter(newFilter);
 }
 
 export function saveSetup(
@@ -164,13 +164,13 @@ export function saveSetup(
 		setSetupsStore("setups", (s) => [...s, updatedSetup]);
 	}
 
-	setPersistedSetups(setupsStore.setups);
+	setSavedSetups(setupsStore.setups);
 	return updatedSetup;
 }
 
 export function deleteSetup(id: string) {
 	setSetupsStore("setups", (s) => s.filter((item) => item.id !== id));
-	setPersistedSetups(setupsStore.setups);
+	setSavedSetups(setupsStore.setups);
 }
 
 export function duplicateSetup(
@@ -200,7 +200,7 @@ export function createSetup(
 		version: 1,
 	};
 	setSetupsStore("setups", (s) => [...s, setup]);
-	setPersistedSetups(setupsStore.setups);
+	setSavedSetups(setupsStore.setups);
 	return setup;
 }
 
@@ -219,7 +219,7 @@ export function updateSetup(
 		}),
 	);
 	if (found) {
-		setPersistedSetups(setupsStore.setups);
+		setSavedSetups(setupsStore.setups);
 	}
 	return found;
 }
@@ -231,7 +231,7 @@ export function addTag(name: string, color: string): SetupTag {
 		color,
 	};
 	setSetupsStore("tags", (t) => [...t, tag]);
-	setPersistedTags(setupsStore.tags);
+	setSavedTags(setupsStore.tags);
 	return tag;
 }
 
@@ -243,6 +243,6 @@ export function deleteTag(id: string) {
 			tags: setup.tags.filter((t) => t.id !== id),
 		})),
 	);
-	setPersistedTags(setupsStore.tags);
-	setPersistedSetups(setupsStore.setups);
+	setSavedTags(setupsStore.tags);
+	setSavedSetups(setupsStore.setups);
 }
