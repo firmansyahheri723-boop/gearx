@@ -8,12 +8,11 @@ import {
 } from "@ark-ui/solid";
 import { FileUpload, useFileUpload } from "@ark-ui/solid/file-upload";
 import {
-	onCleanup,
-	onMount,
+	createEffect,
 	createMemo,
 	createSignal,
-	createEffect,
-	For,
+	onCleanup,
+	onMount,
 	Show,
 } from "solid-js";
 import { Portal } from "solid-js/web";
@@ -26,6 +25,7 @@ import type {
 import { CalibrationOverlay } from "./calibration";
 import { CurveEditor } from "./curve-editor";
 import { DataPreview } from "./data-preview";
+import { HelpContent } from "./help-content";
 
 type TorqueExtractorProps = {
 	onClose: () => void;
@@ -60,6 +60,7 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 	const [extractedPoints, setExtractedPoints] = createSignal<
 		ExtractedDataPoint[]
 	>([]);
+	const [helpView, setHelpView] = createSignal<null | "what" | "how">(null);
 
 	const fileUpload = useFileUpload({
 		accept: ["image/*"],
@@ -225,7 +226,11 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 							<div class="flex items-center gap-3">
 								<div class="w-1.5 h-4 bg-muted" />
 								<DialogTitle class="text-xs font-semibold tracking-wider uppercase text-foreground">
-									Import Torque Curve
+									{helpView() === "what"
+										? "What Is This?"
+										: helpView() === "how"
+											? "How to Import Torque Curves"
+											: "Import Torque Curve"}
 								</DialogTitle>
 							</div>
 							<DialogCloseTrigger class="text-muted hover:text-foreground-secondary transition-colors">
@@ -247,120 +252,172 @@ export function TorqueExtractor(props: TorqueExtractorProps) {
 							</DialogCloseTrigger>
 						</div>
 
-						{/* Step Indicator */}
-						<div class="flex items-center px-4 py-2 border-b border-border/50 bg-surface/30">
-							{STEPS.map((s, idx) => (
-								<>
+						{/* Step Indicator / Progress */}
+						<Show
+							when={helpView()}
+							fallback={
+								<div class="flex items-center px-4 py-2 border-b border-border/50 bg-surface/30">
+									{STEPS.map((s, idx) => (
+										<>
+											<div
+												class="flex items-center gap-2"
+												classList={{
+													"text-foreground": currentStepIndex() === idx,
+													"text-muted": currentStepIndex() !== idx,
+													"text-emerald-500": currentStepIndex() > idx,
+												}}
+											>
+												<div
+													class="w-5 h-5 flex items-center justify-center text-[10px] font-medium border"
+													classList={{
+														"border-border bg-surface-elevated":
+															currentStepIndex() === idx,
+														"border-border bg-surface":
+															currentStepIndex() < idx,
+														"border-emerald-600 bg-emerald-900/30":
+															currentStepIndex() > idx,
+													}}
+												>
+													{currentStepIndex() > idx ? "✓" : idx + 1}
+												</div>
+												<span class="text-[10px] tracking-wider">
+													{s.label}
+												</span>
+											</div>
+											{idx < STEPS.length - 1 && (
+												<div
+													class="flex-1 h-px mx-3"
+													classList={{
+														"bg-emerald-600": currentStepIndex() > idx,
+														"bg-surface-elevated": currentStepIndex() <= idx,
+													}}
+												/>
+											)}
+										</>
+									))}
+								</div>
+							}
+						>
+							<div class="flex items-center px-4 py-3 border-b border-border/50 bg-surface/30 gap-1">
+								{Array.from({ length: 5 }).map((_, idx) => (
 									<div
-										class="flex items-center gap-2"
+										class="h-1 rounded-full transition-all duration-300"
 										classList={{
-											"text-foreground": currentStepIndex() === idx,
-											"text-muted": currentStepIndex() !== idx,
-											"text-emerald-500": currentStepIndex() > idx,
+											"flex-1 bg-emerald-500": helpView() === "how" && idx <= 0,
+											"flex-1 bg-surface-elevated":
+												helpView() !== "how" || idx > 0,
 										}}
-									>
-										<div
-											class="w-5 h-5 flex items-center justify-center text-[10px] font-medium border"
-											classList={{
-												"border-border bg-surface-elevated":
-													currentStepIndex() === idx,
-												"border-border bg-surface": currentStepIndex() < idx,
-												"border-emerald-600 bg-emerald-900/30":
-													currentStepIndex() > idx,
-											}}
-										>
-											{currentStepIndex() > idx ? "✓" : idx + 1}
-										</div>
-										<span class="text-[10px] tracking-wider">{s.label}</span>
-									</div>
-									{idx < STEPS.length - 1 && (
-										<div
-											class="flex-1 h-px mx-3"
-											classList={{
-												"bg-emerald-600": currentStepIndex() > idx,
-												"bg-surface-elevated": currentStepIndex() <= idx,
-											}}
-										/>
-									)}
-								</>
-							))}
-						</div>
+									/>
+								))}
+							</div>
+						</Show>
 
 						{/* Content */}
 						<div class="flex-1 overflow-y-auto p-4">
-							{/* Upload Step */}
-							<Show when={step() === "upload"}>
-								<FileUpload.RootProvider value={fileUpload}>
-									<div class="flex flex-col items-center justify-center gap-4 py-8">
-										<div class="text-center mb-2">
-											<span class="text-[10px] uppercase tracking-wider text-muted block mb-1">
-												Step 1
-											</span>
-											<span class="text-sm text-foreground-secondary">
-												Select torque curve screenshot
-											</span>
-										</div>
-										<FileUpload.Trigger class="cursor-pointer border border-border hover:border-border bg-surface hover:bg-surface-elevated px-6 py-3 flex items-center gap-3 transition-colors">
-											<svg
-												class="w-4 h-4 text-muted"
-												fill="none"
-												stroke="currentColor"
-												viewBox="0 0 24 24"
-												aria-hidden="true"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="1.5"
-													d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-												/>
-											</svg>
-											<span class="text-xs uppercase tracking-wider text-foreground-secondary">
-												Select Image
-											</span>
-										</FileUpload.Trigger>
-										<span class="text-[10px] text-muted uppercase tracking-wider">
-											PNG, JPG, WebP or paste from clipboard
-										</span>
-									</div>
-									<FileUpload.HiddenInput />
-								</FileUpload.RootProvider>
-							</Show>
+							<Show
+								when={helpView()}
+								fallback={
+									<>
+										{/* Upload Step */}
+										<Show when={step() === "upload"}>
+											<FileUpload.RootProvider value={fileUpload}>
+												<div class="flex flex-col items-center justify-center gap-4 py-8">
+													<div class="text-center mb-2">
+														<span class="text-[10px] uppercase tracking-wider text-muted block mb-1">
+															Step 1
+														</span>
+														<span class="text-sm text-foreground-secondary">
+															Select torque curve screenshot
+														</span>
+													</div>
+													<FileUpload.Trigger class="cursor-pointer border border-border hover:border-border bg-surface hover:bg-surface-elevated px-6 py-3 flex items-center gap-3 transition-colors">
+														<svg
+															class="w-4 h-4 text-muted"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+															aria-hidden="true"
+														>
+															<path
+																stroke-linecap="round"
+																stroke-linejoin="round"
+																stroke-width="1.5"
+																d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+															/>
+														</svg>
+														<span class="text-xs uppercase tracking-wider text-foreground-secondary">
+															Select Image
+														</span>
+													</FileUpload.Trigger>
+													<span class="text-[10px] text-muted uppercase tracking-wider">
+														PNG, JPG, WebP or paste from clipboard
+													</span>
+													<button
+														type="button"
+														onClick={() => setHelpView("what")}
+														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors"
+													>
+														What is this?
+													</button>
+													<button
+														type="button"
+														onClick={() => setHelpView("how")}
+														class="text-sm text-muted underline hover:text-foreground-secondary transition-colors"
+													>
+														How to use this?
+													</button>
+												</div>
+												<FileUpload.HiddenInput />
+											</FileUpload.RootProvider>
+										</Show>
 
-							{/* Calibrate Step */}
-							<Show when={step() === "calibrate" && imageData()}>
-								<CalibrationOverlay
-									imageData={imageData()!}
-									canvasWidth={CANVAS_WIDTH}
-									canvasHeight={CANVAS_HEIGHT}
-									calibration={calibration()}
-									onChange={setCalibration}
-									onBack={handleBack}
-									onNext={handleExtract}
-									isValid={isCalibrationValid()}
-								/>
-							</Show>
+										{/* Calibrate Step */}
+										<Show when={step() === "calibrate" && imageData()}>
+											<CalibrationOverlay
+												imageData={imageData()!}
+												canvasWidth={CANVAS_WIDTH}
+												canvasHeight={CANVAS_HEIGHT}
+												calibration={calibration()}
+												onChange={setCalibration}
+												onBack={handleBack}
+												onNext={handleExtract}
+												isValid={isCalibrationValid()}
+											/>
+										</Show>
 
-							{/* Extract/Edit Step */}
-							<Show when={step() === "extract" && imageData()}>
-								<CurveEditor
-									imageData={imageData()!}
-									canvasWidth={CANVAS_WIDTH}
-									canvasHeight={CANVAS_HEIGHT}
-									calibration={calibration()}
-									extractedPoints={extractedPoints()}
-									onPointsChange={setExtractedPoints}
-									onBack={handleBack}
-									onNext={handleNext}
-								/>
-							</Show>
+										{/* Extract/Edit Step */}
+										<Show when={step() === "extract" && imageData()}>
+											<CurveEditor
+												imageData={imageData()!}
+												canvasWidth={CANVAS_WIDTH}
+												canvasHeight={CANVAS_HEIGHT}
+												calibration={calibration()}
+												extractedPoints={extractedPoints()}
+												onPointsChange={setExtractedPoints}
+												onBack={handleBack}
+												onNext={handleNext}
+											/>
+										</Show>
 
-							{/* Preview Step */}
-							<Show when={step() === "preview"}>
-								<DataPreview
-									extractedPoints={extractedPoints()}
-									onBack={handleBack}
-									onApply={handleApply}
+										{/* Preview Step */}
+										<Show when={step() === "preview"}>
+											<DataPreview
+												extractedPoints={extractedPoints()}
+												onBack={handleBack}
+												onApply={handleApply}
+											/>
+										</Show>
+									</>
+								}
+							>
+								<HelpContent
+									view={helpView()!}
+									onClose={() => setHelpView(null)}
+									onShowGuide={() => setHelpView("how")}
+									onTryIt={() => {
+										setHelpView(null);
+										setStep("upload");
+									}}
 								/>
 							</Show>
 						</div>
