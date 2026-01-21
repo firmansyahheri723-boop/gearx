@@ -117,12 +117,6 @@ function RootComponent() {
 				</div>
 
 				<Outlet />
-
-				<footer class="mt-4 sm:mt-6 flex items-center justify-center gap-2 text-muted text-[10px] sm:text-xs">
-					<span class="text-foreground-secondary">{"///"}</span>
-					<span>GEARX SUSPENSION CALCULATOR v1.0.0</span>
-					<span class="text-foreground-secondary">{"///"}</span>
-				</footer>
 			</div>
 		</div>
 	);
