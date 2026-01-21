@@ -1,4 +1,5 @@
 import { GRAVITY_MS2 } from "@/constants/physics";
+import { roundToDecimal } from "@/utils/math";
 import { calcLongitudinalAccelG, calcWeightTransfer } from "@/utils/physics";
 
 export type SuspensionInputs = {
@@ -299,10 +300,10 @@ export function calculateSuspensionOutputs(
 		acceleration,
 		...(hasAero && {
 			experimental: {
-				aeroFrontLoadKg: Math.round(aeroFrontLoadKg * 10) / 10,
-				aeroRearLoadKg: Math.round(aeroRearLoadKg * 10) / 10,
-				adjustedFrontSprungMass: Math.round(adjustedFrontSprungMass * 10) / 10,
-				adjustedRearSprungMass: Math.round(adjustedRearSprungMass * 10) / 10,
+				aeroFrontLoadKg: roundToDecimal(aeroFrontLoadKg, 1),
+				aeroRearLoadKg: roundToDecimal(aeroRearLoadKg, 1),
+				adjustedFrontSprungMass: roundToDecimal(adjustedFrontSprungMass, 1),
+				adjustedRearSprungMass: roundToDecimal(adjustedRearSprungMass, 1),
 			},
 		}),
 	};

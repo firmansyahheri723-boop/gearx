@@ -5,6 +5,7 @@ import type {
 	AeroStandardOutput,
 } from "@/features/aero/types";
 import type { CarData } from "@/features/database/types";
+import { roundToDecimal, roundToNearest } from "@/utils/math";
 import {
 	AIR_DENSITY,
 	GAME_CD_FACTOR,
@@ -53,7 +54,7 @@ export function calculateStandardAero(
 	return {
 		frontDownforceRelative: frontRel,
 		rearDownforceRelative: rearRel,
-		aeroBalancePct: Math.round(balancePct * 10) / 10,
+		aeroBalancePct: roundToDecimal(balancePct, 1),
 		predictedBehavior: behavior,
 		recommendations,
 	};
@@ -117,9 +118,9 @@ export function calculateExperimentalAero(
 		rearDownforceN: Math.round(rearDownforceN),
 		totalDownforceN: Math.round(totalDownforceN),
 		dragForceN: Math.round(dragForceN),
-		powerLossKw: Math.round(powerLossKw * 10) / 10,
+		powerLossKw: roundToDecimal(powerLossKw, 1),
 		topSpeedReductionKmh: Math.round(topSpeedReductionKmh),
-		corneringGIncrease: Math.round(corneringGIncrease * 100) / 100,
+		corneringGIncrease: roundToDecimal(corneringGIncrease, 2),
 		effectiveLoadIncreaseKg: Math.round(effectiveLoadIncreaseKg),
 		tractionLimitIncreasePct: Math.round(tractionLimitIncreasePct),
 		speedData,
@@ -208,7 +209,7 @@ function calculateMaxSpeedKmh(
 		}
 	}
 
-	return Math.round(maxSpeed / 10) * 10;
+	return roundToNearest(maxSpeed, 10);
 }
 
 export function getAeroBalanceDescription(balancePct: number): string {

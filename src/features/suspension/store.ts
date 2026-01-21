@@ -72,30 +72,6 @@ export const [tractionMode, setTractionMode] = makePersisted(
 	{ name: TRACTION_MODE_KEY, deserialize: deserializeTractionMode },
 );
 
-export const [springsStiffness] = createStore<SpringsStiffness>({
-	front: 173.441,
-	rear: 135.362,
-});
-
-export const [dampers] = createStore<Dampers>({
-	bump: { front: 12275, rear: 9580 },
-	fastBump: { front: 6137, rear: 4790 },
-	rebound: { front: 27618, rear: 21554 },
-	fastRebound: { front: 13809, rear: 10777 },
-});
-
-export const [antiRollBars] = createStore<AntiRollBars>({
-	farb: -131,
-	rarb: -91,
-});
-
-export const [accelerationMetrics] = createStore<AccelerationMetrics>({
-	weightTransfer: 186.52,
-	frontWeightDistOnAccel: "45.57%",
-	maxLongitudinalAccel: 0.6,
-	maxLateralAccel: 1.3065,
-});
-
 export function applySavedSetupToVehicle(setup: SavedSetup): void {
 	setVehicleInputs(setup.inputs);
 	setTorqueRpmData(setup.torqueRpmData);
