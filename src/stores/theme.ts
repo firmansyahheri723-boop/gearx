@@ -46,7 +46,6 @@ createEffect(() => {
 export function changeThemePreference(value: ThemePreference): void {
 	setThemePreference(value);
 	const resolved = resolveTheme(value);
-	document.documentElement.classList.toggle("light", resolved === "light");
 	document.documentElement.setAttribute("data-theme", resolved);
 	setTheme(resolved);
 }
@@ -55,15 +54,16 @@ export function initThemeListener(): () => void {
 	onMount(() => {
 		const pref = themePreference();
 		const resolved = resolveTheme(pref);
-		document.documentElement.classList.toggle("light", resolved === "light");
 		document.documentElement.setAttribute("data-theme", resolved);
 	});
 
 	const observer = new MutationObserver((mutations) => {
 		for (const mutation of mutations) {
-			if (mutation.attributeName === "class") {
-				const isLight = document.documentElement.classList.contains("light");
-				setThemePreference(isLight ? "light" : "dark");
+			if (mutation.attributeName === "data-theme") {
+				const dataTheme = document.documentElement.getAttribute("data-theme");
+				if (dataTheme === "light" || dataTheme === "dark") {
+					setThemePreference(dataTheme);
+				}
 			}
 		}
 	});
