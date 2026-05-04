@@ -1,40 +1,44 @@
-import {
-	createRootRoute,
-	Link,
-	Outlet,
-	useLocation,
-} from "@tanstack/solid-router";
-import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
-import { DashboardHeader } from "@/components/ui/dashboard-header";
-import { initDatabase } from "@/features/database/store";
-import { deserializeSetup } from "@/features/setups/sharing";
-import { applySharedSetup } from "@/features/suspension/store";
-import { clearSelection } from "@/stores/selection";
-import { initThemeListener } from "@/stores/theme";
-
-const TABS = [
-	{ id: "main", label: "Input", to: "/" },
-	{ id: "suspension", label: "Suspension", to: "/suspension" },
-	{ id: "gearbox", label: "Gearbox", to: "/gearbox" },
-	{ id: "aero", label: "Aero", to: "/aero" },
-	{ id: "alignment", label: "Alignment", to: "/alignment" },
-	{ id: "setups", label: "Setups", to: "/setups" },
-	{ id: "data", label: "Database", to: "/database" },
-	{ id: "chat", label: "Chat", to: "/chat" },
-	{ id: "about", label: "About", to: "/about" },
-] as const;
+import { createRootRoute, Outlet } from '@tanstack/solid-router';
+import { createSignal, onMount, Show } from 'solid-js';
+import { supabase } from '../supabase';
 
 export const Route = createRootRoute({
-	component: RootComponent,
+  component: RootComponent,
 });
 
 function RootComponent() {
-	const location = useLocation();
-	const [showLoadedBanner, setShowLoadedBanner] = createSignal(false);
+  const [session, setSession] = createSignal(null);
+  const [email, setEmail] = createSignal('');
+  const [password, setPassword] = createSignal('');
 
-	onMount(() => {
-		const cleanupThemeListener = initThemeListener();
-		initDatabase();
+  onMount(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+  });
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email: email(), password: password() });
+    if (error) alert(error.message);
+  };
+
+  return (
+    <Show when={session()} fallback={
+      <div style={{ background: '#000', color: '#0f0', height: '100vh', display: 'flex', "flex-direction": 'column', "justify-content": 'center', "align-items": 'center', "font-family": 'monospace', "text-align": 'center' }}>
+        <h1 style={{ "letter-spacing": '5px', "border-bottom": '2px solid #0f0', "padding-bottom": '10px' }}>GEARX_SYSTEM_LOCKED</h1>
+        <div style={{ display: 'flex', "flex-direction": 'column', gap: '15px', width: '280px', marginTop: '20px' }}>
+          <input type="email" placeholder="ADMIN_EMAIL" onInput={e => setEmail(e.currentTarget.value)} style={{ background: '#000', color: '#0f0', border: '1px solid #0f0', padding: '12px', outline: 'none' }} />
+          <input type="password" placeholder="ACCESS_KEY" onInput={e => setPassword(e.currentTarget.value)} style={{ background: '#000', color: '#0f0', border: '1px solid #0f0', padding: '12px', outline: 'none' }} />
+          <button onClick={handleLogin} style={{ background: '#0f0', color: '#000', padding: '12px', "font-weight": 'bold', cursor: 'pointer', border: 'none' }}>AUTHENTICATE</button>
+        </div>
+        <p style={{ "font-size": '10px', marginTop: '30px', opacity: '0.5' }}>SECURE_ENCRYPTION_ACTIVE</p>
+      </div>
+    }>
+      {/* Kalau sudah login, baru tampilin isi dashboard (Outlet) */}
+      <Outlet />
+    </Show>
+  );
+}
+initDatabase();
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
