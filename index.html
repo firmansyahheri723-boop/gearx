@@ -1,12 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEARX_SYSTEM</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
-  </body>
+<html>
+<head>
+    <title>GEARX PROTECTED</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .box { border: 2px solid #0f0; padding: 30px; text-align: center; box-shadow: 0 0 20px #0f0; background: rgba(0,20,0,0.9); width: 80%; max-width: 300px; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 100%; box-sizing: border-box; margin: 15px 0; outline: none; text-align: center; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; }
+        button:hover { background: #0a0; }
+        #dashboard { display: none; width: 100vw; height: 100vh; position: fixed; top:0; left:0; background: #fff; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <div id="login-box" class="box">
+        <h3>GEARX_SYSTEM_LOCKED</h3>
+        <p style="font-size: 10px;">ENTER ACCESS KEY</p>
+        <input type="password" id="pass" placeholder="****">
+        <button onclick="cek()">AUTHENTICATE</button>
+    </div>
+
+    <div id="dashboard">
+        <iframe src="/src/index.tsx"></iframe>
+    </div>
+
+    <script>
+        function cek() {
+            var p = document.getElementById('pass').value;
+            if(p === '1234') { // <--- PASSWORD LU DI SINI
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                // Paksa reload iframe biar dashboard muncul
+                location.href = '/?access=granted';
+            } else {
+                alert('ACCESS DENIED!');
+            }
+        }
+        // Biar kalau sudah login nggak balik lagi (simpel bypass)
+        if(window.location.search.includes('access=granted')) {
+            document.write('<h1 style="color:black;text-align:center;margin-top:50px;">LOADING DASHBOARD...</h1><script>setTimeout(function(){ window.location.href="https://gearx-production.up.railway.app/"; },1000)<\/script>');
+        }
+    </script>
+</body>
 </html>
