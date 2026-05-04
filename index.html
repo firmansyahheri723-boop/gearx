@@ -1,17 +1,12 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>GEARX PROTECTED</title>
-</head>
-<body style="background:black; color:red; display:flex; justify-content:center; align-items:center; height:100vh; font-family:monospace;">
-    <div style="border:5px solid red; padding:50px;">
-        <h1>SISTEM TERKUNCI: 1234</h1>
-        <input type="password" id="p" placeholder="PASSWORD">
-        <button onclick="if(document.getElementById('p').value=='1234'){document.getElementById('m').style.display='block'}else{alert('SALAH!')}">MASUK</button>
-    </div>
-    <div id="m" style="display:none; color:white;">
-        <h2>DASHBOARD TERBUKA!</h2>
-        <p>Kalau lu liat ini, berarti update berhasil.</p>
-    </div>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GEARX DASHBOARD</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
 </html>
