@@ -3,51 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEARX SYSTEM</title>
-    <style>
-      /* Style Gembok */
-      #gembok-screen { background: #000; color: #0f0; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 9999; }
-      .box { border: 2px solid #0f0; padding: 30px; text-align: center; box-shadow: 0 0 20px #0f0; background: rgba(0,20,0,0.9); width: 80%; max-width: 300px; }
-      input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 100%; box-sizing: border-box; margin: 15px 0; outline: none; text-align: center; font-size: 16px; }
-      button { background: #0f0; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; }
-    </style>
-  </head>
-  <body>
-    <div id="gembok-screen">
-      <div class="box">
-        <h3>GEARX_LOCKED</h3>
-        <input type="password" id="pass" placeholder="****" autofocus>
-        <button onclick="auth()">ACCESS</button>
-      </div>
-    </div>
-
-    <div id="root"></div>
-
+    <title>GEARX</title>
     <script>
-      function auth() {
-        var p = document.getElementById('pass').value;
-        if(p === '1234') {
-          localStorage.setItem('gearx_verified', 'true');
-          bukaSistem();
-        } else {
-          alert('WRONG KEY');
-        }
-      }
-
-      function bukaSistem() {
-        // Hapus layar gembok
-        document.getElementById('gembok-screen').style.display = 'none';
-        // Jalankan script asli GEARX lu
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = '/src/index.tsx';
-        document.body.appendChild(script);
-      }
-
-      // Cek kalau sebelumnya sudah login
-      if(localStorage.getItem('gearx_verified') === 'true') {
-        bukaSistem();
+      // INI POINT PENTINGNYA: Langsung minta pass di awal banget
+      var input = prompt("ENTER ACCESS KEY:");
+      if (input !== "1234") {
+        alert("ACCESS DENIED!");
+        window.location.href = "https://google.com";
       }
     </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
