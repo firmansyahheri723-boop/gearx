@@ -1,36 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEARX_SECURE</title>
-    <style>
-      body { background: #000; color: #0f0; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-      #lock-screen { text-align: center; border: 1px solid #0f0; padding: 40px; }
-      input { background: #000; color: #0f0; border: 1px solid #0f0; padding: 10px; margin: 10px 0; width: 200px; display: block; }
-      button { background: #0f0; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; width: 100%; }
-    </style>
-  </head>
-  <body>
-    <div id="lock-screen">
-      <h1>GEARX_LOCKED</h1>
-      <input type="password" id="pass" placeholder="ENTER_ACCESS_KEY">
-      <button onclick="check()">ACCESS_SYSTEM</button>
+<html>
+<head>
+    <title>GEARX PROTECTED</title>
+</head>
+<body style="background:black; color:red; display:flex; justify-content:center; align-items:center; height:100vh; font-family:monospace;">
+    <div style="border:5px solid red; padding:50px;">
+        <h1>SISTEM TERKUNCI: 1234</h1>
+        <input type="password" id="p" placeholder="PASSWORD">
+        <button onclick="if(document.getElementById('p').value=='1234'){document.getElementById('m').style.display='block'}else{alert('SALAH!')}">MASUK</button>
     </div>
-
-    <div id="root" style="display:none"></div>
-
-    <script>
-      function check() {
-        // Ganti '1234' sama password yang lu mau buat sementara
-        if(document.getElementById('pass').value === '1234') {
-          document.getElementById('lock-screen').style.display = 'none';
-          document.getElementById('root').style.display = 'block';
-        } else {
-          alert('ACCESS_DENIED');
-        }
-      }
-    </script>
-    <script type="module" src="/src/index.tsx"></script>
-  </body>
+    <div id="m" style="display:none; color:white;">
+        <h2>DASHBOARD TERBUKA!</h2>
+        <p>Kalau lu liat ini, berarti update berhasil.</p>
+    </div>
+</body>
 </html>
