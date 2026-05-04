@@ -1,7 +1,7 @@
 {
   "name": "gearx",
   "version": "0.0.0",
-  "description": "A dashboard for CarX Street – suspension calculator, gearbox tuning, and more",
+  "description": "A dashboard for CarX Street - suspension calculator, gearbox tuning, and more",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "serve": "^14.2.0",
+    "serve": "14.2.0",
     "@ark-ui/solid": "^5.30.0",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@openrouter/ai-sdk-provider": "^1.5.4",
